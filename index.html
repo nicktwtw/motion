@@ -1,0 +1,2101 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>動態設計技能</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-1: #e9f1fa;
+        --bg-2: #f6f3ec;
+        --ink: #10151c;
+        --ink-soft: #3d4654;
+        --ink-faint: #7c8798;
+        --card: #ffffff;
+        --card-line: rgba(16, 21, 28, 0.08);
+        --accent: #1f6ae1;
+        --accent-soft: rgba(31, 106, 225, 0.1);
+        --chip: #eef2f7;
+        --code-bg: #0e1420;
+        --code-ink: #cfe3ff;
+        --pill: #ffffff;
+        --pill-active: #10151c;
+        --pill-active-ink: #ffffff;
+        --warn: #b45309;
+        --warn-bg: rgba(180, 83, 9, 0.09);
+        --shadow: 0 10px 30px rgba(23, 43, 77, 0.08);
+        color-scheme: light dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-1: #0a111d;
+          --bg-2: #0d1322;
+          --ink: #eef3fa;
+          --ink-soft: #b6c2d4;
+          --ink-faint: #7e8ca3;
+          --card: #131c2d;
+          --card-line: rgba(255, 255, 255, 0.09);
+          --accent: #6ea8ff;
+          --accent-soft: rgba(110, 168, 255, 0.14);
+          --chip: #1b2740;
+          --code-bg: #060b14;
+          --code-ink: #cfe3ff;
+          --pill: #16213699;
+          --pill-active: #eef3fa;
+          --pill-active-ink: #10151c;
+          --warn: #f0b269;
+          --warn-bg: rgba(240, 178, 105, 0.12);
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, -apple-system, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+        color: var(--ink);
+        background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 78%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      button, input { min-height: 2.25rem; font: inherit; }
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 72px; }
+
+      /* ---------- top strip ---------- */
+      .topbar {
+        display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        padding: 18px 2px 0;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+      .topbar .right { text-align: right; }
+      .topbar b { color: var(--ink); font-weight: 500; }
+
+      /* ---------- hero ---------- */
+      .hero { padding: 44px 2px 8px; }
+      .hero .cats {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--accent); font-weight: 500; margin: 0 0 14px;
+      }
+      .hero h1 {
+        font-family: "Archivo", ui-sans-system, sans-serif;
+        font-weight: 900; letter-spacing: -0.02em;
+        font-size: clamp(44px, 8.5vw, 92px); line-height: 0.98; margin: 0;
+      }
+      .hero .ghost {
+        font-family: "Archivo", ui-sans-system, sans-serif;
+        font-weight: 800; letter-spacing: -0.02em;
+        font-size: clamp(30px, 6vw, 64px); line-height: 1.05;
+        color: var(--ink-faint); opacity: 0.45; margin: 2px 0 0;
+      }
+      .hero .lede {
+        max-width: 640px; margin: 22px 0 0;
+        font-size: 16px; line-height: 1.75; color: var(--ink-soft);
+      }
+      .pipeline {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+        margin-top: 26px;
+        font-size: 13px; color: var(--ink-soft);
+      }
+      .pipeline .step {
+        background: var(--card); border: 1px solid var(--card-line);
+        border-radius: 999px; padding: 7px 14px; font-weight: 600; color: var(--ink);
+      }
+      .pipeline .arrow { color: var(--ink-faint); }
+
+      /* ---------- showcase carousel ---------- */
+      .showcase { margin-top: 42px; overflow: hidden; }
+      .showcase-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+        padding: 0 2px; flex-wrap: wrap;
+      }
+      .showcase-head h2 {
+        font-family: "Archivo", ui-sans-system, sans-serif;
+        font-size: 23px; font-weight: 800; letter-spacing: -0.01em; margin: 0;
+      }
+      .showcase-head p { margin: 0; font-size: 13px; color: var(--ink-faint); }
+      .stage {
+        position: relative; height: 462px; margin-top: 8px;
+        perspective: 1500px; overflow: hidden;
+        touch-action: pan-y;
+      }
+      .slide {
+        position: absolute; left: 50%; top: 50%;
+        width: min(730px, 96%);
+        display: flex; gap: 18px; align-items: stretch;
+        transform-style: preserve-3d;
+        transition: transform 0.65s cubic-bezier(0.22, 0.9, 0.28, 1), opacity 0.65s ease;
+        will-change: transform, opacity;
+      }
+      .vis-card {
+        flex: 0 0 302px;
+        background: var(--card); border: 1px solid var(--card-line);
+        border-radius: 18px; box-shadow: var(--shadow);
+        padding: 12px; display: flex; flex-direction: column; gap: 10px;
+        min-width: 0;
+      }
+      .vis-card canvas { width: 100%; height: 238px; display: block; border-radius: 10px; cursor: zoom-in; }
+      .vis-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; min-width: 0; }
+      .vis-foot .vname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .vis-meta { display: inline-flex; align-items: center; gap: 8px; flex: none; }
+      .vis-chip {
+        font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10.5px; font-weight: 500;
+        letter-spacing: 0.1em; color: var(--accent); background: var(--accent-soft);
+        border-radius: 999px; padding: 4px 10px;
+      }
+      .vis-meta .n { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--ink-faint); }
+      .info-card { flex: 1; }
+      .slide.side .info-card { display: none; }
+      .info-card .desc {
+        display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .caro-nav {
+        display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 4px;
+      }
+      .caro-btn {
+        width: 44px; height: 44px; border-radius: 999px;
+        border: 1px solid var(--card-line); background: var(--card); color: var(--ink);
+        font-size: 20px; line-height: 1; cursor: pointer; box-shadow: var(--shadow);
+        display: inline-flex; align-items: center; justify-content: center;
+      }
+      .caro-btn:hover { border-color: var(--accent); color: var(--accent); }
+      .caro-count {
+        font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12.5px;
+        color: var(--ink-faint); text-align: center; min-width: 180px;
+      }
+      .caro-count b { color: var(--ink); font-weight: 500; }
+
+      /* ---------- search + filters ---------- */
+      .controls {
+        position: sticky; top: 10px; z-index: 20;
+        margin-top: 34px;
+        background: var(--card);
+        border: 1px solid var(--card-line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 10px;
+      }
+      .searchrow { display: flex; align-items: center; gap: 10px; }
+      .stack-badge {
+        flex: none; background: var(--ink); color: var(--bg-2);
+        border-radius: 999px; padding: 8px 14px;
+        font-size: 13px; font-weight: 700; white-space: nowrap;
+      }
+      .stack-badge span { opacity: 0.65; font-weight: 500; margin-left: 4px; }
+      .searchrow input {
+        flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink);
+        font-size: 15px; padding: 6px 2px; outline: none;
+      }
+      .searchrow input::placeholder { color: var(--ink-faint); }
+      .count {
+        flex: none; font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 12px; color: var(--ink-faint); padding-right: 8px; white-space: nowrap;
+      }
+      .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+      .filters button {
+        border: 1px solid var(--card-line); background: var(--chip); color: var(--ink-soft);
+        border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: 600;
+        cursor: pointer; min-height: 2.5rem;
+      }
+      .filters button .n { font-family: "IBM Plex Mono", monospace; font-size: 11px; opacity: 0.6; margin-left: 5px; }
+      .filters button[aria-pressed="true"] { background: var(--pill-active); color: var(--pill-active-ink); border-color: transparent; }
+      .action-row {
+        display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--card-line);
+      }
+      .action-row .hint { font-size: 12.5px; color: var(--ink-faint); line-height: 1.5; }
+      .shuffle-btn {
+        flex: none; display: inline-flex; align-items: center; gap: 7px;
+        border: 1px solid var(--card-line); background: var(--ink); color: var(--bg-2);
+        border-radius: 999px; padding: 8px 16px; font-size: 13.5px; font-weight: 700;
+        cursor: pointer; min-height: 2.5rem; white-space: nowrap;
+      }
+      .shuffle-btn:hover { opacity: 0.88; }
+      .shuffle-btn:active { transform: scale(0.97); }
+      .shuffle-btn svg { width: 16px; height: 16px; flex: none; }
+
+      /* ---------- grid ---------- */
+      .grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr));
+        gap: 18px; margin-top: 26px;
+      }
+      .card {
+        background: var(--card); border: 1px solid var(--card-line);
+        border-radius: 20px; padding: 20px 20px 16px;
+        display: flex; flex-direction: column; gap: 10px;
+        box-shadow: var(--shadow);
+        min-width: 0;
+      }
+      .card > * { min-width: 0; }
+      .card .row1 {
+        display: flex; justify-content: space-between; align-items: baseline;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 11px; letter-spacing: 0.12em; color: var(--ink-faint); text-transform: uppercase;
+      }
+      .card .row1 a { color: var(--ink-faint); text-decoration: none; }
+      .card .row1 a:hover { color: var(--accent); }
+      .card canvas.thumb {
+        width: 100%; height: 148px; display: block; border-radius: 12px; cursor: zoom-in;
+      }
+      .card .cat {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--accent); font-weight: 500; margin: 0;
+      }
+      .card h2 {
+        font-family: "Archivo", ui-sans-system, sans-serif;
+        font-size: 26px; font-weight: 800; letter-spacing: -0.01em; margin: 0; line-height: 1.15;
+        overflow-wrap: anywhere;
+      }
+      .card .desc { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--ink-soft); }
+      .card .note {
+        margin: 0; font-size: 13px; line-height: 1.65;
+        background: var(--warn-bg); color: var(--warn);
+        border-radius: 10px; padding: 9px 12px;
+      }
+      .card .note.info { background: var(--accent-soft); color: var(--ink-soft); }
+      .card .note b { font-weight: 700; }
+      .card .spacer { flex: 1; }
+      .cmd {
+        display: flex; align-items: stretch; gap: 0;
+        background: var(--code-bg); border-radius: 10px; overflow: hidden;
+      }
+      .cmd code {
+        flex: 1; min-width: 0; padding: 10px 12px;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 12px; line-height: 1.55; color: var(--code-ink);
+        white-space: normal; overflow-wrap: anywhere;
+      }
+      .cmd button {
+        flex: none; border: 0; background: rgba(255,255,255,0.08); color: #dbeafe;
+        font-size: 12.5px; font-weight: 600; padding: 0 14px; cursor: pointer; min-height: 2.5rem;
+      }
+      .cmd button:hover { background: rgba(255,255,255,0.16); }
+      .card .foot {
+        display: flex; justify-content: space-between; align-items: flex-end; gap: 10px;
+        border-top: 1px solid var(--card-line); padding-top: 12px; margin-top: 2px;
+      }
+      .card .repo { min-width: 0; }
+      .card .repo .kind {
+        font-size: 11px; color: var(--ink-faint);
+        font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0.08em;
+      }
+      .card .repo .path {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 12.5px; color: var(--ink); overflow-wrap: anywhere; line-height: 1.45;
+      }
+      .card .meta { display: flex; gap: 6px; flex-wrap: wrap; }
+      .tag {
+        font-size: 11.5px; font-weight: 600; color: var(--ink-soft);
+        background: var(--chip); border-radius: 999px; padding: 4px 10px; white-space: nowrap;
+      }
+      .foot-btns { display: flex; gap: 8px; flex: none; flex-wrap: wrap; justify-content: flex-end; }
+      .open-btn {
+        flex: none; display: inline-flex; align-items: center; gap: 5px;
+        background: var(--ink); color: var(--bg-2); text-decoration: none;
+        border: 1px solid var(--ink);
+        border-radius: 999px; padding: 9px 18px; font-size: 13.5px; font-weight: 700;
+        min-height: 2.5rem; cursor: pointer; font-family: inherit;
+      }
+      .open-btn:hover { opacity: 0.85; }
+      .open-btn.ghost { background: transparent; color: var(--ink); border-color: var(--card-line); }
+      .open-btn.ghost:hover { border-color: var(--accent); color: var(--accent); opacity: 1; }
+      .empty {
+        display: none; text-align: center; padding: 56px 20px;
+        color: var(--ink-faint); font-size: 15px; line-height: 1.8;
+      }
+      .empty.show { display: block; }
+
+      /* ---------- notes ---------- */
+      .notes {
+        margin-top: 48px; background: var(--card); border: 1px solid var(--card-line);
+        border-radius: 20px; padding: 26px 26px 10px; box-shadow: var(--shadow);
+      }
+      .notes h2 { font-size: 19px; margin: 0 0 6px; font-weight: 800; }
+      .notes p, .notes li { font-size: 14px; line-height: 1.8; color: var(--ink-soft); }
+      .notes ul { padding-left: 20px; margin: 8px 0 18px; }
+      .notes li { margin-bottom: 6px; }
+      .notes a { color: var(--accent); }
+      .notes .src { font-size: 12.5px; color: var(--ink-faint); border-top: 1px solid var(--card-line); padding: 14px 0 16px; margin: 0; }
+
+      /* ---------- license + sources ---------- */
+      .license-row {
+        display: grid; grid-template-columns: 168px 1fr; gap: 4px 16px;
+        padding: 11px 0; border-top: 1px solid var(--card-line);
+      }
+      .license-row:first-of-type { margin-top: 10px; }
+      .license-row .lic {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.7;
+      }
+      .license-row .who { font-size: 14px; line-height: 1.8; color: var(--ink-soft); }
+      .license-row .who a { color: var(--accent); }
+      .sources-list {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 2px 28px;
+        list-style: none; padding: 0; margin: 10px 0 18px;
+      }
+      .sources-list li {
+        font-size: 13px; line-height: 1.6; margin: 0; padding: 5px 0;
+        border-top: 1px solid var(--card-line); min-width: 0;
+      }
+      .sources-list .sname { font-weight: 700; color: var(--ink); }
+      .sources-list a {
+        font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 640px) {
+        .license-row { grid-template-columns: 1fr; }
+        .sources-list { grid-template-columns: 1fr; }
+      }
+
+      /* ---------- modal ---------- */
+      .modal { position: fixed; inset: 0; z-index: 60; display: none; }
+      .modal.open { display: block; }
+      .modal .backdrop { position: absolute; inset: 0; background: rgba(8, 12, 20, 0.55); }
+      .modal .sheet {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        width: min(880px, calc(100vw - 28px));
+        max-height: calc(100dvh - 36px); overflow-y: auto;
+        background: var(--card); border: 1px solid var(--card-line);
+        border-radius: 22px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+        padding: 22px 24px 20px;
+      }
+      .m-head {
+        display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px;
+      }
+      .m-kicker {
+        font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11.5px;
+        letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 500;
+        overflow-wrap: anywhere;
+      }
+      .m-close {
+        flex: none; width: 40px; height: 40px; border-radius: 999px;
+        border: 1px solid var(--card-line); background: var(--chip); color: var(--ink);
+        font-size: 16px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+      }
+      .stage-big canvas { width: 100%; height: 330px; display: block; border-radius: 14px; }
+      .sheet h2 {
+        font-family: "Archivo", ui-sans-system, sans-serif;
+        font-size: 32px; font-weight: 800; letter-spacing: -0.01em; margin: 18px 0 8px; line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+      .sheet .desc { margin: 0; font-size: 15px; line-height: 1.75; color: var(--ink-soft); }
+      .sheet .note {
+        margin: 12px 0 0; font-size: 13.5px; line-height: 1.65;
+        background: var(--warn-bg); color: var(--warn);
+        border-radius: 10px; padding: 10px 13px;
+      }
+      .sheet .note.info { background: var(--accent-soft); color: var(--ink-soft); }
+      .sheet .cmd { margin-top: 14px; }
+      .sheet .foot {
+        display: flex; justify-content: space-between; align-items: flex-end; gap: 10px;
+        border-top: 1px solid var(--card-line); padding-top: 14px; margin-top: 16px;
+      }
+      .sheet .repo .kind {
+        font-size: 11px; color: var(--ink-faint);
+        font-family: "IBM Plex Mono", ui-monospace, monospace; letter-spacing: 0.08em;
+      }
+      .sheet .repo .path {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 13px; color: var(--ink); overflow-wrap: anywhere; line-height: 1.45;
+      }
+      .sheet .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 7px; }
+      .sliders { margin-top: 16px; display: grid; gap: 10px; }
+      .sliders label {
+        display: grid; grid-template-columns: 118px 1fr 44px; align-items: center; gap: 12px;
+        font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px;
+        letter-spacing: 0.12em; color: var(--ink-soft);
+      }
+      .sliders label output { text-align: right; color: var(--ink); }
+      .sliders input[type="range"] { width: 100%; accent-color: var(--accent); min-height: 2rem; }
+      .promptbar {
+        margin-top: 16px; background: var(--accent); color: #ffffff;
+        border-radius: 12px; padding: 12px 16px;
+        font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.6;
+        overflow-wrap: anywhere;
+      }
+      .statuschip {
+        display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 0;
+        background: var(--chip); color: var(--ink-soft);
+        border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 600;
+      }
+      .statuschip .ok { color: #2f9e5f; font-weight: 800; }
+      .m-nav {
+        display: flex; justify-content: space-between; gap: 10px; margin-top: 18px;
+      }
+      .m-nav button {
+        border: 1px solid var(--card-line); background: var(--chip); color: var(--ink);
+        border-radius: 999px; padding: 9px 18px; font-size: 13.5px; font-weight: 700; cursor: pointer;
+        min-height: 2.5rem; max-width: 48%;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .m-nav button:hover { border-color: var(--accent); color: var(--accent); }
+
+      @media (max-width: 760px) {
+        .stage { height: 628px; }
+        .slide { flex-direction: column; gap: 12px; }
+        .vis-card { flex: none; }
+        .vis-card canvas { height: 196px; }
+        .info-card .desc {
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .stage-big canvas { height: 250px; }
+        .caro-count { min-width: 0; }
+      }
+      @media (max-width: 560px) {
+        .wrap { padding: 0 14px 56px; }
+        .grid { grid-template-columns: 1fr; }
+        .hero { padding-top: 32px; }
+        .stack-badge { display: none; }
+        .controls { top: 6px; border-radius: 18px; }
+        .sliders label { grid-template-columns: 92px 1fr 40px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .slide { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <span>Motion Skills / <b>001–090</b></span>
+        <span class="right">連結查核 <b>2026-11-17・11-18</b></span>
+      </div>
+
+      <header class="hero">
+        <p class="cats">Skills · 3D · FX · Motion · Sound · Export · 副業 · 網頁設計 · 生圖 · 生視頻</p>
+        <h1>動態設計技能</h1>
+        <p class="ghost">motion design skills</p>
+        <p class="lede">讓 Muse 變成專業動態工作室的 20 個倉庫、技能與工具，加上「副業」5 個通用工具，再加上設計技能合集裡扣掉重複後的 65 項（網頁設計、生圖、生視頻），共 90 項。這裡收的是查證過的完整網址，附分類、授權與安裝指令，需要做影片、做設計或做副業時直接從這裡挑。</p>
+        <div class="pipeline" aria-label="製作流程">
+          <span class="step">技能</span><span class="arrow">→</span>
+          <span class="step">場景</span><span class="arrow">→</span>
+          <span class="step">動態</span><span class="arrow">→</span>
+          <span class="step">聲音</span><span class="arrow">→</span>
+          <span class="step">輸出完成</span>
+        </div>
+      </header>
+
+      <section class="showcase" aria-label="輪播展示">
+        <div class="showcase-head">
+          <h2>輪播展示</h2>
+          <p>每個工具一張圖案，點圖案可以放大看</p>
+        </div>
+        <div class="stage" id="stage"><div id="slides"></div></div>
+        <div class="caro-nav">
+          <button type="button" class="caro-btn" id="caroPrev" aria-label="上一個">‹</button>
+          <span class="caro-count" id="caroCount"></span>
+          <button type="button" class="caro-btn" id="caroNext" aria-label="下一個">›</button>
+        </div>
+      </section>
+
+      <div class="controls">
+        <div class="searchrow">
+          <span class="stack-badge">工具箱<span>90</span></span>
+          <input id="q" type="search" placeholder="搜尋技能、工具或倉庫…" aria-label="搜尋" autocomplete="off" />
+          <span class="count" id="count">90 / 90</span>
+        </div>
+        <div class="filters" id="filters" role="group" aria-label="分類篩選"></div>
+        <div class="action-row">
+          <span class="hint">每次開啟自動隨機排列</span>
+          <button type="button" class="shuffle-btn" id="shuffleBtn" aria-label="重新隨機排序">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 18h4l10-12h4"/><path d="m20 2 2 2-2 2"/><path d="M2 6h4l3.5 3.5"/><path d="M22 18h-4l-3.5-3.5"/><path d="m22 16-2 2 2 2"/></svg>
+            隨機排序
+          </button>
+        </div>
+      </div>
+
+      <main class="grid" id="grid"></main>
+      <div class="empty" id="empty">找不到符合的項目。<br />換個關鍵字，或切回「全部」看看。</div>
+
+      <section class="notes">
+        <h2>查核說明</h2>
+        <p>這份清單來自一篇日文 X 貼文（2026-11-17 發表，約 2.9 萬次查看），原文連結全被截斷。本頁的 20 個網址已於 2026-11-17 逐一查證：18 項直接開頁或搜尋比對確認存在，另有兩項例外如下。</p>
+        <ul>
+          <li><b>17 Openverse API</b>：查核時未能直接連線確認，存活是依據多個獨立來源在 2026 年 10 月前後的實測（匿名請求回傳 HTTP 200）佐證。</li>
+          <li><b>16 Lottie</b>：貼文連結截斷在「lottie-」之後，無法確定原貼文指的是哪個播放器。本頁依「網頁輕量向量動畫播放」的用途選 lottie-web；若指的是行動端，應為 <a href="https://github.com/airbnb/lottie-android" target="_blank" rel="noopener">lottie-android</a> 或 <a href="https://github.com/airbnb/lottie-ios" target="_blank" rel="noopener">lottie-ios</a>。</li>
+          <li>貼文宣稱「20 個都在 Muse 上動作確認過」，那只是貼文的說法。本頁只驗證連結存在、倉庫公開可存取、公開資訊描述相符，未實際安裝或執行任何一項。</li>
+          <li><b>03 與 14 Remotion</b> 為 source-available 授權：個人與三人以下團隊免費，四人以上公司須購買公司授權，使用前先讀授權頁。</li>
+          <li><b>07 Blender 與 20 FFmpeg</b> 的 GitHub 倉庫是官方鏡像，主要開發不在 GitHub 上進行。</li>
+          <li>本頁每個工具的圖案是依它的用途繪製的示意動畫，幫助辨認與溝通，不是官方截圖，也不是工具實際跑出來的畫面。</li>
+        </ul>
+        <p>2026-11-18 新增第 21 至 25 項，來自 Mikhailovichi（@MitCheese14）2026-11-15 的 X 貼文，主題是用 Muse 做副業。這五項與動態設計無關，依 nick 的決定以新分類「副業」加入本頁；連結已於 2026-11-18 直接開啟各 GitHub 倉庫確認存在。第 24 項依貼文寫法一張卡片掛兩個連結（yt-dlp 與 Whisper），不拆成兩項。</p>
+        <p>2026-11-18 再新增第 26 至 90 項，來自硅基練習生 JAXX（@jaxxchen003）2026-11-14 的 X 貼文所介紹的設計技能合集站（2026-11-18 快照，當日站上共 70 條）。合集裡已有相同倉庫的 3 條、合集內部重複的 1 條，以及與本頁第 1 項同倉庫的 motion-design 1 條都已扣掉，只加新的 65 條，並分成「網頁設計」「生圖」「生視頻」三個新分類。每張卡片的說明都以本站自己的話重寫，沒有照抄合集站文字；儲存順序也與合集站不同，加上每次開啟的隨機排序，順序不會跟原文一樣。合集站每天半夜更新，本頁是 2026-11-18 的快照，不會自動同步之後新增的條目。第 26 至 90 項的授權未逐一查核，使用前請以各倉庫的 LICENSE 檔案為準。</p>
+        <p class="src">分類沿用貼文截圖的分類列（Skills、3D、FX、Motion、Sound、Export），另加「副業」一類收第 21 至 25 項；12 Tweakpane 本質是參數調整工具，依貼文暫歸 FX。</p>
+      </section>
+
+      <section class="notes" aria-labelledby="licenseTitle">
+        <h2 id="licenseTitle">授權與引用來源</h2>
+        <p>本頁只整理連結與說明，沒有收錄或散布任何工具的程式碼。各工具的名稱與程式碼權利屬於各自的作者與專案，使用、修改或散布時依該工具自己的授權為準。以下授權資訊是查核時的快照（第 1 至 20 項為 2026-11-17、第 21 至 25 項為 2026-11-18），之後可能變動，實際使用前請以各倉庫當下的 LICENSE 檔案為準；這份彙總是查核整理，不是法律建議。</p>
+
+        <div class="license-row">
+          <span class="lic">本頁本身</span>
+          <span class="who">本頁原創的整理文字、分類說明與 Canvas 示意動畫程式碼以 <b>MIT License</b> 釋出，可自由使用、修改與散布，並請保留本段授權標示。各工具的名稱、商標與其本身的程式碼不在此授權範圍內，仍依下方各自的授權。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">MIT</span>
+          <span class="who"><a href="https://github.com/LottieFiles/motion-design-skill" target="_blank" rel="noopener">01 motion-design-skill</a>、<a href="https://github.com/motiondivision/motion" target="_blank" rel="noopener">02 Motion</a>、<a href="https://www.typingmind.com/skills/annnguyentt-anatomy-reveal" target="_blank" rel="noopener">06 anatomy-reveal</a>、<a href="https://github.com/mrdoob/three.js" target="_blank" rel="noopener">08 Three.js</a>、<a href="https://github.com/pmndrs/react-three-rapier" target="_blank" rel="noopener">09 react-three-rapier</a>、<a href="https://github.com/pmndrs/react-postprocessing" target="_blank" rel="noopener">10 react-postprocessing</a>、<a href="https://github.com/Alchemist0823/three.quarks" target="_blank" rel="noopener">11 three.quarks</a>、<a href="https://github.com/cocopon/tweakpane" target="_blank" rel="noopener">12 Tweakpane</a>、<a href="https://github.com/ManimCommunity/manim" target="_blank" rel="noopener">15 Manim</a>、<a href="https://github.com/airbnb/lottie-web" target="_blank" rel="noopener">16 Lottie（lottie-web）</a>。使用時須保留原作者的版權與授權標示。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">ISC</span>
+          <span class="who"><a href="https://github.com/librosa/librosa" target="_blank" rel="noopener">18 librosa</a>。條件與 MIT 相近，使用時須保留版權與授權標示。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">BSD-2-Clause</span>
+          <span class="who"><a href="https://github.com/m-bain/whisperX" target="_blank" rel="noopener">19 WhisperX</a>。使用與散布時須保留版權標示與免責聲明。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">GPL v3</span>
+          <span class="who"><a href="https://github.com/blender/blender" target="_blank" rel="noopener">07 Blender</a>。屬著佐權（copyleft）授權：散布修改版時須以相同授權公開原始碼。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">LGPL／部分 GPL</span>
+          <span class="who"><a href="https://github.com/FFmpeg/FFmpeg" target="_blank" rel="noopener">20 FFmpeg</a>。主體為 LGPL，部分元件為 GPL；實際授權依編譯時啟用的元件而定，散布執行檔前先確認自己的編譯設定。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">完全免費（專屬授權）</span>
+          <span class="who"><a href="https://github.com/greensock/GSAP" target="_blank" rel="noopener">13 GSAP</a>。Webflow 收購後改為完全免費，含以往的付費外掛，商業使用亦可；細節以 GSAP 官方授權說明為準。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">Source-available</span>
+          <span class="who"><a href="https://github.com/remotion-dev/remotion" target="_blank" rel="noopener">14 Remotion</a> 與 <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">03 Remotion Skills</a> 所對應的 Remotion 本體：個人與三人以下團隊免費，四人以上公司須購買公司授權（每人每月 25 美元）。這不是開放原始碼授權，使用前先讀官方授權頁。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">未標示／無 LICENSE</span>
+          <span class="who"><a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">03 Remotion Skills</a> 倉庫根目錄沒有 LICENSE 檔案；<a href="https://hairline.lucasmarkes.com/skills" target="_blank" rel="noopener">04 hairline</a> 與 <a href="https://skills.wheresryan.sh/anatomy" target="_blank" rel="noopener">05 anatomy</a> 未標示授權。未標示不代表可以自由使用或散布，要引用或再散布前先查倉庫現況，或向作者確認。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">逐筆授權</span>
+          <span class="who"><a href="https://api.openverse.org/v1/" target="_blank" rel="noopener">17 Openverse API</a>：API 本身免金鑰可用，但搜尋到的每筆音檔與圖片授權都不同，多為 Creative Commons 系列。用到哪一筆，就依那一筆的標示署名原作者，不要把 API 可用當成素材可自由使用。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">Apache 2.0（README 所述）</span>
+          <span class="who"><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">21 skills</a>。README 說明技能為 Apache 2.0 授權，但倉庫根目錄沒有 LICENSE 檔案，只有 THIRD_PARTY_NOTICES.md；引用或散布前先查倉庫現況。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">MIT（副業新增）</span>
+          <span class="who"><a href="https://github.com/obra/superpowers" target="_blank" rel="noopener">22 superpowers</a>、<a href="https://github.com/openai/whisper" target="_blank" rel="noopener">24 Whisper</a>（第 24 項的其中一個連結）、<a href="https://github.com/marp-team/marp-cli" target="_blank" rel="noopener">25 marp-cli</a>。使用時須保留原作者的版權與授權標示。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">AGPL-3.0</span>
+          <span class="who"><a href="https://github.com/firecrawl/firecrawl" target="_blank" rel="noopener">23 firecrawl</a>。屬著佐權授權：自架或改作服務時須遵守 AGPL-3.0；雲端版另須註冊取得 API 金鑰。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">Unlicense／執行檔 GPLv3+</span>
+          <span class="who"><a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noopener">24 yt-dlp</a>（第 24 項的其中一個連結）。本體與原始碼、tarball 為 Unlicense；但官方 PyInstaller 執行檔因內含 GPLv3+ 程式碼，合併後為 GPLv3+，散布執行檔時依 GPLv3+ 看待。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">第 26 至 90 項</span>
+          <span class="who">這 65 項來自設計技能合集（2026-11-18 快照），本次未逐一查核各倉庫的 LICENSE；未查核不代表可自由使用或散布，引用或再散布前請先看該倉庫當下的授權檔案，或向作者確認。</span>
+        </div>
+        <div class="license-row">
+          <span class="lic">字型</span>
+          <span class="who">本頁標題字型 Archivo 與等寬字型 IBM Plex Mono 經 Google Fonts 載入，兩者皆為 SIL Open Font License 1.1 授權。</span>
+        </div>
+
+        <h2 style="margin-top:22px;">引用來源</h2>
+        <p>原始清單來源為 2026-11-17 發表的一篇日文 X 貼文（約 2.9 萬次查看，原文連結皆被截斷）。以下第 1 至 20 筆是本頁逐一查證後採用的官方倉庫、技能頁面與 API 位址，查核日期 2026-11-17，也是上方各卡片「開啟」按鈕連向的同一批來源。第 21 至 25 筆來自 Mikhailovichi（@MitCheese14）2026-11-15 的 X 貼文（<a href="https://x.com/MitCheese14/status/2121922595213771143" target="_blank" rel="noopener">x.com/MitCheese14/status/2121922595213771143</a>），查核日期 2026-11-18；第 24 項含兩個倉庫連結。第 26 至 90 筆來自硅基練習生 JAXX（@jaxxchen003）2026-11-14 的 X 貼文（<a href="https://x.com/jaxxchen003/status/2121558185677140240" target="_blank" rel="noopener">x.com/jaxxchen003/status/2121558185677140240</a>）介紹的合集站 <a href="https://jaxxchen003.github.io/awesome-codex-skills/" target="_blank" rel="noopener">jaxxchen003.github.io/awesome-codex-skills</a>（合集倉庫 <a href="https://github.com/jaxxchen003/awesome-codex-skills" target="_blank" rel="noopener">github.com/jaxxchen003/awesome-codex-skills</a>），快照日期 2026-11-18。</p>
+        <ol class="sources-list">
+          <li><span class="sname">01 motion-design-skill</span><br /><a href="https://github.com/LottieFiles/motion-design-skill" target="_blank" rel="noopener">github.com/LottieFiles/motion-design-skill</a></li>
+          <li><span class="sname">02 Motion</span><br /><a href="https://github.com/motiondivision/motion" target="_blank" rel="noopener">github.com/motiondivision/motion</a></li>
+          <li><span class="sname">03 Remotion Skills</span><br /><a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">github.com/remotion-dev/skills</a></li>
+          <li><span class="sname">04 hairline</span><br /><a href="https://hairline.lucasmarkes.com/skills" target="_blank" rel="noopener">hairline.lucasmarkes.com/skills</a></li>
+          <li><span class="sname">05 anatomy</span><br /><a href="https://skills.wheresryan.sh/anatomy" target="_blank" rel="noopener">skills.wheresryan.sh/anatomy</a></li>
+          <li><span class="sname">06 anatomy-reveal</span><br /><a href="https://www.typingmind.com/skills/annnguyentt-anatomy-reveal" target="_blank" rel="noopener">typingmind.com/skills/annnguyentt-anatomy-reveal</a></li>
+          <li><span class="sname">07 Blender</span><br /><a href="https://github.com/blender/blender" target="_blank" rel="noopener">github.com/blender/blender</a></li>
+          <li><span class="sname">08 Three.js</span><br /><a href="https://github.com/mrdoob/three.js" target="_blank" rel="noopener">github.com/mrdoob/three.js</a></li>
+          <li><span class="sname">09 react-three-rapier</span><br /><a href="https://github.com/pmndrs/react-three-rapier" target="_blank" rel="noopener">github.com/pmndrs/react-three-rapier</a></li>
+          <li><span class="sname">10 react-postprocessing</span><br /><a href="https://github.com/pmndrs/react-postprocessing" target="_blank" rel="noopener">github.com/pmndrs/react-postprocessing</a></li>
+          <li><span class="sname">11 three.quarks</span><br /><a href="https://github.com/Alchemist0823/three.quarks" target="_blank" rel="noopener">github.com/Alchemist0823/three.quarks</a></li>
+          <li><span class="sname">12 Tweakpane</span><br /><a href="https://github.com/cocopon/tweakpane" target="_blank" rel="noopener">github.com/cocopon/tweakpane</a></li>
+          <li><span class="sname">13 GSAP</span><br /><a href="https://github.com/greensock/GSAP" target="_blank" rel="noopener">github.com/greensock/GSAP</a></li>
+          <li><span class="sname">14 Remotion</span><br /><a href="https://github.com/remotion-dev/remotion" target="_blank" rel="noopener">github.com/remotion-dev/remotion</a></li>
+          <li><span class="sname">15 Manim</span><br /><a href="https://github.com/ManimCommunity/manim" target="_blank" rel="noopener">github.com/ManimCommunity/manim</a></li>
+          <li><span class="sname">16 Lottie</span><br /><a href="https://github.com/airbnb/lottie-web" target="_blank" rel="noopener">github.com/airbnb/lottie-web</a></li>
+          <li><span class="sname">17 Openverse API</span><br /><a href="https://api.openverse.org/v1/" target="_blank" rel="noopener">api.openverse.org/v1/</a></li>
+          <li><span class="sname">18 librosa</span><br /><a href="https://github.com/librosa/librosa" target="_blank" rel="noopener">github.com/librosa/librosa</a></li>
+          <li><span class="sname">19 WhisperX</span><br /><a href="https://github.com/m-bain/whisperX" target="_blank" rel="noopener">github.com/m-bain/whisperX</a></li>
+          <li><span class="sname">20 FFmpeg</span><br /><a href="https://github.com/FFmpeg/FFmpeg" target="_blank" rel="noopener">github.com/FFmpeg/FFmpeg</a></li>
+          <li><span class="sname">21 skills</span><br /><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">github.com/anthropics/skills</a></li>
+          <li><span class="sname">22 superpowers</span><br /><a href="https://github.com/obra/superpowers" target="_blank" rel="noopener">github.com/obra/superpowers</a></li>
+          <li><span class="sname">23 firecrawl</span><br /><a href="https://github.com/firecrawl/firecrawl" target="_blank" rel="noopener">github.com/firecrawl/firecrawl</a></li>
+          <li><span class="sname">24 yt-dlp + Whisper</span><br /><a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noopener">github.com/yt-dlp/yt-dlp</a><br /><a href="https://github.com/openai/whisper" target="_blank" rel="noopener">github.com/openai/whisper</a></li>
+          <li><span class="sname">25 marp-cli</span><br /><a href="https://github.com/marp-team/marp-cli" target="_blank" rel="noopener">github.com/marp-team/marp-cli</a></li>
+          <li><span class="sname">26 unslop</span><br /><a href="https://github.com/heydamir/unslop" target="_blank" rel="noopener">github.com/heydamir/unslop</a></li>
+          <li><span class="sname">27 Stageshow</span><br /><a href="https://github.com/benjitaylor/skills" target="_blank" rel="noopener">github.com/benjitaylor/skills</a></li>
+          <li><span class="sname">28 ai-design-skills</span><br /><a href="https://github.com/elayadesign/ai-design-skills" target="_blank" rel="noopener">github.com/elayadesign/ai-design-skills</a></li>
+          <li><span class="sname">29 Hallmark</span><br /><a href="https://github.com/Nutlope/hallmark" target="_blank" rel="noopener">github.com/Nutlope/hallmark</a></li>
+          <li><span class="sname">30 ui-ux-pro-max</span><br /><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">github.com/nextlevelbuilder/ui-ux-pro-max-skill</a></li>
+          <li><span class="sname">31 taste-skill</span><br /><a href="https://github.com/Leonxlnx/taste-skill" target="_blank" rel="noopener">github.com/Leonxlnx/taste-skill</a></li>
+          <li><span class="sname">32 impeccable</span><br /><a href="https://github.com/pbakaus/impeccable" target="_blank" rel="noopener">github.com/pbakaus/impeccable</a></li>
+          <li><span class="sname">33 frontend-ui-engineering</span><br /><a href="https://github.com/addyosmani/agent-skills" target="_blank" rel="noopener">github.com/addyosmani/agent-skills</a></li>
+          <li><span class="sname">34 emilkowalski/skills</span><br /><a href="https://github.com/emilkowalski/skills" target="_blank" rel="noopener">github.com/emilkowalski/skills</a></li>
+          <li><span class="sname">35 web-design-guidelines</span><br /><a href="https://github.com/vercel-labs/agent-skills" target="_blank" rel="noopener">github.com/vercel-labs/agent-skills</a></li>
+          <li><span class="sname">36 frontend-skill</span><br /><a href="https://github.com/openai/skills" target="_blank" rel="noopener">github.com/openai/skills</a></li>
+          <li><span class="sname">37 Liquid-Glass-Skill</span><br /><a href="https://github.com/EVEDensity/Liquid-Glass-Skill" target="_blank" rel="noopener">github.com/EVEDensity/Liquid-Glass-Skill</a></li>
+          <li><span class="sname">38 premium-frontend-director</span><br /><a href="https://github.com/AVL05/premium-frontend-director" target="_blank" rel="noopener">github.com/AVL05/premium-frontend-director</a></li>
+          <li><span class="sname">39 variant-design-skill</span><br /><a href="https://github.com/YuqingNicole/variant-design-skill" target="_blank" rel="noopener">github.com/YuqingNicole/variant-design-skill</a></li>
+          <li><span class="sname">40 diagram-design</span><br /><a href="https://github.com/cathrynlavery/diagram-design" target="_blank" rel="noopener">github.com/cathrynlavery/diagram-design</a></li>
+          <li><span class="sname">41 nordic-civic-design-skill</span><br /><a href="https://github.com/capsrock/nordic-civic-design-skill" target="_blank" rel="noopener">github.com/capsrock/nordic-civic-design-skill</a></li>
+          <li><span class="sname">42 neopop-design-skill</span><br /><a href="https://github.com/Satyam085/neopop-design-skill" target="_blank" rel="noopener">github.com/Satyam085/neopop-design-skill</a></li>
+          <li><span class="sname">43 cloudmamba-design-skill</span><br /><a href="https://github.com/KEVqwe/cloudmamba-design-skill" target="_blank" rel="noopener">github.com/KEVqwe/cloudmamba-design-skill</a></li>
+          <li><span class="sname">44 digital-go-design-skill</span><br /><a href="https://github.com/capsrock/digital-go-design-skill" target="_blank" rel="noopener">github.com/capsrock/digital-go-design-skill</a></li>
+          <li><span class="sname">45 finesse</span><br /><a href="https://github.com/delevski/finesse" target="_blank" rel="noopener">github.com/delevski/finesse</a></li>
+          <li><span class="sname">46 mochen-website-design</span><br /><a href="https://github.com/mochenai/mochen-website-design" target="_blank" rel="noopener">github.com/mochenai/mochen-website-design</a></li>
+          <li><span class="sname">47 mobile-app-designer</span><br /><a href="https://github.com/chrollo-03/mobile-app-designer" target="_blank" rel="noopener">github.com/chrollo-03/mobile-app-designer</a></li>
+          <li><span class="sname">48 ui-designer</span><br /><a href="https://github.com/freeheart/ui-designer" target="_blank" rel="noopener">github.com/freeheart/ui-designer</a></li>
+          <li><span class="sname">49 anti-slop-ui</span><br /><a href="https://github.com/erlttt0/anti-slop-ui" target="_blank" rel="noopener">github.com/erlttt0/anti-slop-ui</a></li>
+          <li><span class="sname">50 frontend-ux-motion-skills</span><br /><a href="https://github.com/AbdullahNaveed/frontend-ux-motion-skills" target="_blank" rel="noopener">github.com/AbdullahNaveed/frontend-ux-motion-skills</a></li>
+          <li><span class="sname">51 mermaid-design</span><br /><a href="https://github.com/kevin801221/mermaid-design" target="_blank" rel="noopener">github.com/kevin801221/mermaid-design</a></li>
+          <li><span class="sname">52 design-taste-skills</span><br /><a href="https://github.com/imranbru99/design-taste-skills" target="_blank" rel="noopener">github.com/imranbru99/design-taste-skills</a></li>
+          <li><span class="sname">53 anti-ai-slop</span><br /><a href="https://github.com/imranbru99/anti-ai-slop" target="_blank" rel="noopener">github.com/imranbru99/anti-ai-slop</a></li>
+          <li><span class="sname">54 antheo-design/skills</span><br /><a href="https://github.com/antheo-design/skills" target="_blank" rel="noopener">github.com/antheo-design/skills</a></li>
+          <li><span class="sname">55 classic-aero-ui</span><br /><a href="https://github.com/hidiraslan/aslan-skills" target="_blank" rel="noopener">github.com/hidiraslan/aslan-skills</a></li>
+          <li><span class="sname">56 craft</span><br /><a href="https://github.com/diego3g/craft" target="_blank" rel="noopener">github.com/diego3g/craft</a></li>
+          <li><span class="sname">57 baoyu-design</span><br /><a href="https://github.com/JimLiu/baoyu-design" target="_blank" rel="noopener">github.com/JimLiu/baoyu-design</a></li>
+          <li><span class="sname">58 codex-ui-design</span><br /><a href="https://github.com/gwelinder/pi-extension-pack" target="_blank" rel="noopener">github.com/gwelinder/pi-extension-pack</a></li>
+          <li><span class="sname">59 logo-design-skill</span><br /><a href="https://github.com/kaankiziltug/logo-design-skill" target="_blank" rel="noopener">github.com/kaankiziltug/logo-design-skill</a></li>
+          <li><span class="sname">60 ComfyUI</span><br /><a href="https://github.com/Comfy-Org/ComfyUI" target="_blank" rel="noopener">github.com/Comfy-Org/ComfyUI</a></li>
+          <li><span class="sname">61 danlogo-swisstech</span><br /><a href="https://github.com/dan-cube/danlogo-swisstech" target="_blank" rel="noopener">github.com/dan-cube/danlogo-swisstech</a></li>
+          <li><span class="sname">62 chanmeng-logo-as-code</span><br /><a href="https://github.com/ChanMeng666/chanmeng-logo-as-code" target="_blank" rel="noopener">github.com/ChanMeng666/chanmeng-logo-as-code</a></li>
+          <li><span class="sname">63 gif-factory</span><br /><a href="https://github.com/WoYun520/gif-factory" target="_blank" rel="noopener">github.com/WoYun520/gif-factory</a></li>
+          <li><span class="sname">64 cartoon-jake-skill</span><br /><a href="https://github.com/rlatjr8362/cartoon-jake-skill" target="_blank" rel="noopener">github.com/rlatjr8362/cartoon-jake-skill</a></li>
+          <li><span class="sname">65 HyperFrames</span><br /><a href="https://github.com/heygen-com/hyperframes" target="_blank" rel="noopener">github.com/heygen-com/hyperframes</a></li>
+          <li><span class="sname">66 video-shotcraft</span><br /><a href="https://github.com/Vincentwei1021/video-shotcraft" target="_blank" rel="noopener">github.com/Vincentwei1021/video-shotcraft</a></li>
+          <li><span class="sname">67 brag</span><br /><a href="https://github.com/latent-spaces/brag" target="_blank" rel="noopener">github.com/latent-spaces/brag</a></li>
+          <li><span class="sname">68 pixelfx</span><br /><a href="https://github.com/patch-gg/pixelfx" target="_blank" rel="noopener">github.com/patch-gg/pixelfx</a></li>
+          <li><span class="sname">69 anidoodle</span><br /><a href="https://github.com/alexgreensh/anidoodle" target="_blank" rel="noopener">github.com/alexgreensh/anidoodle</a></li>
+          <li><span class="sname">70 idea-to-motion</span><br /><a href="https://github.com/georgesmomo/idea-to-motion" target="_blank" rel="noopener">github.com/georgesmomo/idea-to-motion</a></li>
+          <li><span class="sname">71 one-prompt-video</span><br /><a href="https://github.com/li2092/one-prompt-video" target="_blank" rel="noopener">github.com/li2092/one-prompt-video</a></li>
+          <li><span class="sname">72 four-style-motion-video</span><br /><a href="https://github.com/yangwei251003/four-style-motion-video" target="_blank" rel="noopener">github.com/yangwei251003/four-style-motion-video</a></li>
+          <li><span class="sname">73 viva-video</span><br /><a href="https://github.com/keepview/viva-video" target="_blank" rel="noopener">github.com/keepview/viva-video</a></li>
+          <li><span class="sname">74 course-to-feishu-video</span><br /><a href="https://github.com/flemin86/course-to-feishu-video" target="_blank" rel="noopener">github.com/flemin86/course-to-feishu-video</a></li>
+          <li><span class="sname">75 clip-builder</span><br /><a href="https://github.com/Greater-Expanse/clip-builder" target="_blank" rel="noopener">github.com/Greater-Expanse/clip-builder</a></li>
+          <li><span class="sname">76 gpt-hand-drawing-skill</span><br /><a href="https://github.com/chao69782/gpt-hand-drawing-skill" target="_blank" rel="noopener">github.com/chao69782/gpt-hand-drawing-skill</a></li>
+          <li><span class="sname">77 video-3d-explicativo</span><br /><a href="https://github.com/MatheusSBPRO/video-3d-explicativo" target="_blank" rel="noopener">github.com/MatheusSBPRO/video-3d-explicativo</a></li>
+          <li><span class="sname">78 hyperframes-video-polish</span><br /><a href="https://github.com/rocksstarcode/hyperframes-video-polish" target="_blank" rel="noopener">github.com/rocksstarcode/hyperframes-video-polish</a></li>
+          <li><span class="sname">79 Beatreel</span><br /><a href="https://github.com/anand-reddi/Beatreel" target="_blank" rel="noopener">github.com/anand-reddi/Beatreel</a></li>
+          <li><span class="sname">80 shortform-kinetic-typography</span><br /><a href="https://github.com/collinsanfo/shortform-kinetic-typography" target="_blank" rel="noopener">github.com/collinsanfo/shortform-kinetic-typography</a></li>
+          <li><span class="sname">81 codex-motions-movie</span><br /><a href="https://github.com/silenveritas/codex-motions-movie" target="_blank" rel="noopener">github.com/silenveritas/codex-motions-movie</a></li>
+          <li><span class="sname">82 muri-skills</span><br /><a href="https://github.com/murilolol/muri-skills" target="_blank" rel="noopener">github.com/murilolol/muri-skills</a></li>
+          <li><span class="sname">83 guiji-marble-video</span><br /><a href="https://github.com/10291124jcjc-dotcom/guiji-marble-video" target="_blank" rel="noopener">github.com/10291124jcjc-dotcom/guiji-marble-video</a></li>
+          <li><span class="sname">84 motion2code</span><br /><a href="https://github.com/lovisdotio/motion2code" target="_blank" rel="noopener">github.com/lovisdotio/motion2code</a></li>
+          <li><span class="sname">85 motion-skill</span><br /><a href="https://github.com/Felipeex/motion-skill" target="_blank" rel="noopener">github.com/Felipeex/motion-skill</a></li>
+          <li><span class="sname">86 huashu-art-motion</span><br /><a href="https://github.com/alchaincyf/huashu-art-motion" target="_blank" rel="noopener">github.com/alchaincyf/huashu-art-motion</a></li>
+          <li><span class="sname">87 design-style</span><br /><a href="https://github.com/guanmo-ai/design-style" target="_blank" rel="noopener">github.com/guanmo-ai/design-style</a></li>
+          <li><span class="sname">88 viral-hook-reels</span><br /><a href="https://github.com/dovudhusan/viral-hook-reels" target="_blank" rel="noopener">github.com/dovudhusan/viral-hook-reels</a></li>
+          <li><span class="sname">89 motion-director</span><br /><a href="https://github.com/sharbelxyz/motion-director" target="_blank" rel="noopener">github.com/sharbelxyz/motion-director</a></li>
+          <li><span class="sname">90 cinematic-skill</span><br /><a href="https://github.com/Moh4696/cinematic-skill" target="_blank" rel="noopener">github.com/Moh4696/cinematic-skill</a></li>
+        </ol>
+        <p class="src">補充來源：16 Lottie 若指行動端，來源為 <a href="https://github.com/airbnb/lottie-android" target="_blank" rel="noopener">github.com/airbnb/lottie-android</a> 與 <a href="https://github.com/airbnb/lottie-ios" target="_blank" rel="noopener">github.com/airbnb/lottie-ios</a>；05 anatomy 的 GitHub 來源為 wheresryan22/anatomy、06 anatomy-reveal 的 GitHub 來源為 annnguyentt/anatomy-reveal-skill、13 GSAP 的官方 AI 技能來源為 greensock/gsap-skills，均已註記在各卡片上。</p>
+      </section>
+    </div>
+
+    <div class="modal" id="modal" aria-hidden="true">
+      <div class="backdrop" data-close></div>
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script>
+      var ITEMS = [
+        { n: 1, name: "motion-design-skill", cat: "Skills", catZh: "技能",
+          desc: "時序、緩動與迪士尼動畫十二原則。LottieFiles 官方 Agent Skill，把動態設計原則整理成 AI 代理可直接遵循的規範，並改寫為介面設計用的版本。",
+          kind: "github / skill", path: "LottieFiles/motion-design-skill",
+          url: "https://github.com/LottieFiles/motion-design-skill",
+          tags: ["MIT"], cmd: "npx skills add LottieFiles/motion-design-skill" },
+        { n: 2, name: "Motion", cat: "Motion", catZh: "動態",
+          desc: "彈簧動畫與畫面切換。現代 React 與 JavaScript 動畫函式庫，前身為 Framer Motion，提供彈簧物理、佈局動畫與畫面切換，官網為 motion.dev。",
+          kind: "github", path: "motiondivision/motion",
+          url: "https://github.com/motiondivision/motion",
+          tags: ["MIT", "3 萬+ 星"] },
+        { n: 3, name: "Remotion Skills", cat: "Skills", catZh: "技能",
+          desc: "Remotion 官方 Agent Skills，教 AI 代理正確使用 Remotion 製作影片。",
+          kind: "github / skill", path: "remotion-dev/skills",
+          url: "https://github.com/remotion-dev/skills",
+          tags: ["官方技能", "無 LICENSE"],
+          cmd: "npx skills add remotion-dev/skills",
+          note: "注意：此倉庫根目錄沒有 LICENSE 檔案；Remotion 本體為 source-available 授權，四人以上公司須付費購買授權。" },
+        { n: 4, name: "hairline", cat: "Skills", catZh: "技能",
+          desc: "從一句話點子或 SVG 產生單一 HTML 的互動線畫圖形，含強度滑桿、主題切換與導覽播放。一次裝入 hairline-create 與 hairline-adopt 兩個技能。",
+          kind: "skill 頁面", path: "hairline.lucasmarkes.com/skills",
+          url: "https://hairline.lucasmarkes.com/skills",
+          tags: ["技能頁面", "授權未標示"], cmd: "npx skills add lucasmarkes/hairline",
+          note: "頁面與倉庫未標示授權；未標示不代表可自由使用或散布，引用前先確認。" },
+        { n: 5, name: "anatomy", cat: "Skills", catZh: "技能",
+          desc: "把機械與構造做成立體圖解。用一句話點子生成可互動的等角立體機械圖解，由數十至數百個小零件組成，含真實數字，可拖曳與按鍵操作。",
+          kind: "skill 頁面", path: "skills.wheresryan.sh/anatomy",
+          url: "https://skills.wheresryan.sh/anatomy",
+          tags: ["技能頁面", "授權未標示"],
+          note: "GitHub 來源為 wheresryan22/anatomy；頁面未顯示 skills 安裝指令，安裝方式以該倉庫 README 為準。頁面與倉庫未標示授權，引用或散布前先確認。", noteInfo: true },
+        { n: 6, name: "anatomy-reveal", cat: "Skills", catZh: "技能",
+          desc: "產品分解圖與展示影片。把實體物件做成等角立體解剖圖，並可產生產品展示影片（MP4，預設 10 秒），附 34 個附帶檔案。",
+          kind: "typingmind / skill", path: "annnguyentt-anatomy-reveal",
+          url: "https://www.typingmind.com/skills/annnguyentt-anatomy-reveal",
+          tags: ["MIT"],
+          note: "GitHub 來源為 annnguyentt/anatomy-reveal-skill。", noteInfo: true },
+        { n: 7, name: "Blender", cat: "3D", catZh: "3D",
+          desc: "3D 綁定與角色動畫。免費開源 3D 製作套裝，支援建模、綁定、角色動畫、算圖與影片剪輯，Muse 內建支援。",
+          kind: "github", path: "blender/blender",
+          url: "https://github.com/blender/blender",
+          tags: ["GPL v3"],
+          note: "GitHub 上的倉庫是官方鏡像，實際開發在 projects.blender.org，GitHub 不接受 pull request。", noteInfo: true },
+        { n: 8, name: "Three.js", cat: "3D", catZh: "3D",
+          desc: "3D 場景與鏡頭運動。瀏覽器用的 JavaScript 3D 函式庫，基於 WebGL 與 WebGPU，支援場景、材質、燈光與鏡頭運動。",
+          kind: "github", path: "mrdoob/three.js",
+          url: "https://github.com/mrdoob/three.js",
+          tags: ["MIT", "11 萬+ 星"] },
+        { n: 9, name: "react-three-rapier", cat: "3D", catZh: "3D",
+          desc: "給 3D 加上真實物理。把 Rapier 物理引擎接進 React Three Fiber，物件會自然掉落、碰撞與堆疊，適合骨牌、積木塔、彈珠台等動畫。",
+          kind: "github", path: "pmndrs/react-three-rapier",
+          url: "https://github.com/pmndrs/react-three-rapier",
+          tags: ["MIT", "@react-three/rapier"],
+          note: "v2 支援 React 19 與 @react-three/fiber v9；React 18 使用者須用 v1。", noteInfo: true },
+        { n: 10, name: "react-postprocessing", cat: "FX", catZh: "特效",
+          desc: "光暈、景深與電影感效果。React Three Fiber 用的後製特效包裝，提供光暈（Bloom）、景深、噪點、暗角、故障等效果。",
+          kind: "github", path: "pmndrs/react-postprocessing",
+          url: "https://github.com/pmndrs/react-postprocessing",
+          tags: ["MIT", "@react-three/postprocessing"] },
+        { n: 11, name: "three.quarks", cat: "FX", catZh: "特效",
+          desc: "粒子軌跡與特效。three.js 用的通用粒子系統與視覺特效引擎，可做粒子軌跡、火焰、煙霧、爆炸等效果，TypeScript 撰寫。",
+          kind: "github", path: "Alchemist0823/three.quarks",
+          url: "https://github.com/Alchemist0823/three.quarks",
+          tags: ["MIT"] },
+        { n: 12, name: "Tweakpane", cat: "FX", catZh: "特效",
+          desc: "參數即時調整。輕量參數調整面板，靈感來自 dat.GUI，可即時微調數值並監看變化，適合動畫參數除錯與即時預覽。",
+          kind: "github", path: "cocopon/tweakpane",
+          url: "https://github.com/cocopon/tweakpane",
+          tags: ["MIT"],
+          note: "本質是開發工具而非特效，依貼文分類暫歸 FX。v4 起改為 ES 模組，CommonJS 使用者請用 3.x 版。", noteInfo: true },
+        { n: 13, name: "GSAP", cat: "Motion", catZh: "動態",
+          desc: "動畫時間軸，現已完全免費。GreenSock 動畫平台，強項是時間軸編排、捲動觸發（ScrollTrigger）與路徑動畫；Webflow 收購後連以往付費外掛（SplitText、MorphSVG 等）都免費，商業使用亦可。",
+          kind: "github", path: "greensock/GSAP",
+          url: "https://github.com/greensock/GSAP",
+          tags: ["完全免費"],
+          cmd: "npx skills add https://github.com/greensock/gsap-skills",
+          note: "上方指令裝的是 GSAP 官方 AI 技能（greensock/gsap-skills）。", noteInfo: true },
+        { n: 14, name: "Remotion", cat: "Motion", catZh: "動態",
+          desc: "用 React 做影片的引擎。寫元件與動畫後算圖輸出 MP4，支援互動預覽、批次算圖與雲端算圖（Lambda）。",
+          kind: "github", path: "remotion-dev/remotion",
+          url: "https://github.com/remotion-dev/remotion",
+          tags: ["source-available"],
+          cmd: "npx create-video@latest",
+          note: "授權：個人與三人以下團隊免費；四人以上公司須購買公司授權（每人每月 25 美元，含以 AI 代理撰寫程式碼的情況）。" },
+        { n: 15, name: "Manim", cat: "Motion", catZh: "動態",
+          desc: "圖解、公式與解說動畫。社群維護的 Python 數學動畫引擎，3Blue1Brown 影片背後的工具即源自 Manim。",
+          kind: "github", path: "ManimCommunity/manim",
+          url: "https://github.com/ManimCommunity/manim",
+          tags: ["MIT", "社群版"],
+          note: "此為社群版（ManimCE）；原作者 Grant Sanderson 的版本為 3b1b/manim，兩者安裝方式不同，不可混用。一般使用者建議選社群版。", noteInfo: true },
+        { n: 16, name: "Lottie", cat: "Motion", catZh: "動態",
+          desc: "輕量向量動畫播放。網頁版 Lottie 播放器，用 JSON 播放 After Effects 製作的向量動畫，檔案小、可縮放、支援互動。",
+          kind: "github", path: "airbnb/lottie-web",
+          url: "https://github.com/airbnb/lottie-web",
+          tags: ["MIT", "約 3.25 萬星"],
+          note: "貼文連結截斷，指向未完全確定：本頁依用途選 lottie-web（網頁播放器）；若原貼文指的是行動端，應為 lottie-android 或 lottie-ios。" },
+        { n: 17, name: "Openverse API", cat: "Sound", catZh: "聲音",
+          desc: "免費效果音、環境音與音樂，免金鑰搜尋。WordPress 旗下 Openverse 的公開 API，音訊約 520 萬筆，來源含 Jamendo、Wikimedia Commons 與 Freesound，每筆附授權與現成的署名文字。主要端點為 /v1/audio/ 與 /v1/images/。",
+          kind: "api", path: "api.openverse.org/v1/",
+          url: "https://api.openverse.org/v1/",
+          tags: ["免金鑰", "逐筆授權"],
+          note: "匿名使用有限流（每分鐘 20 次、每天 200 次），免費註冊 OAuth 可提高上限。本次查核未能直接連線確認，存活由多個獨立來源在 2026 年 10 月的實測（HTTP 200）佐證。素材授權逐筆不同，使用時依該筆標示署名原作者。" },
+        { n: 18, name: "librosa", cat: "Sound", catZh: "聲音",
+          desc: "偵測節拍，讓動作對上音樂。Python 音訊與音樂分析函式庫，提供節拍追蹤、起始點偵測與頻譜分析，可把節拍偵測結果對齊動畫時間軸。",
+          kind: "github", path: "librosa/librosa",
+          url: "https://github.com/librosa/librosa",
+          tags: ["ISC"], cmd: "pip install librosa" },
+        { n: 19, name: "WhisperX", cat: "Sound", catZh: "聲音",
+          desc: "自動產生字幕時間軸，日文也支援。高速語音辨識，在 Whisper 基礎上加入單字級時間戳記與說話者分離，批次轉錄可達即時 70 倍。",
+          kind: "github", path: "m-bain/whisperX",
+          url: "https://github.com/m-bain/whisperX",
+          tags: ["BSD-2-Clause", "約 2.54 萬星"],
+          note: "說話者分離功能須另備 Hugging Face 存取權杖；本機使用須安裝 FFmpeg，GPU 可大幅加速。" },
+        { n: 20, name: "FFmpeg", cat: "Export", catZh: "輸出",
+          desc: "輸出與轉檔的最後一哩。處理音訊、影片、字幕與詮釋資料的多媒體框架，命令列工具可轉檔、剪輯、混流與串流。",
+          kind: "github", path: "FFmpeg/FFmpeg",
+          url: "https://github.com/FFmpeg/FFmpeg",
+          tags: ["LGPL / 部分 GPL", "67,552 星"],
+          note: "GitHub 倉庫是官方鏡像，pull request 會被忽略。一般使用者建議直接安裝編譯好的執行檔，不必從原始碼編譯。", noteInfo: true },
+        { n: 21, name: "skills", cat: "Side", catZh: "副業",
+          desc: "官方技能包，先打底。Anthropic 官方推出的 Agent Skills 公開倉庫，含創意設計、開發技術、企業溝通等範例技能，以及 docx、pdf、pptx、xlsx 四個文件製作技能。",
+          kind: "github / skill", path: "anthropics/skills",
+          url: "https://github.com/anthropics/skills",
+          tags: ["Apache 2.0", "約 19.7 萬星"], cmd: "/plugin marketplace add anthropics/skills",
+          note: "README 說明技能為 Apache 2.0 授權，但倉庫根目錄沒有 LICENSE 檔案，只有 THIRD_PARTY_NOTICES.md；引用或散布前先查倉庫現況。" },
+        { n: 22, name: "superpowers", cat: "Side", catZh: "副業",
+          desc: "讓智能體按步驟幹活，不亂跑。智能體軟體開發方法論與技能框架，讓 coding agent 先問需求、寫規格、再按計畫以子代理開發，強調 TDD、YAGNI 與 DRY。",
+          kind: "github / skill", path: "obra/superpowers",
+          url: "https://github.com/obra/superpowers",
+          tags: ["MIT", "約 32 萬星"], cmd: "/plugin install superpowers@claude-plugins-official" },
+        { n: 23, name: "firecrawl", cat: "Side", catZh: "副業",
+          desc: "把網頁抓成乾淨的文本。把網頁抓成乾淨文本的知識基礎設施，提供搜尋、抓取、互動與 550 個以上資料來源，輸出 LLM 友好的 Markdown 或結構化 JSON。",
+          kind: "github", path: "firecrawl/firecrawl",
+          url: "https://github.com/firecrawl/firecrawl",
+          tags: ["AGPL-3.0", "約 20.3 萬星"],
+          note: "雲端版須註冊拿 API 金鑰；自架須遵守 AGPL-3.0。" },
+        { n: 24, name: "yt-dlp + Whisper", cat: "Side", catZh: "副業",
+          desc: "影片下載下來直接轉成文字稿。yt-dlp 是功能豐富的命令列影音下載工具；Whisper 是 OpenAI 的通用語音辨識模型，兩者搭配使用。",
+          kind: "github × 2", path: "yt-dlp/yt-dlp",
+          url: "https://github.com/yt-dlp/yt-dlp",
+          path2: "openai/whisper",
+          url2: "https://github.com/openai/whisper",
+          openLabel: "yt-dlp", openLabel2: "Whisper",
+          tags: ["Unlicense", "MIT", "約 20.9 萬 / 11.3 萬星"],
+          cmd: "pip install yt-dlp && pip install -U openai-whisper",
+          note: "yt-dlp 本體為 Unlicense，但官方 PyInstaller 執行檔因內含 GPLv3+ 程式碼，合併後為 GPLv3+；原始碼與 tarball 僅 Unlicense。Whisper 另須安裝 ffmpeg。" },
+        { n: 25, name: "marp-cli", cat: "Side", catZh: "副業",
+          desc: "用 Markdown 一鍵出幻燈片。Marp 的命令列工具，可轉 HTML、PDF、PPTX 與圖片。",
+          kind: "github", path: "marp-team/marp-cli",
+          url: "https://github.com/marp-team/marp-cli",
+          tags: ["MIT", "約 3,939 星"], cmd: "npx @marp-team/marp-cli@latest slide-deck.md",
+          note: "轉 PDF、PPTX 與圖片須另裝瀏覽器。", noteInfo: true },
+        {"n": 26, "name": "unslop", "cat": "Web", "catZh": "網頁設計", "desc": "專治「AI 味」介面：把紫色漸層、發光效果與 emoji 裝飾拿掉，改成深色、克制、耐看的版面，適合落地頁、儀表板與手機 App。", "kind": "github", "path": "heydamir/unslop", "url": "https://github.com/heydamir/unslop", "tags": ["反俗套", "深色設計"]},
+        {"n": 35, "name": "web-design-guidelines", "cat": "Web", "catZh": "網頁設計", "desc": "依 Vercel《Web Interface Guidelines》逐條審查無障礙與互動問題，評審結果會指出檔案與行號，方便直接修。", "kind": "github", "path": "vercel-labs/agent-skills", "url": "https://github.com/vercel-labs/agent-skills", "tags": ["審查", "無障礙"]},
+        {"n": 44, "name": "digital-go-design-skill", "cat": "Web", "catZh": "網頁設計", "desc": "以日本數位廳設計系統 DADS 測試版為底的公共服務網頁設計：文字易讀、高對比，焦點框用黃色與黑色標示。", "kind": "github", "path": "capsrock/digital-go-design-skill", "url": "https://github.com/capsrock/digital-go-design-skill", "tags": ["公共服務", "高對比"]},
+        {"n": 53, "name": "anti-ai-slop", "cat": "Web", "catZh": "網頁設計", "desc": "反 AI 味技能包，共 7 個技能，涵蓋介面、程式碼與文案，專門攔下紫漸變、置中標題加雙按鈕、三張圓圈圖示卡片這類俗套。", "kind": "github", "path": "imranbru99/anti-ai-slop", "url": "https://github.com/imranbru99/anti-ai-slop", "tags": ["反俗套", "技能包"]},
+        {"n": 62, "name": "chanmeng-logo-as-code", "cat": "Image", "catZh": "生圖", "desc": "把手繪 logo 轉成可編輯 SVG：沿真實輪廓擬合成光滑的三次貝茲曲線，並產出配色與版式變體矩陣。", "kind": "github", "path": "ChanMeng666/chanmeng-logo-as-code", "url": "https://github.com/ChanMeng666/chanmeng-logo-as-code", "tags": ["手繪轉 SVG", "貝茲曲線"]},
+        {"n": 71, "name": "one-prompt-video", "cat": "Video", "catZh": "生視頻", "desc": "一句話產出帶配樂與字幕的短片：大模型填好一張 video.json，一條命令生成 20 到 90 秒 MP4，有九種版式與 18 套主題。", "kind": "github", "path": "li2092/one-prompt-video", "url": "https://github.com/li2092/one-prompt-video", "tags": ["短片", "一句話生成"]},
+        {"n": 80, "name": "shortform-kinetic-typography", "cat": "Video", "catZh": "生視頻", "desc": "短片動態排版：把一句口播變成有閱讀順序的視覺構圖，靠強詞層級、混合字號與克制的強調帶節奏。", "kind": "github", "path": "collinsanfo/shortform-kinetic-typography", "url": "https://github.com/collinsanfo/shortform-kinetic-typography", "tags": ["動態排版", "短片"]},
+        {"n": 89, "name": "motion-director", "cat": "Video", "catZh": "生視頻", "desc": "品牌動效影片導演：給代理一句話或一條連結，就產出 10 到 30 秒的啟動片、產品演示或頻道片頭，另有 266 個 B-roll 與透明疊加圖形。", "kind": "github", "path": "sharbelxyz/motion-director", "url": "https://github.com/sharbelxyz/motion-director", "tags": ["品牌影片", "B-roll"]},
+        {"n": 33, "name": "frontend-ui-engineering", "cat": "Web", "catZh": "網頁設計", "desc": "生產級前端實作指南：設計系統 token、響應式布局、WCAG 2.1 AA 無障礙，以及載入、空白、錯誤等狀態都要做完整。", "kind": "github", "path": "addyosmani/agent-skills", "url": "https://github.com/addyosmani/agent-skills", "tags": ["生產級前端", "無障礙"]},
+        {"n": 42, "name": "neopop-design-skill", "cat": "Web", "catZh": "網頁設計", "desc": "教代理使用 CRED 開源設計語言 NeoPOP 做介面：硬邊 3D 的「plunk」按鈕、黑底主色、大膽字體。", "kind": "github", "path": "Satyam085/neopop-design-skill", "url": "https://github.com/Satyam085/neopop-design-skill", "tags": ["NeoPOP", "大膽風格"]},
+        {"n": 51, "name": "mermaid-design", "cat": "Web", "catZh": "網頁設計", "desc": "把 Mermaid 流程圖美化並多格式匯出：緊湊圓角節點、柔和配色，提供設計、PNG、SVG 與可編輯 PPT 四個入口。", "kind": "github", "path": "kevin801221/mermaid-design", "url": "https://github.com/kevin801221/mermaid-design", "tags": ["流程圖", "匯出"]},
+        {"n": 60, "name": "ComfyUI", "cat": "Image", "catZh": "生圖", "desc": "本地生圖與生影片後端：節點式擴散模型介面加 API，自備 GPU 就能以零單張成本跑開源模型。", "kind": "github", "path": "Comfy-Org/ComfyUI", "url": "https://github.com/Comfy-Org/ComfyUI", "tags": ["本地生圖", "節點式"]},
+        {"n": 69, "name": "anidoodle", "cat": "Video", "catZh": "生視頻", "desc": "手繪風插畫與短片技能：全片逐幀以程式碼手繪生成，並配上音樂。", "kind": "github", "path": "alexgreensh/anidoodle", "url": "https://github.com/alexgreensh/anidoodle", "tags": ["手繪風", "逐幀"]},
+        {"n": 78, "name": "hyperframes-video-polish", "cat": "Video", "catZh": "生視頻", "desc": "HyperFrames 成片打磨與實片校驗：逐幀診斷對齊與動效問題、修置中與基線，並校驗真實匯出 MP4 的編碼、幀率、時長與音訊漂移。", "kind": "github", "path": "rocksstarcode/hyperframes-video-polish", "url": "https://github.com/rocksstarcode/hyperframes-video-polish", "tags": ["成片校驗", "逐幀診斷"]},
+        {"n": 87, "name": "design-style", "cat": "Video", "catZh": "生視頻", "desc": "每天認識一個設計風格：一支 15 到 20 秒的動效短片、一張風格圖與一份製作指南，完整原始碼開放。", "kind": "github", "path": "guanmo-ai/design-style", "url": "https://github.com/guanmo-ai/design-style", "tags": ["每日一風格", "短片加指南"]},
+        {"n": 31, "name": "taste-skill", "cat": "Web", "catZh": "網頁設計", "desc": "用三個 1 到 10 的檔位調前端品味：布局變化、動效強度、視覺密度，像調參數一樣避開俗套版面。", "kind": "github", "path": "Leonxlnx/taste-skill", "url": "https://github.com/Leonxlnx/taste-skill", "tags": ["品味調參", "反俗套"]},
+        {"n": 40, "name": "diagram-design", "cat": "Web", "catZh": "網頁設計", "desc": "把 45 種圖表與資訊圖畫成品牌一致的成品，輸出自包含的 HTML 加 SVG 單一檔案，拿了就能用。", "kind": "github", "path": "cathrynlavery/diagram-design", "url": "https://github.com/cathrynlavery/diagram-design", "tags": ["圖表", "資訊圖"]},
+        {"n": 49, "name": "anti-slop-ui", "cat": "Web", "catZh": "網頁設計", "desc": "產品導向的反俗套介面技能：先理解產品任務再定方向，接著修層級、做流程，最後驗證成果。", "kind": "github", "path": "erlttt0/anti-slop-ui", "url": "https://github.com/erlttt0/anti-slop-ui", "tags": ["反俗套", "產品導向"]},
+        {"n": 58, "name": "codex-ui-design", "cat": "Image", "catZh": "生圖", "desc": "圖先行的 UI 流程：透過本地 Codex app-server 與已登入的訂閱呼叫 gpt-image-2 先產出介面 mockup，再轉成 build spec 落成程式碼。", "kind": "github", "path": "gwelinder/pi-extension-pack", "url": "https://github.com/gwelinder/pi-extension-pack", "tags": ["圖先行", "mockup"]},
+        {"n": 67, "name": "brag", "cat": "Video", "catZh": "生視頻", "desc": "一句話把專案變成 launch 影片：自動帶上音樂、動效與分享文案，底層使用 HyperFrames 渲染。", "kind": "github", "path": "latent-spaces/brag", "url": "https://github.com/latent-spaces/brag", "tags": ["launch 影片", "一句話生成"]},
+        {"n": 76, "name": "gpt-hand-drawing-skill", "cat": "Video", "catZh": "生視頻", "desc": "水彩墨線手繪動畫：用 p5.js 與 p5.brush 逐幀手繪，本地 Chrome 加 FFmpeg 輸出短片、音樂 MV、歌詞影片與循環動畫。", "kind": "github", "path": "chao69782/gpt-hand-drawing-skill", "url": "https://github.com/chao69782/gpt-hand-drawing-skill", "tags": ["水彩手繪", "p5.js"]},
+        {"n": 85, "name": "motion-skill", "cat": "Video", "catZh": "生視頻", "desc": "用 Canvas 加 Web Audio 做任何動效影片並匯出 MP4，適合片頭、動畫解說與動態文字。", "kind": "github", "path": "Felipeex/motion-skill", "url": "https://github.com/Felipeex/motion-skill", "tags": ["Canvas", "Web Audio"]},
+        {"n": 29, "name": "Hallmark", "cat": "Web", "catZh": "網頁設計", "desc": "開源的反 AI 俗套設計技能：內建 50 種主題材質與分層檢查，並用真實瀏覽器跑 sloplint 檢查，另附 755 張 Wikimedia 授權照片可用。", "kind": "github", "path": "Nutlope/hallmark", "url": "https://github.com/Nutlope/hallmark", "tags": ["反俗套", "設計檢查"]},
+        {"n": 38, "name": "premium-frontend-director", "cat": "Web", "catZh": "網頁設計", "desc": "高階前端藝術指導流程：從創意簡報提出設計方向，落到現有框架實作，再用瀏覽器實查，最後以證據優先的方式交接。", "kind": "github", "path": "AVL05/premium-frontend-director", "url": "https://github.com/AVL05/premium-frontend-director", "tags": ["藝術指導", "高階前端"]},
+        {"n": 47, "name": "mobile-app-designer", "cat": "Web", "catZh": "網頁設計", "desc": "行動 App 端到端設計流程：從簡報、設計系統、iOS 與 Android 雙端介面、可點原型、圖示一路到 137 項檢查與打包交接。", "kind": "github", "path": "chrollo-03/mobile-app-designer", "url": "https://github.com/chrollo-03/mobile-app-designer", "tags": ["行動 App", "端到端"]},
+        {"n": 56, "name": "craft", "cat": "Web", "catZh": "網頁設計", "desc": "讓 AI 代理像謹慎的設計師一樣做介面：先寫設計簡報、列出畫面全部狀態、沿用設計系統元件、完工再自查，支援 Paper、Figma 與純 HTML。", "kind": "github", "path": "diego3g/craft", "url": "https://github.com/diego3g/craft", "tags": ["設計流程", "自查"]},
+        {"n": 65, "name": "HyperFrames", "cat": "Video", "catZh": "生視頻", "desc": "讓代理寫 HTML、CSS、JS 場景再渲染成幀精確的 MP4，內含 9 個技能與約 450 個現成 blocks。", "kind": "github", "path": "heygen-com/hyperframes", "url": "https://github.com/heygen-com/hyperframes", "tags": ["HTML 渲染影片", "幀精確"]},
+        {"n": 74, "name": "course-to-feishu-video", "cat": "Video", "catZh": "生視頻", "desc": "教學課程分批交付影片技能：從大綱、飛書圖文課件、口語化授課稿、語意斷句 SRT，到每批約 10 分鐘逐批交付。", "kind": "github", "path": "flemin86/course-to-feishu-video", "url": "https://github.com/flemin86/course-to-feishu-video", "tags": ["教學影片", "飛書課件"]},
+        {"n": 83, "name": "guiji-marble-video", "cat": "Video", "catZh": "生視頻", "desc": "音樂同步的 3D 彈珠卡點影片：彈珠沿金屬軌道下落，琴鍵、銅鈴、木音條與鼓面隨撞擊發聲，Blender 渲染 720×1280、24fps。", "kind": "github", "path": "10291124jcjc-dotcom/guiji-marble-video", "url": "https://github.com/10291124jcjc-dotcom/guiji-marble-video", "tags": ["彈珠卡點", "Blender"]},
+        {"n": 27, "name": "Stageshow", "cat": "Web", "catZh": "網頁設計", "desc": "先把產品故事講清楚，再做逼真的產品介面靜幀與動效，讓展示畫面像真的產品截圖而不是示意圖。", "kind": "github", "path": "benjitaylor/skills", "url": "https://github.com/benjitaylor/skills", "tags": ["產品展示", "動效靜幀"]},
+        {"n": 36, "name": "frontend-skill", "cat": "Web", "catZh": "網頁設計", "desc": "OpenAI 官方 Codex 前端技能：不用卡片式布局、主打全幅 hero 與品牌優先的層級，動效克制，最多兩種字體加一個強調色。", "kind": "github", "path": "openai/skills", "url": "https://github.com/openai/skills", "tags": ["OpenAI 官方", "前端"]},
+        {"n": 45, "name": "finesse", "cat": "Web", "catZh": "網頁設計", "desc": "應用介面打磨技能包：狀態優先、語意化 token、帶意圖的動效，並原生支援 RTL 版面。", "kind": "github", "path": "delevski/finesse", "url": "https://github.com/delevski/finesse", "tags": ["介面打磨", "RTL"]},
+        {"n": 54, "name": "antheo-design/skills", "cat": "Web", "catZh": "網頁設計", "desc": "21 個設計技能的組合：用精確數值、規則與檢查工具處理配色、排版、布局、元件、動效、行動端、無障礙與評審。", "kind": "github", "path": "antheo-design/skills", "url": "https://github.com/antheo-design/skills", "tags": ["技能包", "21 個技能"]},
+        {"n": 63, "name": "gif-factory", "cat": "Image", "catZh": "生圖", "desc": "GIF 工廠：電影片頭大字標題（40 種字形）、動態簽名、表情包、動態海報、光柵變畫卡、動態繪本與品牌短片，用 GPT image 2.6 出圖。", "kind": "github", "path": "WoYun520/gif-factory", "url": "https://github.com/WoYun520/gif-factory", "tags": ["GIF", "動態海報"]},
+        {"n": 72, "name": "four-style-motion-video", "cat": "Video", "catZh": "生視頻", "desc": "四類程式碼動效短片：視覺隱喻、物體狀態、變量圖解、像素劇情四種畫面邏輯，依內容挑一種來做。", "kind": "github", "path": "yangwei251003/four-style-motion-video", "url": "https://github.com/yangwei251003/four-style-motion-video", "tags": ["四種畫面邏輯", "程式碼動效"]},
+        {"n": 81, "name": "codex-motions-movie", "cat": "Video", "catZh": "生視頻", "desc": "彩色火柴人民俗與恐怖直式短片：Gemini TTS 旁白、Remotion 本地動畫，兩條關鍵鏡頭由使用者自備 Veo 3.1 Lite 生成。", "kind": "github", "path": "silenveritas/codex-motions-movie", "url": "https://github.com/silenveritas/codex-motions-movie", "tags": ["火柴人", "直式短片"]},
+        {"n": 90, "name": "cinematic-skill", "cat": "Video", "catZh": "生視頻", "desc": "純程式碼的電影感旁白紀錄片：一句話要一部 90 秒紀錄片，它會寫腳本、錄旁白、找公域照片，用 Skia 在一張「設計世界」上做連續運鏡，字幕與音效卡點。", "kind": "github", "path": "Moh4696/cinematic-skill", "url": "https://github.com/Moh4696/cinematic-skill", "tags": ["紀錄片", "連續運鏡"]},
+        {"n": 34, "name": "emilkowalski/skills", "cat": "Web", "catZh": "網頁設計", "desc": "動效與介面打磨技能：用一套決策框架判斷該不該加動畫、目的為何、緩動怎麼選、時長壓在 300ms 以內，另附評審技能。", "kind": "github", "path": "emilkowalski/skills", "url": "https://github.com/emilkowalski/skills", "tags": ["動效打磨", "評審"]},
+        {"n": 43, "name": "cloudmamba-design-skill", "cat": "Web", "catZh": "網頁設計", "desc": "雲曼巴品牌設計語言技能：配色與字體 token、9 個 logo SVG、6 個角色 SVG，還有毛邊細節的對照規範。", "kind": "github", "path": "KEVqwe/cloudmamba-design-skill", "url": "https://github.com/KEVqwe/cloudmamba-design-skill", "tags": ["品牌語言", "設計 token"]},
+        {"n": 52, "name": "design-taste-skills", "cat": "Web", "catZh": "網頁設計", "desc": "設計品味技能包，共 11 個技能：先替 coding agent 定好設計觀點，再依受眾與氣質排層級、留白、配色、字體與動效。", "kind": "github", "path": "imranbru99/design-taste-skills", "url": "https://github.com/imranbru99/design-taste-skills", "tags": ["技能包", "設計觀點"]},
+        {"n": 61, "name": "danlogo-swisstech", "cat": "Image", "catZh": "生圖", "desc": "以字為標的瑞士風 logo 體系：中英文字形從零構造，讓字成一體再取字成符，走九個階段的流程。", "kind": "github", "path": "dan-cube/danlogo-swisstech", "url": "https://github.com/dan-cube/danlogo-swisstech", "tags": ["瑞士風", "字標"]},
+        {"n": 70, "name": "idea-to-motion", "cat": "Video", "catZh": "生視頻", "desc": "一句話想法變成帶配樂與旁白的動效影片：14 種風格、16 種體裁，本地渲染，不需要任何 API key。", "kind": "github", "path": "georgesmomo/idea-to-motion", "url": "https://github.com/georgesmomo/idea-to-motion", "tags": ["一句話生成", "本地渲染"]},
+        {"n": 79, "name": "Beatreel", "cat": "Video", "catZh": "生視頻", "desc": "口播解說影片產生器：寫一段 JSON 腳本就能輸出直式與橫式影片，用 Kokoro 離線配音，字幕逐詞同步。", "kind": "github", "path": "anand-reddi/Beatreel", "url": "https://github.com/anand-reddi/Beatreel", "tags": ["口播影片", "JSON 腳本"]},
+        {"n": 88, "name": "viral-hook-reels", "cat": "Video", "catZh": "生視頻", "desc": "爆款影片拆解成片：貼上一條爆款連結，就產出一支「為什麼它會火」的拆解短片，ElevenLabs 配音、逐詞字幕、Remotion 渲染 1080×1920 MP4。", "kind": "github", "path": "dovudhusan/viral-hook-reels", "url": "https://github.com/dovudhusan/viral-hook-reels", "tags": ["爆款拆解", "直式影片"]},
+        {"n": 32, "name": "impeccable", "cat": "Web", "catZh": "網頁設計", "desc": "給 AI 代理用的設計詞彙與檢查工具：23 個以上命令、59 條 AI 痕跡檢測規則，並能在瀏覽器裡即時迭代修改。", "kind": "github", "path": "pbakaus/impeccable", "url": "https://github.com/pbakaus/impeccable", "tags": ["設計詞彙", "AI 痕跡檢測"]},
+        {"n": 41, "name": "nordic-civic-design-skill", "cat": "Web", "catZh": "網頁設計", "desc": "以赫爾辛基設計系統 HDS 6.0.7 為底的公共服務網頁設計：直角、強烈色彩、大留白，風格鮮明的北歐 civic 風。", "kind": "github", "path": "capsrock/nordic-civic-design-skill", "url": "https://github.com/capsrock/nordic-civic-design-skill", "tags": ["公共服務", "北歐風"]},
+        {"n": 50, "name": "frontend-ux-motion-skills", "cat": "Web", "catZh": "網頁設計", "desc": "前端 UI 與 UX 動效技能包，共 28 個技能，涵蓋產品落地頁結構、卡片懸停、捲動敘事、logo 跑馬燈等常見場景。", "kind": "github", "path": "AbdullahNaveed/frontend-ux-motion-skills", "url": "https://github.com/AbdullahNaveed/frontend-ux-motion-skills", "tags": ["技能包", "UX 動效"]},
+        {"n": 59, "name": "logo-design-skill", "cat": "Image", "catZh": "生圖", "desc": "完整的 logo 設計流程：從 brief 一路做到 SVG 成品與品牌規範，另附 1,400 個以上的 logo 參考庫。", "kind": "github", "path": "kaankiziltug/logo-design-skill", "url": "https://github.com/kaankiziltug/logo-design-skill", "tags": ["logo", "品牌規範"]},
+        {"n": 68, "name": "pixelfx", "cat": "Video", "catZh": "生視頻", "desc": "像素風特效庫加技能：232 個特效全部由程式碼產生，完全不用圖片素材。", "kind": "github", "path": "patch-gg/pixelfx", "url": "https://github.com/patch-gg/pixelfx", "tags": ["像素風", "程式碼特效"]},
+        {"n": 77, "name": "video-3d-explicativo", "cat": "Video", "catZh": "生視頻", "desc": "低多邊形 3D 直式講解影片：把講稿變成 30 到 60 秒的低多邊形小城 3D 直式片，含 AI 旁白與逐詞同步字幕。", "kind": "github", "path": "MatheusSBPRO/video-3d-explicativo", "url": "https://github.com/MatheusSBPRO/video-3d-explicativo", "tags": ["3D 講解", "直式影片"]},
+        {"n": 86, "name": "huashu-art-motion", "cat": "Video", "catZh": "生視頻", "desc": "藝術動畫技能：36 種藝術風格、9 種解說語法、8 種參數化片段，全部由純程式碼驅動。", "kind": "github", "path": "alchaincyf/huashu-art-motion", "url": "https://github.com/alchaincyf/huashu-art-motion", "tags": ["藝術動畫", "參數化"]},
+        {"n": 30, "name": "ui-ux-pro-max", "cat": "Web", "catZh": "網頁設計", "desc": "大型 UI/UX 設計資料庫：67 種介面風格、161 條行業規則、161 套配色與 57 組字體搭配，設計前先查資料再動手。", "kind": "github", "path": "nextlevelbuilder/ui-ux-pro-max-skill", "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", "tags": ["設計資料庫", "配色字體"]},
+        {"n": 39, "name": "variant-design-skill", "cat": "Web", "catZh": "網頁設計", "desc": "一份簡報同時產出 A、B、C 三個設計方向，每個方向附取捨說明；改動前先快照，方向不對可以回滾。", "kind": "github", "path": "YuqingNicole/variant-design-skill", "url": "https://github.com/YuqingNicole/variant-design-skill", "tags": ["三方向提案", "可回滾"]},
+        {"n": 48, "name": "ui-designer", "cat": "Web", "catZh": "網頁設計", "desc": "AI 原生介面設計工具：在瀏覽器裡像 Figma 一樣拖曳排版，也能用一句話請 AI 改稿並給出品評。", "kind": "github", "path": "freeheart/ui-designer", "url": "https://github.com/freeheart/ui-designer", "tags": ["設計工具", "拖曳編輯"]},
+        {"n": 57, "name": "baoyu-design", "cat": "Image", "catZh": "生圖", "desc": "把 claude.ai 的 Design Artifact 搬到本地變成 Agent Skill，可做 UI mockup、原型、簡報、設計系統、儀表板與 motion film 五種可編輯產出。", "kind": "github", "path": "JimLiu/baoyu-design", "url": "https://github.com/JimLiu/baoyu-design", "tags": ["本地化", "多型產出"]},
+        {"n": 66, "name": "video-shotcraft", "cat": "Video", "catZh": "生視頻", "desc": "電影感產品宣傳片流程：用真實頁面截圖，配 124 張鏡頭配方卡與 150 個動態預覽，按節拍剪輯並做音效設計，最後以 Remotion 渲染 1080p MP4。", "kind": "github", "path": "Vincentwei1021/video-shotcraft", "url": "https://github.com/Vincentwei1021/video-shotcraft", "tags": ["產品宣傳片", "鏡頭配方"]},
+        {"n": 75, "name": "clip-builder", "cat": "Video", "catZh": "生視頻", "desc": "一句話產出帶字幕與旁白的教學、宣傳短片：代理寫腳本與 HTML 場景逐幀繪圖，以 headless Chromium 渲染、FFmpeg 編碼成 MP4。", "kind": "github", "path": "Greater-Expanse/clip-builder", "url": "https://github.com/Greater-Expanse/clip-builder", "tags": ["教學短片", "逐幀繪圖"]},
+        {"n": 84, "name": "motion2code", "cat": "Video", "catZh": "生視頻", "desc": "把動效影片還原成可編輯的 SVG 加 GSAP 程式碼：逐幀拆解影片、還原成乾淨程式碼，可逐幀定位並做無縫循環。", "kind": "github", "path": "lovisdotio/motion2code", "url": "https://github.com/lovisdotio/motion2code", "tags": ["影片轉程式碼", "GSAP"]},
+        {"n": 28, "name": "ai-design-skills", "cat": "Web", "catZh": "網頁設計", "desc": "落地頁設計技能組合，結合 Higgsfield、Claude 與 Cursor，再加上作者自研的 AI 設計師流程，產出可上線的頁面。", "kind": "github", "path": "elayadesign/ai-design-skills", "url": "https://github.com/elayadesign/ai-design-skills", "tags": ["落地頁", "技能包"]},
+        {"n": 37, "name": "Liquid-Glass-Skill", "cat": "Web", "catZh": "網頁設計", "desc": "液態玻璃風格的互動控制項：會折射的按鈕、開關、滑桿與分段控制項，做出通透的玻璃質感介面。", "kind": "github", "path": "EVEDensity/Liquid-Glass-Skill", "url": "https://github.com/EVEDensity/Liquid-Glass-Skill", "tags": ["液態玻璃", "控制項"]},
+        {"n": 46, "name": "mochen-website-design", "cat": "Web", "catZh": "網頁設計", "desc": "個人網站設計技能：紙白網格底、炭黑大字、淺黃強調色，還有可以拖著玩的小狗互動元素。", "kind": "github", "path": "mochenai/mochen-website-design", "url": "https://github.com/mochenai/mochen-website-design", "tags": ["個人網站", "紙白風"]},
+        {"n": 55, "name": "classic-aero-ui", "cat": "Web", "catZh": "網頁設計", "desc": "WPF 高密度 Aero 企業設計系統：Classic Aero 與 Dark Aero 雙主題，帶真實縱深與光澤，且零 NuGet 依賴。", "kind": "github", "path": "hidiraslan/aslan-skills", "url": "https://github.com/hidiraslan/aslan-skills", "tags": ["WPF", "企業介面"]},
+        {"n": 64, "name": "cartoon-jake-skill", "cat": "Image", "catZh": "生圖", "desc": "Cartoon Jake 風格的 2D 卡通圖：用三張參考圖定住風格，特色是圓潤造型、粗黑描邊與鮮豔平塗。", "kind": "github", "path": "rlatjr8362/cartoon-jake-skill", "url": "https://github.com/rlatjr8362/cartoon-jake-skill", "tags": ["2D 卡通", "風格參考"]},
+        {"n": 73, "name": "viva-video", "cat": "Video", "catZh": "生視頻", "desc": "把產品文件變成程式碼渲染的發布片：先產出理解文件與結論清單，再用 OKLCH 從品牌色推導配色，附 4 套主題包。", "kind": "github", "path": "keepview/viva-video", "url": "https://github.com/keepview/viva-video", "tags": ["產品發布片", "品牌配色"]},
+        {"n": 82, "name": "muri-skills", "cat": "Video", "catZh": "生視頻", "desc": "敘事產品片與品牌設計技能包，含三個葡語技能；其中的 muri-video 做帶旁白的產品與機構敘事片，可用 Remotion 或 HyperFrames 渲染，最高 4K。", "kind": "github", "path": "murilolol/muri-skills", "url": "https://github.com/murilolol/muri-skills", "tags": ["敘事片", "技能包"]}
+      ];
+
+      var CATS = [
+        { key: "all", label: "全部" },
+        { key: "Skills", label: "技能 Skills" },
+        { key: "3D", label: "3D" },
+        { key: "FX", label: "特效 FX" },
+        { key: "Motion", label: "動態 Motion" },
+        { key: "Sound", label: "聲音 Sound" },
+        { key: "Export", label: "輸出 Export" },
+        { key: "Side", label: "副業 Side" },
+        { key: "Web", label: "網頁設計 Web" },
+        { key: "Image", label: "生圖 Image" },
+        { key: "Video", label: "生視頻 Video" }
+      ];
+
+      function shuffleItems() {
+        for (var i = ITEMS.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = ITEMS[i]; ITEMS[i] = ITEMS[j]; ITEMS[j] = tmp;
+        }
+      }
+      function pad(n) { return (n < 10 ? "0" : "") + n; }
+      function esc(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function byN(n) { for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].n === n) return ITEMS[i]; return null; }
+      function hostLabel(url) {
+        if (url.indexOf("github.com") !== -1) return "GitHub ↗";
+        if (url.indexOf("api.openverse.org") !== -1) return "API ↗";
+        return "網站 ↗";
+      }
+      function chipLabel(item) {
+        if (item.kind.indexOf("api") === 0) return "API";
+        if (item.kind.indexOf("skill") !== -1) return "SKILL";
+        return "REPO";
+      }
+
+      /* ================= visual engine ================= */
+      var REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var MONO = '"IBM Plex Mono", ui-monospace, monospace';
+      var vizList = [];
+
+      function RR(g, x, y, w, h, r) {
+        r = Math.min(r, w / 2, h / 2);
+        g.beginPath();
+        g.moveTo(x + r, y);
+        g.arcTo(x + w, y, x + w, y + h, r);
+        g.arcTo(x + w, y + h, x, y + h, r);
+        g.arcTo(x, y + h, x, y, r);
+        g.arcTo(x, y, x + w, y, r);
+        g.closePath();
+      }
+      function TXT(g, s, x, y, font, color, align) {
+        g.font = font; g.fillStyle = color; g.textAlign = align || "left"; g.textBaseline = "middle";
+        g.fillText(s, x, y);
+      }
+      function cyl(g, cx, cy, rx, ry, hh, col) {
+        g.fillStyle = col;
+        g.beginPath();
+        g.moveTo(cx - rx, cy - hh / 2);
+        g.lineTo(cx - rx, cy + hh / 2);
+        g.ellipse(cx, cy + hh / 2, rx, ry, 0, Math.PI, 0, true);
+        g.lineTo(cx + rx, cy - hh / 2);
+        g.ellipse(cx, cy - hh / 2, rx, ry, 0, 0, Math.PI, true);
+        g.closePath(); g.fill();
+        g.fillStyle = "rgba(255,255,255,0.20)";
+        g.beginPath(); g.ellipse(cx, cy - hh / 2, rx, ry, 0, 0, Math.PI * 2); g.fill();
+      }
+
+      var VIZ = {
+        /* 01 easing curve */
+        1: function (g, w, h, t) {
+          g.fillStyle = "#e9f1fd"; g.fillRect(0, 0, w, h);
+          var x0 = w * 0.14, y0 = h * 0.76, x1 = w * 0.86, y1 = h * 0.22;
+          var dx = x1 - x0;
+          var P = [[x0, y0], [x0 + dx * 0.12, y0], [x0 + dx * 0.88, y1], [x1, y1]];
+          function bp(u) {
+            var v = 1 - u;
+            return [
+              v * v * v * P[0][0] + 3 * v * v * u * P[1][0] + 3 * v * u * u * P[2][0] + u * u * u * P[3][0],
+              v * v * v * P[0][1] + 3 * v * v * u * P[1][1] + 3 * v * u * u * P[2][1] + u * u * u * P[3][1]
+            ];
+          }
+          g.strokeStyle = "rgba(16,21,28,0.18)"; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0, y1 - 8); g.moveTo(x0, y0); g.lineTo(x1 + 8, y0); g.stroke();
+          g.strokeStyle = "#1f6ae1"; g.lineWidth = 3; g.lineCap = "round";
+          g.beginPath();
+          for (var i = 0; i <= 40; i++) { var p = bp(i / 40); i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); }
+          g.stroke();
+          g.setLineDash([3, 5]); g.strokeStyle = "rgba(16,21,28,0.30)"; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(P[0][0], P[0][1]); g.lineTo(P[1][0], P[1][1]); g.moveTo(P[3][0], P[3][1]); g.lineTo(P[2][0], P[2][1]); g.stroke();
+          g.setLineDash([]);
+          var ph = (t % 3.4) / 3.4, u = ph < 0.78 ? ph / 0.78 : 1;
+          for (var k = 7; k >= 1; k--) {
+            var uu = Math.max(0, u - k * 0.022), tp = bp(uu);
+            g.globalAlpha = 0.10 * (8 - k) / 7 + 0.02;
+            g.fillStyle = "#1f6ae1";
+            g.beginPath(); g.arc(tp[0], tp[1], 6, 0, 6.2832); g.fill();
+          }
+          g.globalAlpha = ph > 0.9 ? Math.max(0, 1 - (ph - 0.9) / 0.1) : 1;
+          var hp = bp(u);
+          g.fillStyle = "#1f6ae1"; g.beginPath(); g.arc(hp[0], hp[1], 7.5, 0, 6.2832); g.fill();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.arc(hp[0], hp[1], 3, 0, 6.2832); g.fill();
+          g.globalAlpha = 1;
+          var ty = h * 0.93;
+          g.strokeStyle = "rgba(16,21,28,0.25)"; g.lineWidth = 2;
+          g.beginPath(); g.moveTo(x0, ty); g.lineTo(x1, ty); g.stroke();
+          g.fillStyle = "#10151c"; RR(g, hp[0] - 6, ty - 6, 12, 12, 3); g.fill();
+          TXT(g, "ease", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 02 spring */
+        2: function (g, w, h, t, dt, S) {
+          g.fillStyle = "#eef4ff"; g.fillRect(0, 0, w, h);
+          if (S.x === undefined) { S.x = w * 0.55; S.v = 0; S.tg = w * 0.68; S.tm = 0; }
+          S.tm += dt;
+          if (S.tm > 2.3) { S.tm = 0; S.tg = S.tg > w * 0.55 ? w * 0.42 : w * 0.68; }
+          var F = (S.tg - S.x) * 90 - S.v * 7.5;
+          S.v += F * dt; S.x += S.v * dt;
+          var cy = h * 0.5, size = h * 0.36, gy = h * 0.88;
+          g.fillStyle = "rgba(16,21,28,0.12)";
+          g.beginPath(); g.ellipse(S.x, gy, size * 0.55, 5, 0, 0, 6.2832); g.fill();
+          g.fillStyle = "#10151c"; RR(g, w * 0.06, cy - size * 0.95, 7, size * 1.9, 3); g.fill();
+          var sx = w * 0.06 + 9, ex = S.x - size / 2, seg = 14;
+          g.strokeStyle = "#10151c"; g.lineWidth = 2.5; g.lineJoin = "round";
+          g.beginPath(); g.moveTo(sx, cy);
+          for (var i = 1; i < seg; i++) g.lineTo(sx + (ex - sx) * i / seg, cy + (i % 2 ? -1 : 1) * size * 0.26);
+          g.lineTo(ex, cy); g.stroke();
+          g.fillStyle = "#1f6ae1"; RR(g, S.x - size / 2, cy - size / 2, size, size, size * 0.22); g.fill();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.arc(S.x, cy, size * 0.13, 0, 6.2832); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.2)"; g.lineWidth = 1.5;
+          g.beginPath(); g.moveTo(w * 0.06, gy); g.lineTo(w * 0.94, gy); g.stroke();
+          TXT(g, "spring", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 03 remotion skills terminal */
+        3: function (g, w, h, t) {
+          g.fillStyle = "#0d1420"; g.fillRect(0, 0, w, h);
+          var fs = Math.max(10, Math.min(15, w * 0.046));
+          var lines = [
+            ["/remotion promo · 20s", "#e8f1ff"],
+            ["✓ composition 1080×1350", "#7ee2a8"],
+            ["✓ 4 sequences timed", "#7ee2a8"],
+            ["✓ captions synced", "#7ee2a8"],
+            ["✓ render queued", "#7ee2a8"]
+          ];
+          var ph = (t % 6) / 6;
+          for (var i = 0; i < lines.length; i++) {
+            if (ph < 0.06 + i * 0.13) continue;
+            TXT(g, lines[i][0], w * 0.07, h * 0.15 + i * h * 0.145, "500 " + fs + "px " + MONO, lines[i][1]);
+          }
+          if (ph < 0.06 && Math.floor(t * 2) % 2 === 0)
+            TXT(g, "▌", w * 0.07, h * 0.15, "500 " + fs + "px " + MONO, "#e8f1ff");
+          var bw = w * 0.86, bx = w * 0.07, by = h * 0.9;
+          g.fillStyle = "rgba(255,255,255,0.14)"; RR(g, bx, by - 3, bw, 6, 3); g.fill();
+          g.fillStyle = "#1f6ae1"; RR(g, bx, by - 3, bw * Math.min(1, ph * 1.2), 6, 3); g.fill();
+        },
+        /* 04 hairline */
+        4: function (g, w, h, t) {
+          g.fillStyle = "#faf6ee"; g.fillRect(0, 0, w, h);
+          var cx = w / 2, cy = h / 2, total = 240;
+          var ph = (t % 5) / 5, n = Math.floor(total * Math.min(1, ph * 1.2));
+          var drift = 0.5 * Math.sin(t * 0.3);
+          function pt(i) {
+            var a = i / total * Math.PI * 2;
+            return [cx + Math.sin(a * 3 + drift) * w * 0.33, cy + Math.sin(a * 2) * h * 0.32];
+          }
+          g.strokeStyle = "rgba(16,21,28,0.12)"; g.lineWidth = 2;
+          g.beginPath();
+          for (var i = 0; i <= total; i += 4) { var q = pt(i); i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }
+          g.stroke();
+          g.strokeStyle = "#10151c"; g.lineWidth = 2.2; g.lineCap = "round";
+          g.beginPath();
+          for (var j = 0; j <= n; j++) { var p = pt(j); j ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); }
+          g.stroke();
+          if (n > 0) {
+            var hp = pt(n);
+            g.fillStyle = "#1f6ae1"; g.beginPath(); g.arc(hp[0], hp[1], 4.5, 0, 6.2832); g.fill();
+          }
+          TXT(g, "hairline", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "rgba(16,21,28,0.4)");
+        },
+        /* 05 anatomy layered diagram */
+        5: function (g, w, h, t) {
+          g.fillStyle = "#f6f1e7"; g.fillRect(0, 0, w, h);
+          var cx = w / 2, sw = w * 0.48, sh = h * 0.115;
+          var e = 0.55 + 0.45 * Math.sin(t * 0.8);
+          var cols = ["#ece5d3", "#d84f35", "#262a31", "#3f9e4d"];
+          g.setLineDash([4, 5]); g.strokeStyle = "rgba(16,21,28,0.3)"; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(cx, h * 0.06); g.lineTo(cx, h * 0.94); g.stroke(); g.setLineDash([]);
+          for (var i = 0; i < 4; i++) {
+            var y = h * 0.5 + (i - 1.5) * sh * 2.15 * e;
+            g.fillStyle = "rgba(16,21,28,0.16)";
+            g.beginPath();
+            g.moveTo(cx - sw / 2 + 9, y - sh / 2 + 7); g.lineTo(cx + sw / 2 + 9, y - sh / 2 + 7);
+            g.lineTo(cx + sw / 2, y + sh / 2 + 7); g.lineTo(cx - sw / 2, y + sh / 2 + 7);
+            g.closePath(); g.fill();
+            g.fillStyle = cols[i]; RR(g, cx - sw / 2, y - sh / 2, sw, sh, 4); g.fill();
+            if (i === 0) {
+              g.fillStyle = "rgba(16,21,28,0.4)";
+              for (var d = 0; d < 9; d++) { g.beginPath(); g.arc(cx - sw * 0.36 + d * sw * 0.09, y, 1.8, 0, 6.2832); g.fill(); }
+            }
+            g.strokeStyle = "rgba(16,21,28,0.35)"; g.lineWidth = 1;
+            g.beginPath(); g.moveTo(cx - sw / 2 - 8, y); g.lineTo(cx - sw / 2 - 26, y); g.stroke();
+            TXT(g, "0" + (i + 1), cx - sw / 2 - 32, y, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.55)", "right");
+          }
+        },
+        /* 06 anatomy-reveal exploded speaker */
+        6: function (g, w, h, t, dt, S) {
+          g.fillStyle = "#f7f1e4"; g.fillRect(0, 0, w, h);
+          var manual = S.manual || null;
+          var e = manual ? manual.e : 0.55 + 0.45 * Math.sin(t * 0.75);
+          var orbit = manual ? manual.o : 0.3;
+          var glow = manual ? manual.g : 0.15 + 0.1 * Math.sin(t * 0.9);
+          var big = w >= 380;
+          var cx = w / 2, rx = big ? Math.min(w * 0.17, 150) : Math.min(w * 0.27, 120);
+          var ry = rx * 0.30, lh = ry * 0.95;
+          if (glow > 0.02) {
+            var gr = g.createRadialGradient(cx, h * 0.5, 4, cx, h * 0.5, rx * 2.1);
+            gr.addColorStop(0, "rgba(255,186,92," + (0.55 * glow) + ")");
+            gr.addColorStop(1, "rgba(255,186,92,0)");
+            g.fillStyle = gr; g.fillRect(0, 0, w, h);
+          }
+          var layers = ["#e9e2d2", "#e2483d", "#23262b", "#3f9e4d", "#c9ccd4", "#23262b"];
+          var labels = ["01 GRILLE 網罩", "02 LIGHT RING 燈環", "03 DRIVER 單體", "04 LOGIC BOARD 主機板", "05 BATTERY 電池", "06 BASE 底座"];
+          var ys = [];
+          for (var i = 0; i < 6; i++) {
+            var ox = Math.sin((i - 2.5) * 0.9) * orbit * 13;
+            var y = h * 0.5 + (i - 2.5) * (lh * 2.35) * e;
+            ys.push(y);
+            cyl(g, cx + ox, y, rx, ry, lh * 0.82, layers[i]);
+            if (i === 0) {
+              g.fillStyle = "rgba(16,21,28,0.38)";
+              var seed = 7;
+              for (var d = 0; d < 16; d++) {
+                seed = (seed * 16807) % 2147483647;
+                var a1 = (seed % 628) / 100, r1 = ((seed >> 3) % 70) / 100;
+                g.beginPath();
+                g.arc(cx + ox + Math.cos(a1) * rx * 0.8 * r1, y - lh * 0.41 + Math.sin(a1) * ry * 0.8 * r1, 1.6, 0, 6.2832);
+                g.fill();
+              }
+            }
+          }
+          var la = Math.max(0, Math.min(1, (e - 0.12) / 0.5));
+          if (la > 0.02) {
+            g.globalAlpha = la;
+            var fs2 = Math.max(9.5, Math.min(12, w * 0.026));
+            for (var li = 0; li < 6; li++) {
+              var ly = ys[li], leftSide = li % 2 === 0;
+              g.strokeStyle = "rgba(16,21,28,0.4)"; g.lineWidth = 1;
+              g.beginPath();
+              if (big) {
+                var lx = leftSide ? cx - rx - 18 : cx + rx + 18;
+                g.moveTo(leftSide ? cx - rx : cx + rx, ly); g.lineTo(lx, ly); g.stroke();
+                TXT(g, labels[li], leftSide ? lx - 6 : lx + 6, ly, "500 " + fs2 + "px " + MONO, "rgba(16,21,28,0.62)", leftSide ? "right" : "left");
+              } else {
+                TXT(g, "0" + (li + 1), cx + rx + 12, ly, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(16,21,28,0.55)");
+              }
+            }
+            g.globalAlpha = 1;
+          }
+        },
+        /* 07 blender cube */
+        7: function (g, w, h, t) {
+          var grad = g.createLinearGradient(0, 0, 0, h);
+          grad.addColorStop(0, "#2e2e2e"); grad.addColorStop(1, "#222222");
+          g.fillStyle = grad; g.fillRect(0, 0, w, h);
+          g.strokeStyle = "rgba(255,255,255,0.07)"; g.lineWidth = 1;
+          g.beginPath();
+          for (var gx = 0; gx <= w; gx += w / 10) { g.moveTo(gx, 0); g.lineTo(gx, h); }
+          for (var gy = 0; gy <= h; gy += h / 7) { g.moveTo(0, gy); g.lineTo(w, gy); }
+          g.stroke();
+          var cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.27;
+          var ay = t * 0.6, ax = 0.55 + 0.18 * Math.sin(t * 0.4);
+          var V = [];
+          for (var i = 0; i < 8; i++) {
+            var vx = (i & 1 ? 1 : -1), vy = (i & 2 ? 1 : -1), vz = (i & 4 ? 1 : -1);
+            var x1 = vx * Math.cos(ay) + vz * Math.sin(ay), z1 = -vx * Math.sin(ay) + vz * Math.cos(ay);
+            var y2 = vy * Math.cos(ax) - z1 * Math.sin(ax), z2 = vy * Math.sin(ax) + z1 * Math.cos(ax);
+            V.push([cx + x1 * R, cy + y2 * R * 0.94, z2]);
+          }
+          var E = [[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+          g.fillStyle = "rgba(232,125,26,0.16)";
+          g.beginPath();
+          [4,5,7,6].forEach(function (vi, k) { k ? g.lineTo(V[vi][0], V[vi][1]) : g.moveTo(V[vi][0], V[vi][1]); });
+          g.closePath(); g.fill();
+          g.strokeStyle = "#d9d9d9"; g.lineWidth = 1.6; g.lineJoin = "round";
+          E.forEach(function (e2) {
+            g.beginPath(); g.moveTo(V[e2[0]][0], V[e2[0]][1]); g.lineTo(V[e2[1]][0], V[e2[1]][1]); g.stroke();
+          });
+          var axes = [["#e05252", 1, 0.35, "X"], ["#7ac74f", 0, -1, "Y"], ["#4f83e0", -1, 0.35, "Z"]];
+          axes.forEach(function (a) {
+            g.strokeStyle = a[0]; g.lineWidth = 1.6;
+            g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + a[1] * R * 1.45, cy + a[2] * R * 1.45); g.stroke();
+            TXT(g, a[3], cx + a[1] * R * 1.62, cy + a[2] * R * 1.62, "700 10px " + MONO, a[0], "center");
+          });
+        },
+        /* 08 three.js wireframe sphere */
+        8: function (g, w, h, t) {
+          g.fillStyle = "#f2f6fc"; g.fillRect(0, 0, w, h);
+          var cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.33;
+          g.strokeStyle = "rgba(16,21,28,0.5)"; g.lineWidth = 1.1;
+          for (var j = -2; j <= 2; j++) {
+            var yy = cy + j * R * 0.42, rr2 = R * Math.cos(j * 0.42);
+            g.beginPath(); g.ellipse(cx, yy, rr2, rr2 * 0.30, 0, 0, Math.PI * 2); g.stroke();
+          }
+          for (var i = 0; i < 8; i++) {
+            var a = i * Math.PI / 8 + t * 0.45, rx2 = Math.abs(Math.cos(a)) * R;
+            if (rx2 < 1.5) continue;
+            g.beginPath(); g.ellipse(cx, cy, rx2, R, 0, 0, Math.PI * 2); g.stroke();
+          }
+          g.beginPath(); g.ellipse(cx, cy, R, R, 0, 0, Math.PI * 2); g.stroke();
+          g.strokeStyle = "rgba(31,106,225,0.55)"; g.lineWidth = 1.4;
+          g.beginPath(); g.ellipse(cx, cy, R * 1.28, R * 0.42, -0.5, 0, Math.PI * 2); g.stroke();
+          var pa = t * 1.1;
+          var px = cx + Math.cos(pa) * R * 1.28, py = cy + Math.sin(pa) * R * 0.42;
+          var tilt = -0.5, tx2 = cx + (px - cx) * Math.cos(tilt) - (py - cy) * Math.sin(tilt);
+          var ty2 = cy + (px - cx) * Math.sin(tilt) + (py - cy) * Math.cos(tilt);
+          g.fillStyle = "#1f6ae1"; g.beginPath(); g.arc(tx2, ty2, 4.5, 0, 6.2832); g.fill();
+        },
+        /* 09 rapier physics balls */
+        9: function (g, w, h, t, dt, S) {
+          g.fillStyle = "#eaf2fe"; g.fillRect(0, 0, w, h);
+          var floor = h * 0.86;
+          if (!S.balls) {
+            var seeds = [
+              [0.18, 0.30, 13, "#1f6ae1", 26, false], [0.36, 0.12, 10, "#e2483d", -18, false],
+              [0.55, 0.40, 15, "#3f9e4d", 14, false], [0.72, 0.16, 11, "#f0a13c", -22, false],
+              [0.86, 0.30, 9, "#10151c", 10, false], [0.30, 0, 12, "#5b8cff", 0, true], [0.64, 0, 12, "#e2483d", 0, true]
+            ];
+            S.balls = seeds.map(function (s) {
+              var r = s[2] * Math.min(1.15, h / 150);
+              return { x: s[0] * w, y: s[5] ? floor - r : s[1] * h, vx: s[4], vy: 0, r: r, c: s[3] };
+            });
+          }
+          var grav = 640 * (h / 200);
+          S.balls.forEach(function (b) {
+            b.vy += grav * dt; b.x += b.vx * dt; b.y += b.vy * dt;
+            if (b.y + b.r > floor) {
+              b.y = floor - b.r; b.vy *= -0.68; b.vx *= 0.985;
+              if (Math.abs(b.vy) < 26) b.vy = 0;
+            }
+            if (b.x - b.r < 4) { b.x = 4 + b.r; b.vx = Math.abs(b.vx) * 0.8; }
+            if (b.x + b.r > w - 4) { b.x = w - 4 - b.r; b.vx = -Math.abs(b.vx) * 0.8; }
+          });
+          g.strokeStyle = "rgba(16,21,28,0.35)"; g.lineWidth = 2;
+          g.beginPath(); g.moveTo(4, floor); g.lineTo(w - 4, floor); g.stroke();
+          g.strokeStyle = "rgba(16,21,28,0.10)"; g.lineWidth = 1;
+          g.beginPath();
+          for (var hx = 10; hx < w - 8; hx += 14) { g.moveTo(hx, floor); g.lineTo(hx - 6, floor + 6); }
+          g.stroke();
+          S.balls.forEach(function (b) {
+            g.fillStyle = b.c; g.beginPath(); g.arc(b.x, b.y, b.r, 0, 6.2832); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.5)";
+            g.beginPath(); g.arc(b.x - b.r * 0.32, b.y - b.r * 0.32, b.r * 0.28, 0, 6.2832); g.fill();
+          });
+          TXT(g, "physics", w * 0.05, h * 0.09, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 10 postprocessing bloom */
+        10: function (g, w, h, t) {
+          g.fillStyle = "#07070d"; g.fillRect(0, 0, w, h);
+          function orb(x, y, r, col, a) {
+            var gr = g.createRadialGradient(x, y, 1, x, y, r);
+            gr.addColorStop(0, "rgba(255,255,255," + a + ")");
+            gr.addColorStop(0.25, col);
+            gr.addColorStop(1, "rgba(0,0,0,0)");
+            g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2);
+          }
+          g.globalCompositeOperation = "lighter";
+          orb(w * 0.5, h * 0.48, h * 0.34 * (1 + 0.08 * Math.sin(t * 1.3)), "rgba(63,110,255,0.55)", 0.95);
+          orb(w * 0.28, h * 0.64, h * 0.15, "rgba(255,70,110,0.5)", 0.8);
+          orb(w * 0.74, h * 0.36, h * 0.12, "rgba(45,212,191,0.5)", 0.8);
+          g.globalCompositeOperation = "source-over";
+          var seed = Math.floor(t * 6) * 977;
+          g.fillStyle = "rgba(255,255,255,0.10)";
+          for (var i = 0; i < 42; i++) {
+            seed = (seed * 16807) % 2147483647;
+            g.fillRect((seed % 1000) / 1000 * w, ((seed >> 4) % 1000) / 1000 * h, 1.4, 1.4);
+          }
+          var vg = g.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.32, w / 2, h / 2, Math.max(w, h) * 0.72);
+          vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,0.6)");
+          g.fillStyle = vg; g.fillRect(0, 0, w, h);
+          TXT(g, "bloom · dof · grain", w * 0.05, h * 0.92, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+        },
+        /* 11 three.quarks particles */
+        11: function (g, w, h, t, dt, S) {
+          g.fillStyle = "#0c1424"; g.fillRect(0, 0, w, h);
+          if (!S.ps) { S.ps = []; S.acc = 0; }
+          var cols = ["#6ea8ff", "#ffd166", "#ff7a90", "#7ef0c9"];
+          S.acc += dt * 42;
+          while (S.acc > 1 && S.ps.length < 110) {
+            S.acc -= 1;
+            S.ps.push({
+              x: w * 0.5 + (Math.random() - 0.5) * 10, y: h * 0.86,
+              vx: (Math.random() - 0.5) * 34, vy: -(46 + Math.random() * 76) * (h / 200),
+              life: 0, max: 1.5 + Math.random() * 1.5, r: 1.4 + Math.random() * 2.2,
+              c: cols[Math.floor(Math.random() * cols.length)], sd: Math.random() * 6.28
+            });
+          }
+          var eg = g.createRadialGradient(w * 0.5, h * 0.86, 1, w * 0.5, h * 0.86, h * 0.2);
+          eg.addColorStop(0, "rgba(140,180,255,0.5)"); eg.addColorStop(1, "rgba(140,180,255,0)");
+          g.fillStyle = eg; g.fillRect(0, 0, w, h);
+          S.ps = S.ps.filter(function (p) { return p.life < p.max; });
+          S.ps.forEach(function (p) {
+            p.life += dt;
+            p.x += p.vx * dt + Math.sin(p.life * 3 + p.sd) * 13 * dt;
+            p.y += p.vy * dt; p.vy -= 7 * dt;
+            var a = Math.max(0, 1 - p.life / p.max);
+            g.globalAlpha = a;
+            g.strokeStyle = p.c; g.lineWidth = p.r * 0.8;
+            g.beginPath(); g.moveTo(p.x - p.vx * 0.06, p.y - p.vy * 0.06); g.lineTo(p.x, p.y); g.stroke();
+            g.fillStyle = p.c; g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.2832); g.fill();
+          });
+          g.globalAlpha = 1;
+        },
+        /* 12 tweakpane */
+        12: function (g, w, h, t) {
+          g.fillStyle = "#17181c"; g.fillRect(0, 0, w, h);
+          RR(g, w * 0.05, h * 0.07, w * 0.9, h * 0.86, 10); g.fillStyle = "#222329"; g.fill();
+          var labels = ["radius", "speed", "hue"];
+          var vs = [0.5 + 0.42 * Math.sin(t * 0.8), 0.5 + 0.42 * Math.sin(t * 0.8 + 2.1), 0.5 + 0.42 * Math.sin(t * 0.5 + 4.2)];
+          var fs = Math.max(9.5, w * 0.034);
+          for (var i = 0; i < 3; i++) {
+            var y = h * (0.22 + i * 0.17);
+            TXT(g, labels[i], w * 0.10, y, "500 " + fs + "px " + MONO, "#9aa0aa");
+            var tx = w * 0.33, tw = w * 0.30;
+            g.fillStyle = "#3a3b42"; RR(g, tx, y - 2.5, tw, 5, 2.5); g.fill();
+            g.fillStyle = "#6ea8ff"; RR(g, tx, y - 2.5, tw * vs[i], 5, 2.5); g.fill();
+            g.fillStyle = "#ffffff"; g.beginPath(); g.arc(tx + tw * vs[i], y, 6, 0, 6.2832); g.fill();
+            TXT(g, (vs[i] * 100).toFixed(0), tx + tw + 12, y, "500 " + fs + "px " + MONO, "#d5d8de");
+          }
+          var cr = 6 + vs[0] * h * 0.13;
+          g.fillStyle = "hsl(" + Math.floor(vs[2] * 360) + ",70%,55%)";
+          g.beginPath(); g.arc(w * 0.85, h * 0.62, cr, 0, 6.2832); g.fill();
+          TXT(g, "params", w * 0.85, h * 0.88, "500 " + fs + "px " + MONO, "#9aa0aa", "center");
+        },
+        /* 13 gsap timeline */
+        13: function (g, w, h, t) {
+          g.fillStyle = "#0f130e"; g.fillRect(0, 0, w, h);
+          var ph = (t % 4) / 4;
+          var x0 = w * 0.08, x1 = w * 0.9;
+          var e = 1 - Math.pow(1 - ph, 3);
+          for (var tr = 3; tr >= 1; tr--) {
+            g.globalAlpha = 0.10 * tr;
+            g.fillStyle = "#88ce02";
+            RR(g, x0 + (x1 - x0) * e - tr * 9, h * 0.13, h * 0.15, h * 0.15, 4); g.fill();
+          }
+          g.globalAlpha = 1;
+          g.fillStyle = "#88ce02"; RR(g, x0 + (x1 - x0) * e, h * 0.13, h * 0.15, h * 0.15, 4); g.fill();
+          TXT(g, (ph * 4).toFixed(1) + "s", x1, h * 0.20, "500 " + Math.max(11, w * 0.045) + "px " + MONO, "#cfe8b0", "right");
+          var rows = [["#88ce02", 0.0, 0.55], ["#5aa702", 0.3, 0.45], ["#c1f558", 0.58, 0.34]];
+          rows.forEach(function (r, i) {
+            var y = h * (0.48 + i * 0.16);
+            g.fillStyle = "rgba(255,255,255,0.08)"; RR(g, x0, y - 5, x1 - x0, 10, 5); g.fill();
+            g.fillStyle = r[0]; RR(g, x0 + (x1 - x0) * r[1], y - 5, (x1 - x0) * r[2], 10, 5); g.fill();
+          });
+          var px = x0 + (x1 - x0) * ph;
+          g.strokeStyle = "rgba(255,255,255,0.85)"; g.lineWidth = 1.6;
+          g.beginPath(); g.moveTo(px, h * 0.4); g.lineTo(px, h * 0.9); g.stroke();
+          g.fillStyle = "#ffffff";
+          g.beginPath(); g.moveTo(px - 5, h * 0.4); g.lineTo(px + 5, h * 0.4); g.lineTo(px, h * 0.4 + 8); g.closePath(); g.fill();
+        },
+        /* 14 remotion render */
+        14: function (g, w, h, t) {
+          g.fillStyle = "#eef3fa"; g.fillRect(0, 0, w, h);
+          var fh = h * 0.78, fw = fh * 0.8, fx = (w - fw) / 2, fy = h * 0.05;
+          g.fillStyle = "rgba(16,21,28,0.12)"; RR(g, fx + 5, fy + 7, fw, fh, 10); g.fill();
+          g.fillStyle = "#ffffff"; RR(g, fx, fy, fw, fh, 10); g.fill();
+          g.save();
+          RR(g, fx, fy, fw, fh, 10); g.clip();
+          g.fillStyle = "#1f6ae1"; RR(g, fx + fw * 0.1, fy + fh * 0.1, fw * (0.34 + 0.2 * Math.sin(t * 1.4)), fh * 0.09, 4); g.fill();
+          g.fillStyle = "#dbe5f2"; RR(g, fx + fw * 0.1, fy + fh * 0.26, fw * 0.62, fh * 0.055, 3); g.fill();
+          RR(g, fx + fw * 0.1, fy + fh * 0.35, fw * 0.48, fh * 0.055, 3); g.fill();
+          g.fillStyle = "#f0a13c"; g.beginPath(); g.arc(fx + fw * 0.72, fy + fh * 0.58, fh * 0.11 * (1 + 0.1 * Math.sin(t * 2)), 0, 6.2832); g.fill();
+          g.fillStyle = "#3f9e4d"; RR(g, fx + fw * 0.1, fy + fh * 0.52, fw * 0.3, fh * 0.2, 5); g.fill();
+          g.restore();
+          var ph = (t % 5) / 5;
+          g.fillStyle = "rgba(16,21,28,0.12)"; RR(g, fx, fy + fh + 8, fw, 6, 3); g.fill();
+          g.fillStyle = "#1f6ae1"; RR(g, fx, fy + fh + 8, fw * ph, 6, 3); g.fill();
+          TXT(g, "Rendering " + Math.floor(ph * 100) + "%", w / 2, fy + fh + 24, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.6)", "center");
+        },
+        /* 15 manim */
+        15: function (g, w, h, t) {
+          g.fillStyle = "#0a101d"; g.fillRect(0, 0, w, h);
+          var cx = w * 0.40, cy = h * 0.56;
+          g.strokeStyle = "rgba(255,255,255,0.45)"; g.lineWidth = 1.2;
+          g.beginPath();
+          g.moveTo(w * 0.05, cy); g.lineTo(w * 0.72, cy);
+          g.moveTo(cx, h * 0.12); g.lineTo(cx, h * 0.94);
+          g.stroke();
+          g.strokeStyle = "rgba(88,196,221,0.25)"; g.lineWidth = 2.4;
+          g.beginPath();
+          for (var i = 0; i <= 90; i++) {
+            var X = w * 0.06 + (i / 90) * w * 0.64, Y = cy - Math.sin((i / 90) * Math.PI * 3.2) * h * 0.26;
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.stroke();
+          var ph = (t % 4.5) / 4.5, n = Math.floor(90 * Math.min(1, ph * 1.15));
+          g.strokeStyle = "#58c4dd"; g.lineWidth = 2.6; g.lineCap = "round";
+          g.beginPath();
+          for (var j = 0; j <= n; j++) {
+            var X2 = w * 0.06 + (j / 90) * w * 0.64, Y2 = cy - Math.sin((j / 90) * Math.PI * 3.2) * h * 0.26;
+            j ? g.lineTo(X2, Y2) : g.moveTo(X2, Y2);
+          }
+          g.stroke();
+          if (n > 0) {
+            var hx = w * 0.06 + (n / 90) * w * 0.64, hy = cy - Math.sin((n / 90) * Math.PI * 3.2) * h * 0.26;
+            g.fillStyle = "#ffd94d"; g.beginPath(); g.arc(hx, hy, 4.5, 0, 6.2832); g.fill();
+          }
+          var mx = w * 0.86, my = h * 0.34, R = Math.min(w, h) * 0.16, s = 0.5 + 0.5 * Math.sin(t * 0.9);
+          g.strokeStyle = "#ffd94d"; g.lineWidth = 2.2;
+          g.beginPath();
+          for (var k = 0; k <= 40; k++) {
+            var a = k / 40 * Math.PI * 2;
+            var rc = R, rs = R / Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a)));
+            var rr3 = rc + (rs - rc) * s;
+            var px = mx + Math.cos(a) * rr3, py = my + Math.sin(a) * rr3;
+            k ? g.lineTo(px, py) : g.moveTo(px, py);
+          }
+          g.stroke();
+          TXT(g, "y = sin x", w * 0.06, h * 0.10, "italic 600 " + Math.max(11, w * 0.042) + "px Georgia, serif", "rgba(255,255,255,0.85)");
+        },
+        /* 16 lottie heart */
+        16: function (g, w, h, t) {
+          g.fillStyle = "#ffe9ee"; g.fillRect(0, 0, w, h);
+          var cx = w / 2, cy = h * 0.52;
+          g.strokeStyle = "#e7b7c2"; g.lineWidth = 2;
+          g.beginPath();
+          g.moveTo(w * 0.05, cy); g.lineTo(w * 0.33, cy);
+          g.moveTo(w * 0.67, cy); g.lineTo(w * 0.95, cy);
+          g.stroke();
+          var ph = t % 1.4, b = 0;
+          if (ph < 0.12) b = Math.sin(ph / 0.12 * Math.PI) * 0.22;
+          else if (ph < 0.32) b = Math.sin((ph - 0.12) / 0.2 * Math.PI) * 0.12;
+          var s = h * 0.30 * (1 + b);
+          g.fillStyle = "#f43f5e";
+          g.beginPath();
+          g.moveTo(cx, cy + s * 0.92);
+          g.bezierCurveTo(cx - s * 1.35, cy + s * 0.08, cx - s * 0.72, cy - s * 0.98, cx, cy - s * 0.30);
+          g.bezierCurveTo(cx + s * 0.72, cy - s * 0.98, cx + s * 1.35, cy + s * 0.08, cx, cy + s * 0.92);
+          g.fill();
+          TXT(g, "lottie", cx, h * 0.93, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "rgba(120,40,60,0.5)", "center");
+        },
+        /* 17 openverse search */
+        17: function (g, w, h, t) {
+          g.fillStyle = "#f6f1e6"; g.fillRect(0, 0, w, h);
+          g.fillStyle = "rgba(16,21,28,0.08)"; RR(g, w * 0.08 + 2, h * 0.07 + 3, w * 0.84, h * 0.17, h * 0.085); g.fill();
+          g.fillStyle = "#ffffff"; RR(g, w * 0.08, h * 0.07, w * 0.84, h * 0.17, h * 0.085); g.fill();
+          g.strokeStyle = "#10151c"; g.lineWidth = 2;
+          g.beginPath(); g.arc(w * 0.155, h * 0.155, h * 0.042, 0, 6.2832); g.stroke();
+          g.beginPath(); g.moveTo(w * 0.155 + h * 0.036, h * 0.155 + h * 0.036); g.lineTo(w * 0.155 + h * 0.062, h * 0.155 + h * 0.062); g.stroke();
+          TXT(g, "♪ 海浪聲 · 環境音", w * 0.225, h * 0.158, "500 " + Math.max(10.5, w * 0.04) + "px sans-serif", "#3d4654");
+          var ph = (t % 5) / 5;
+          var tw = w * 0.26, th = h * 0.27, gx = w * 0.08, gy = h * 0.34, gapx = (w * 0.84 - tw * 3) / 2, gapy = h * 0.06;
+          for (var i = 0; i < 6; i++) {
+            var col = i % 3, row = Math.floor(i / 3);
+            var X = gx + col * (tw + gapx), Y = gy + row * (th + gapy);
+            var sc = Math.max(0, Math.min(1, (ph * 1.35 - i * 0.07) / 0.22));
+            if (sc <= 0) continue;
+            var ease = 1 - Math.pow(1 - sc, 3);
+            g.save();
+            g.globalAlpha = ease;
+            g.translate(X + tw / 2, Y + th / 2); g.scale(0.7 + 0.3 * ease, 0.7 + 0.3 * ease); g.translate(-tw / 2, -th / 2);
+            if (i % 2 === 0) {
+              var grd = g.createLinearGradient(0, 0, 0, th);
+              grd.addColorStop(0, "#a8d4f0"); grd.addColorStop(1, "#eaf6ff");
+              g.fillStyle = grd; RR(g, 0, 0, tw, th, 8); g.fill();
+              g.fillStyle = "#ffd166"; g.beginPath(); g.arc(tw * 0.72, th * 0.3, th * 0.14, 0, 6.2832); g.fill();
+              g.fillStyle = "#588157";
+              g.beginPath(); g.moveTo(0, th); g.lineTo(tw * 0.42, th * 0.42); g.lineTo(tw * 0.8, th); g.closePath(); g.fill();
+              g.fillStyle = "#7fb069";
+              g.beginPath(); g.moveTo(tw * 0.4, th); g.lineTo(tw * 0.78, th * 0.55); g.lineTo(tw, th * 0.8); g.lineTo(tw, th); g.closePath(); g.fill();
+            } else {
+              g.fillStyle = "#ffffff"; RR(g, 0, 0, tw, th, 8); g.fill();
+              g.fillStyle = "#1f6ae1";
+              g.beginPath(); g.moveTo(tw * 0.14, th * 0.38); g.lineTo(tw * 0.14, th * 0.62); g.lineTo(tw * 0.28, th * 0.5); g.closePath(); g.fill();
+              for (var b2 = 0; b2 < 7; b2++) {
+                var bh = th * (0.14 + 0.2 * Math.abs(Math.sin(i * 3.1 + b2 * 1.3)));
+                g.fillStyle = "rgba(31,106,225,0.65)";
+                RR(g, tw * 0.36 + b2 * tw * 0.085, th / 2 - bh / 2, tw * 0.05, bh, 2); g.fill();
+              }
+            }
+            g.restore();
+          }
+        },
+        /* 18 librosa beats */
+        18: function (g, w, h, t) {
+          g.fillStyle = "#0e1524"; g.fillRect(0, 0, w, h);
+          var N = 42, x0 = w * 0.07, bw = w * 0.86 / N, cy = h * 0.54;
+          var head = ((t * 0.22) % 1) * w;
+          [0.22, 0.47, 0.72, 0.97].forEach(function (f) {
+            var bx = x0 + f * w * 0.86;
+            g.strokeStyle = (t % 0.5) < 0.12 ? "rgba(110,168,255,0.5)" : "rgba(110,168,255,0.16)";
+            g.lineWidth = 1.4;
+            g.beginPath(); g.moveTo(bx, h * 0.16); g.lineTo(bx, h * 0.9); g.stroke();
+          });
+          for (var i = 0; i < N; i++) {
+            var bh = (Math.abs(Math.sin(i * 0.7) * 0.6 + Math.sin(i * 0.23 + 1.7) * 0.4)) * h * 0.30 * (0.78 + 0.22 * Math.sin(t * 2 + i * 0.6));
+            var bx2 = x0 + i * bw;
+            g.fillStyle = Math.abs(bx2 - head) < bw * 1.6 ? "#6ea8ff" : "#4a6b9c";
+            RR(g, bx2 + 1, cy - bh / 2, bw - 2.5, Math.max(3, bh), 2); g.fill();
+          }
+          var bt = (t % 0.5) / 0.5, by = cy - h * 0.40 + Math.sin(bt * Math.PI) * h * 0.07;
+          g.fillStyle = "#ffd166"; g.beginPath(); g.arc(w * 0.5, by, 5, 0, 6.2832); g.fill();
+          TXT(g, "beat track", w * 0.06, h * 0.09, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.45)");
+          TXT(g, "120 BPM", w * 0.94, h * 0.09, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "#6ea8ff", "right");
+        },
+        /* 19 whisperx captions */
+        19: function (g, w, h, t) {
+          g.fillStyle = "#0d1320"; g.fillRect(0, 0, w, h);
+          var N = 48, x0 = w * 0.07, bw = w * 0.86 / N, cy = h * 0.28;
+          var ph = (t % 6) / 6, head = x0 + ph * w * 0.86;
+          for (var i = 0; i < N; i++) {
+            var bh = (0.25 + 0.75 * Math.abs(Math.sin(i * 0.9 + 0.6) * Math.sin(i * 0.31))) * h * 0.15;
+            var bx = x0 + i * bw;
+            g.fillStyle = bx < head ? "#6ea8ff" : "rgba(255,255,255,0.32)";
+            RR(g, bx + 1, cy - bh / 2, bw - 2.5, Math.max(3, bh), 2); g.fill();
+          }
+          g.strokeStyle = "rgba(255,255,255,0.9)"; g.lineWidth = 1.6;
+          g.beginPath(); g.moveTo(head, h * 0.1); g.lineTo(head, h * 0.46); g.stroke();
+          var words = ["字幕", "時間軸", "自動", "對齊", "完成"];
+          var times = ["00:00.0", "00:01.2", "00:02.5", "00:03.7", "00:04.9"];
+          var fs = Math.min(15, Math.max(11.5, w * 0.048));
+          var chipY = h * 0.64, chipH = fs * 2.1, cxp = x0;
+          var active = Math.min(4, Math.floor(ph * 5.4));
+          g.font = "600 " + fs + "px sans-serif";
+          for (var wi = 0; wi < 5; wi++) {
+            var cw = g.measureText(words[wi]).width + 22;
+            if (cxp + cw > w * 0.96) break;
+            g.fillStyle = wi === active ? "#1f6ae1" : wi < active ? "rgba(31,106,225,0.28)" : "rgba(255,255,255,0.08)";
+            RR(g, cxp, chipY - chipH / 2, cw, chipH, 8); g.fill();
+            TXT(g, words[wi], cxp + cw / 2, chipY, "600 " + fs + "px sans-serif", wi <= active ? "#ffffff" : "rgba(255,255,255,0.45)", "center");
+            TXT(g, times[wi], cxp + cw / 2, chipY + chipH / 2 + 13, "500 " + Math.max(9, fs * 0.66) + "px " + MONO, wi === active ? "#6ea8ff" : "rgba(255,255,255,0.3)", "center");
+            cxp += cw + 9;
+          }
+        },
+        /* 20 ffmpeg progress ring */
+        20: function (g, w, h, t) {
+          g.fillStyle = "#0c1118"; g.fillRect(0, 0, w, h);
+          var ph = (t % 7) / 7, p;
+          if (ph < 0.82) p = 0.97 * (1 - Math.pow(1 - ph / 0.82, 2));
+          else if (ph < 0.92) p = 0.97;
+          else p = 0.97 * (1 - (ph - 0.92) / 0.08);
+          var cx = w / 2, cy = h * 0.46, r = Math.min(w, h) * 0.27;
+          g.strokeStyle = "rgba(255,255,255,0.12)"; g.lineWidth = 7; g.lineCap = "round";
+          g.beginPath(); g.arc(cx, cy, r, 0, 6.2832); g.stroke();
+          g.strokeStyle = "#2f7df6";
+          g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + p * 6.2832); g.stroke();
+          TXT(g, Math.round(p * 100) + "%", cx, cy, "800 " + Math.max(17, r * 0.62) + "px Archivo, sans-serif", "#ffffff", "center");
+          TXT(g, "h264 · 1080×1350", cx, h * 0.88, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "#8b98a9", "center");
+        },
+        /* 21 skills blocks */
+        21: function (g, w, h, t) {
+          g.fillStyle = "#eef3fa"; g.fillRect(0, 0, w, h);
+          var labels = ["docx", "pdf", "pptx", "xlsx"];
+          var cols = ["#1f6ae1", "#e2483d", "#f0a13c", "#3f9e4d"];
+          var bw = w * 0.36, bh = h * 0.17, x0 = w * 0.10, yBase = h * 0.82;
+          var ph = (t % 5) / 5;
+          for (var i = 0; i < 4; i++) {
+            var appear = Math.max(0, Math.min(1, (ph * 1.5 - i * 0.14) / 0.25));
+            if (appear <= 0) continue;
+            var ease = 1 - Math.pow(1 - appear, 3);
+            var y = yBase - (i + 1) * (bh + 5) + (1 - ease) * 16;
+            g.globalAlpha = ease;
+            g.fillStyle = cols[i]; RR(g, x0, y, bw, bh, 6); g.fill();
+            TXT(g, labels[i], x0 + 12, y + bh / 2, "600 " + Math.max(10, w * 0.038) + "px " + MONO, "#ffffff");
+            g.globalAlpha = 1;
+          }
+          var sx = w * 0.60;
+          TXT(g, "skills", sx, h * 0.16, "700 " + Math.max(12, w * 0.05) + "px Archivo, sans-serif", "#10151c");
+          var items = ["創意設計", "開發技術", "企業溝通", "文件製作"];
+          for (var j = 0; j < 4; j++) {
+            var on = ph * 5 > j + 0.6;
+            var yy = h * (0.32 + j * 0.15);
+            g.strokeStyle = on ? "#2f9e5f" : "rgba(16,21,28,0.25)"; g.lineWidth = 2;
+            RR(g, sx, yy - 8, 16, 16, 4); g.stroke();
+            if (on) { g.beginPath(); g.moveTo(sx + 3.5, yy); g.lineTo(sx + 7, yy + 3.5); g.lineTo(sx + 12.5, yy - 4); g.stroke(); }
+            TXT(g, items[j], sx + 24, yy, "500 " + Math.max(10.5, w * 0.04) + "px sans-serif", on ? "#10151c" : "rgba(16,21,28,0.4)");
+          }
+        },
+        /* 22 superpowers steps */
+        22: function (g, w, h, t) {
+          g.fillStyle = "#0e1420"; g.fillRect(0, 0, w, h);
+          var steps = ["問需求", "寫規格", "按計畫開發", "TDD 驗證"];
+          var ph = (t % 6) / 6;
+          var x0 = w * 0.09, bw = w * 0.82;
+          TXT(g, "superpowers", x0, h * 0.12, "500 " + Math.max(10, w * 0.04) + "px " + MONO, "rgba(255,255,255,0.45)");
+          for (var i = 0; i < 4; i++) {
+            var y = h * (0.26 + i * 0.17);
+            var done = ph * 4.6 > i + 1, active = !done && ph * 4.6 > i;
+            g.fillStyle = done ? "rgba(47,158,95,0.20)" : active ? "rgba(31,106,225,0.25)" : "rgba(255,255,255,0.06)";
+            RR(g, x0, y - h * 0.065, bw, h * 0.13, 8); g.fill();
+            g.fillStyle = done ? "#2f9e5f" : active ? "#1f6ae1" : "rgba(255,255,255,0.25)";
+            g.beginPath(); g.arc(x0 + 20, y, 10, 0, 6.2832); g.fill();
+            TXT(g, done ? "✓" : String(i + 1), x0 + 20, y + 0.5, "700 11px sans-serif", "#ffffff", "center");
+            TXT(g, steps[i], x0 + 42, y, "600 " + Math.max(11, w * 0.042) + "px sans-serif", done || active ? "#ffffff" : "rgba(255,255,255,0.4)");
+            if (active) {
+              g.fillStyle = "#6ea8ff"; RR(g, x0 + bw - 12 - bw * 0.2 * (1 - (ph * 4.6 - i)), y - 2, bw * 0.2 * (ph * 4.6 - i), 4, 2); g.fill();
+            }
+          }
+        },
+        /* 23 firecrawl scrape */
+        23: function (g, w, h, t) {
+          g.fillStyle = "#faf3ec"; g.fillRect(0, 0, w, h);
+          var bx = w * 0.06, by = h * 0.14, bw2 = w * 0.40, bh2 = h * 0.66;
+          g.fillStyle = "#ffffff"; RR(g, bx, by, bw2, bh2, 8); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.2)"; g.lineWidth = 1.2; RR(g, bx, by, bw2, bh2, 8); g.stroke();
+          g.fillStyle = "#e2483d"; g.beginPath(); g.arc(bx + 12, by + 11, 3.5, 0, 6.2832); g.fill();
+          g.fillStyle = "#f0a13c"; g.beginPath(); g.arc(bx + 24, by + 11, 3.5, 0, 6.2832); g.fill();
+          g.fillStyle = "#3f9e4d"; g.beginPath(); g.arc(bx + 36, by + 11, 3.5, 0, 6.2832); g.fill();
+          for (var i = 0; i < 4; i++) {
+            g.fillStyle = i === 0 ? "rgba(16,21,28,0.55)" : "rgba(16,21,28,0.16)";
+            RR(g, bx + 12, by + 30 + i * (bh2 - 44) / 3.4, bw2 - 24 - (i % 2) * 22, 7, 3.5); g.fill();
+          }
+          var ax = bx + bw2 + w * 0.03, ax2 = w * 0.56;
+          var pulse = 0.5 + 0.5 * Math.sin(t * 3);
+          g.strokeStyle = "#e85d26"; g.lineWidth = 2.5;
+          g.beginPath(); g.moveTo(ax, h * 0.47); g.lineTo(ax2, h * 0.47); g.stroke();
+          g.fillStyle = "#e85d26";
+          g.beginPath(); g.moveTo(ax2, h * 0.47); g.lineTo(ax2 - 8, h * 0.47 - 5); g.lineTo(ax2 - 8, h * 0.47 + 5); g.closePath(); g.fill();
+          g.globalAlpha = 0.5 + 0.5 * pulse;
+          g.beginPath(); g.arc((ax + ax2) / 2, h * 0.47, 4, 0, 6.2832); g.fill();
+          g.globalAlpha = 1;
+          var mx = w * 0.60, mw = w * 0.34;
+          TXT(g, "markdown", mx, h * 0.16, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var ph = (t % 5) / 5;
+          for (var j = 0; j < 5; j++) {
+            if (ph * 1.3 < j * 0.16) continue;
+            g.fillStyle = j === 0 ? "#10151c" : "rgba(16,21,28,0.30)";
+            RR(g, mx, h * (0.26 + j * 0.12), mw * (j === 0 ? 0.62 : 0.85 - (j % 3) * 0.14), 8, 4); g.fill();
+          }
+          TXT(g, "{ json }", mx, h * 0.92, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 24 yt-dlp + whisper */
+        24: function (g, w, h, t) {
+          g.fillStyle = "#0d1320"; g.fillRect(0, 0, w, h);
+          var ph = (t % 6) / 6;
+          var vx = w * 0.07, vy = h * 0.12, vw = w * 0.34, vh = vw * 0.62;
+          g.fillStyle = "#1b2740"; RR(g, vx, vy, vw, vh, 8); g.fill();
+          g.fillStyle = "#e2483d";
+          g.beginPath(); g.moveTo(vx + vw * 0.42, vy + vh * 0.32); g.lineTo(vx + vw * 0.42, vy + vh * 0.68); g.lineTo(vx + vw * 0.64, vy + vh * 0.5); g.closePath(); g.fill();
+          var dl = Math.min(1, ph * 1.6);
+          g.fillStyle = "rgba(255,255,255,0.14)"; RR(g, vx, vy + vh + 10, vw, 6, 3); g.fill();
+          g.fillStyle = "#6ea8ff"; RR(g, vx, vy + vh + 10, vw * dl, 6, 3); g.fill();
+          TXT(g, "下載 " + Math.floor(dl * 100) + "%", vx, vy + vh + 28, "500 " + Math.max(9.5, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.55)");
+          var ax = vx + vw + w * 0.04, ax2 = w * 0.56;
+          g.strokeStyle = "#6ea8ff"; g.lineWidth = 2.2;
+          g.beginPath(); g.moveTo(ax, h * 0.30); g.lineTo(ax2, h * 0.30); g.stroke();
+          g.fillStyle = "#6ea8ff";
+          g.beginPath(); g.moveTo(ax2, h * 0.30); g.lineTo(ax2 - 8, h * 0.30 - 5); g.lineTo(ax2 - 8, h * 0.30 + 5); g.closePath(); g.fill();
+          var wx = w * 0.60, ww = w * 0.33;
+          TXT(g, "whisper → 文字稿", wx, h * 0.16, "500 " + Math.max(9.5, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.45)");
+          var N = 18, bw3 = ww / N, cy = h * 0.30;
+          for (var i = 0; i < N; i++) {
+            var bh3 = (0.3 + 0.7 * Math.abs(Math.sin(i * 0.9))) * h * 0.13;
+            g.fillStyle = ph > 0.45 ? "#6ea8ff" : "rgba(255,255,255,0.3)";
+            RR(g, wx + i * bw3 + 1, cy - bh3 / 2, bw3 - 2.5, Math.max(3, bh3), 2); g.fill();
+          }
+          for (var j = 0; j < 3; j++) {
+            if (ph * 1.4 < 0.55 + j * 0.16) continue;
+            g.fillStyle = "rgba(255,255,255,0.75)";
+            RR(g, wx, h * (0.52 + j * 0.14), ww * (0.9 - j * 0.16), 8, 4); g.fill();
+          }
+          TXT(g, "yt-dlp + whisper", w * 0.06, h * 0.92, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 25 marp slides */
+        25: function (g, w, h, t) {
+          g.fillStyle = "#f2f6fc"; g.fillRect(0, 0, w, h);
+          var mx = w * 0.06, my = h * 0.14, mw = w * 0.36;
+          TXT(g, "# 簡報標題", mx, my, "600 " + Math.max(10.5, w * 0.04) + "px " + MONO, "#10151c");
+          var lines = [0.95, 0.7, 0.82, 0.55];
+          for (var i = 0; i < 4; i++) {
+            g.fillStyle = "rgba(16,21,28,0.28)";
+            RR(g, mx, my + 20 + i * 15, mw * lines[i], 7, 3.5); g.fill();
+          }
+          TXT(g, "---", mx, my + 92, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.4)");
+          var ax = mx + mw + w * 0.03, ax2 = w * 0.56;
+          g.strokeStyle = "#1f6ae1"; g.lineWidth = 2.4;
+          g.beginPath(); g.moveTo(ax, h * 0.42); g.lineTo(ax2, h * 0.42); g.stroke();
+          g.fillStyle = "#1f6ae1";
+          g.beginPath(); g.moveTo(ax2, h * 0.42); g.lineTo(ax2 - 8, h * 0.42 - 5); g.lineTo(ax2 - 8, h * 0.42 + 5); g.closePath(); g.fill();
+          var ph = (t % 5) / 5, cur = Math.floor(ph * 3.4);
+          for (var s = 0; s < 3; s++) {
+            var sx = w * 0.60 + s * 7, sy = h * 0.14 + s * 9, sw = w * 0.33, sh = sw * 0.62;
+            g.fillStyle = "rgba(16,21,28,0.10)"; RR(g, sx + 3, sy + 4, sw, sh, 7); g.fill();
+            g.fillStyle = s === Math.min(2, cur) ? "#ffffff" : "#dbe5f2"; RR(g, sx, sy, sw, sh, 7); g.fill();
+            g.strokeStyle = "rgba(16,21,28,0.15)"; g.lineWidth = 1; RR(g, sx, sy, sw, sh, 7); g.stroke();
+          }
+          var fx = w * 0.60, fy = h * 0.14, fw = w * 0.33, fh = fw * 0.62;
+          g.fillStyle = "#1f6ae1"; RR(g, fx + 12, fy + 13, fw * 0.55, 9, 4); g.fill();
+          g.fillStyle = "rgba(16,21,28,0.22)";
+          RR(g, fx + 12, fy + 32, fw * 0.78, 6, 3); g.fill();
+          RR(g, fx + 12, fy + 44, fw * 0.62, 6, 3); g.fill();
+          var fmts = ["HTML", "PDF", "PPTX"];
+          for (var f = 0; f < 3; f++) {
+            g.fillStyle = f === Math.min(2, cur) ? "#10151c" : "#eef2f7";
+            RR(g, fx + f * (fw / 3 + 2), fy + fh + 14, fw / 3 - 3, 20, 10); g.fill();
+            TXT(g, fmts[f], fx + f * (fw / 3 + 2) + (fw / 3 - 3) / 2, fy + fh + 24, "600 " + Math.max(9, w * 0.03) + "px " + MONO, f === Math.min(2, cur) ? "#ffffff" : "#3d4654", "center");
+          }
+        }
+      };
+
+      var vizIO = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.target._entry) en.target._entry.vis = en.isIntersecting; });
+      }, { threshold: 0.04 }) : null;
+
+      function vizSize(e) {
+        var r = e.el.getBoundingClientRect();
+        if (r.width < 4 || r.height < 4) return;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        e.dpr = dpr; e.w = r.width; e.h = r.height;
+        e.el.width = Math.round(r.width * dpr);
+        e.el.height = Math.round(r.height * dpr);
+      }
+      function vizGeneric(g, w, h, t, n) {
+        var hues = [210, 262, 160, 18, 330, 190, 96, 280];
+        var hue = hues[n % hues.length];
+        var dark = n % 3 === 0;
+        g.fillStyle = dark ? "#10151f" : "#eef3fa"; g.fillRect(0, 0, w, h);
+        var cx = w / 2, cy = h / 2;
+        for (var ring = 3; ring >= 1; ring--) {
+          var r = Math.min(w, h) * 0.13 * ring * (1 + 0.05 * Math.sin(t * 1.4 + ring + n));
+          g.strokeStyle = "hsla(" + hue + ",70%,55%," + (0.25 + ring * 0.2) + ")"; g.lineWidth = 2.4;
+          g.beginPath(); g.arc(cx, cy, r, 0, 6.2832); g.stroke();
+        }
+        g.fillStyle = "hsl(" + hue + ",72%,52%)";
+        g.beginPath(); g.arc(cx, cy, Math.min(w, h) * 0.075, 0, 6.2832); g.fill();
+        var bars = 9;
+        for (var b = 0; b < bars; b++) {
+          var bh = h * (0.10 + 0.16 * Math.abs(Math.sin(t * 1.8 + b * 0.9 + n)));
+          g.fillStyle = "hsla(" + hue + ",65%,55%,0.55)";
+          RR(g, w * 0.08 + b * (w * 0.84 / bars), h * 0.90 - bh, w * 0.84 / bars - 5, bh, 3); g.fill();
+        }
+        TXT(g, "skill " + pad(n), w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, dark ? "rgba(255,255,255,0.5)" : "rgba(16,21,28,0.45)");
+      }
+      function vizDraw(e, t, dt) {
+        var fn = VIZ[e.n];
+        if (!e.w) return;
+        if (!fn) { var gg = e.el.getContext("2d"); gg.setTransform(e.dpr, 0, 0, e.dpr, 0, 0); vizGeneric(gg, e.w, e.h, t + e.n * 0.83, e.n); return; }
+        var g = e.el.getContext("2d");
+        g.setTransform(e.dpr, 0, 0, e.dpr, 0, 0);
+        fn(g, e.w, e.h, t + e.n * 0.83, dt, e.state);
+      }
+      function vizRegister(scope) {
+        scope.querySelectorAll("canvas[data-vis]").forEach(function (el) {
+          if (el._entry) return;
+          var e = { el: el, n: parseInt(el.getAttribute("data-vis"), 10), state: {}, vis: false, w: 0, h: 0, dpr: 1 };
+          el._entry = e;
+          vizList.push(e);
+          vizSize(e);
+          if (vizIO) vizIO.observe(el); else e.vis = true;
+          if (REDUCED) vizDraw(e, 1.35, 0);
+        });
+      }
+      var lastTs = 0;
+      function vizLoop(ts) {
+        var t = ts / 1000, dt = Math.min(0.05, Math.max(0, t - lastTs || 0.016));
+        lastTs = t;
+        vizList = vizList.filter(function (e) { return document.contains(e.el); });
+        vizList.forEach(function (e) {
+          if (!e.vis) return;
+          var slide = e.el.closest(".slide");
+          if (slide && Math.abs(parseInt(slide.getAttribute("data-off") || "0", 10)) > 1) return;
+          if (!e.w) vizSize(e);
+          vizDraw(e, t, dt);
+        });
+        requestAnimationFrame(vizLoop);
+      }
+      if (!REDUCED) requestAnimationFrame(vizLoop);
+
+      var resizeTimer = null;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          vizList.forEach(function (e) { vizSize(e); if (REDUCED) vizDraw(e, 1.35, 0); });
+        }, 160);
+      });
+
+      /* ================= shared card builders ================= */
+      function pathsHTML(i) {
+        var p = esc(i.path);
+        if (i.path2) p += "<br />" + esc(i.path2);
+        return p;
+      }
+      function openBtnsHTML(i) {
+        if (i.url2) {
+          return '<a class="open-btn" href="' + i.url + '" target="_blank" rel="noopener">' + esc(i.openLabel || "開啟") + ' ↗</a>' +
+            '<a class="open-btn ghost" href="' + i.url2 + '" target="_blank" rel="noopener">' + esc(i.openLabel2 || "開啟") + ' ↗</a>';
+        }
+        return '<a class="open-btn" href="' + i.url + '" target="_blank" rel="noopener">開啟 ↗</a>';
+      }
+      function footHTML(i) {
+        return '<div class="repo"><div class="kind">' + esc(i.kind) + '</div><div class="path">' + pathsHTML(i) + "</div>" +
+          '<div class="meta" style="margin-top:7px">' + i.tags.map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") + "</div></div>" +
+          '<div class="foot-btns">' + openBtnsHTML(i) + "</div>";
+      }
+      function cmdHTML(i) {
+        return '<div class="cmd"><code>' + esc(i.cmd) + '</code><button type="button" data-cmd="' + esc(i.cmd) + '">複製</button></div>';
+      }
+      function cardInner(i, inCarousel) {
+        var html = '<div class="row1"><span>' + pad(i.n) + " / 090</span>" +
+          '<a href="' + i.url + '" target="_blank" rel="noopener">' + hostLabel(i.url) + "</a></div>";
+        if (!inCarousel) {
+          html += '<canvas class="thumb" data-vis="' + i.n + '" role="button" tabindex="0" aria-label="放大看 ' + esc(i.name) + ' 的示意圖案"></canvas>';
+        }
+        html += '<p class="cat">' + esc(i.catZh) + " / " + esc(i.name) + "</p>";
+        html += "<h2>" + esc(i.name) + "</h2>";
+        html += '<p class="desc">' + esc(i.desc) + "</p>";
+        if (i.note && !inCarousel) html += '<p class="note' + (i.noteInfo ? " info" : "") + '">' + esc(i.note) + "</p>";
+        html += '<div class="spacer"></div>';
+        if (i.cmd) html += cmdHTML(i);
+        html += '<div class="foot"><div class="repo"><div class="kind">' + esc(i.kind) + '</div><div class="path">' + pathsHTML(i) + "</div>" +
+          '<div class="meta" style="margin-top:7px">' + i.tags.map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") + "</div></div>" +
+          '<div class="foot-btns">' +
+          (inCarousel ? '<button type="button" class="open-btn ghost" data-modal="' + i.n + '">看圖案</button>' : "") +
+          openBtnsHTML(i) + "</div></div>";
+        return html;
+      }
+      function bindCopy(scope) {
+        scope.querySelectorAll("[data-cmd]").forEach(function (btn) {
+          if (btn._bound) return;
+          btn._bound = true;
+          btn.addEventListener("click", function () {
+            var text = btn.getAttribute("data-cmd");
+            function done() {
+              btn.textContent = "已複製";
+              setTimeout(function () { btn.textContent = "複製"; }, 1600);
+            }
+            function fallback() {
+              var ta = document.createElement("textarea");
+              ta.value = text;
+              ta.style.position = "fixed"; ta.style.opacity = "0";
+              document.body.appendChild(ta);
+              ta.select();
+              try { document.execCommand("copy"); done(); } catch (e) { btn.textContent = "請手動複製"; }
+              document.body.removeChild(ta);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+          });
+        });
+      }
+
+      /* ================= carousel ================= */
+      var stageEl = document.getElementById("stage");
+      var slidesEl = document.getElementById("slides");
+      var caroCount = document.getElementById("caroCount");
+      var caro = { list: [], active: 0, timer: null, hover: false };
+      var modalOpen = false;
+
+      function slideHTML(i) {
+        return '<div class="slide">' +
+          '<div class="vis-card"><canvas data-vis="' + i.n + '" role="button" tabindex="0" aria-label="放大看 ' + esc(i.name) + ' 的示意圖案"></canvas>' +
+          '<div class="vis-foot"><span class="vname">' + esc(i.name) + '</span><span class="vis-meta"><span class="vis-chip">' + chipLabel(i) + '</span><span class="n">' + pad(i.n) + "</span></span></div></div>" +
+          '<article class="card info-card">' + cardInner(i, true) + "</article></div>";
+      }
+      function layoutCarousel() {
+        var slides = slidesEl.querySelectorAll(".slide");
+        slides.forEach(function (s, idx) {
+          var o = idx - caro.active, ao = Math.abs(o);
+          var isActive = o === 0;
+          s.setAttribute("data-off", o);
+          s.classList.toggle("side", !isActive);
+          s.setAttribute("aria-hidden", isActive ? "false" : "true");
+          var cv = s.querySelector("canvas");
+          if (cv) {
+            if (isActive) { cv.setAttribute("role", "button"); cv.tabIndex = 0; }
+            else { cv.removeAttribute("role"); cv.tabIndex = -1; }
+          }
+          s.style.transform = "translate(-50%,-50%) translateX(" + (o * 62) + "%) translateZ(" + (-ao * 150) + "px) rotateY(" + (o * -16) + "deg) scale(" + (1 - Math.min(ao, 3) * 0.07) + ")";
+          s.style.opacity = ao > 2 ? "0" : String(1 - ao * 0.28);
+          s.style.zIndex = String(20 - ao);
+          s.style.pointerEvents = isActive ? "auto" : "none";
+        });
+        if (caro.list.length) {
+          var cur = caro.list[caro.active];
+          caroCount.innerHTML = "<b>" + pad(cur.n) + " / 090</b> · " + esc(cur.name) + " · " + (caro.active + 1) + " / " + caro.list.length;
+        } else {
+          caroCount.textContent = "";
+        }
+      }
+      function buildCarousel(list) {
+        caro.list = list;
+        caro.active = 0;
+        slidesEl.innerHTML = list.map(slideHTML).join("");
+        vizRegister(slidesEl);
+        bindCopy(slidesEl);
+        layoutCarousel();
+        restartAuto();
+      }
+      function caroGo(d) {
+        if (!caro.list.length) return;
+        caro.active = (caro.active + d + caro.list.length) % caro.list.length;
+        layoutCarousel();
+        restartAuto();
+      }
+      function restartAuto() {
+        if (caro.timer) clearInterval(caro.timer);
+        caro.timer = null;
+        if (REDUCED) return;
+        caro.timer = setInterval(function () {
+          if (modalOpen || caro.hover || document.visibilityState !== "visible" || caro.list.length < 2) return;
+          caro.active = (caro.active + 1) % caro.list.length;
+          layoutCarousel();
+        }, 5000);
+      }
+      document.getElementById("caroPrev").addEventListener("click", function () { caroGo(-1); });
+      document.getElementById("caroNext").addEventListener("click", function () { caroGo(1); });
+      stageEl.addEventListener("pointerenter", function () { caro.hover = true; });
+      stageEl.addEventListener("pointerleave", function () { caro.hover = false; });
+      var swipeX = null;
+      stageEl.addEventListener("pointerdown", function (e) { swipeX = e.clientX; });
+      stageEl.addEventListener("pointerup", function (e) {
+        if (swipeX === null) return;
+        var dx = e.clientX - swipeX;
+        swipeX = null;
+        if (Math.abs(dx) > 48) caroGo(dx < 0 ? 1 : -1);
+      });
+      stageEl.addEventListener("pointercancel", function () { swipeX = null; });
+
+      /* ================= modal ================= */
+      var modalEl = document.getElementById("modal");
+      var modalBody = document.getElementById("modalBody");
+      var modalN = 0;
+
+      function openModal(n) {
+        var i = byN(n);
+        if (!i) return;
+        modalN = n;
+        var html = '<div class="m-head"><span class="m-kicker">' + pad(i.n) + " / 090 · " + esc(i.cat) + " / " + esc(i.name) + '</span>' +
+          '<button type="button" class="m-close" data-close aria-label="關閉">✕</button></div>';
+        html += '<div class="stage-big"><canvas data-vis="' + i.n + '"></canvas></div>';
+        if (i.n === 6) {
+          html += '<div class="sliders">' +
+            '<label>展開 EXPLODE <input type="range" id="slE" min="0" max="100" value="85" /><output id="slEv">0.85</output></label>' +
+            '<label>旋轉 ORBIT <input type="range" id="slO" min="0" max="100" value="35" /><output id="slOv">0.35</output></label>' +
+            '<label>亮光 GLOW <input type="range" id="slG" min="0" max="100" value="18" /><output id="slGv">0.18</output></label></div>';
+          html += '<div class="promptbar">/anatomy-reveal 一台無線喇叭，分解圖，慢速旋轉，標籤開啟</div>';
+          html += '<p class="statuschip" id="spkStatus"><span class="ok">✓</span> 6 個零件已分離</p>';
+        }
+        html += '<h2 id="modalTitle">' + esc(i.name) + "</h2>";
+        html += '<p class="desc">' + esc(i.desc) + "</p>";
+        if (i.note) html += '<p class="note' + (i.noteInfo ? " info" : "") + '">' + esc(i.note) + "</p>";
+        if (i.cmd) html += cmdHTML(i);
+        html += '<div class="foot">' + footHTML(i) + "</div>";
+        var curIdx = 0;
+        for (var ci = 0; ci < ITEMS.length; ci++) if (ITEMS[ci].n === n) { curIdx = ci; break; }
+        var prev = ITEMS[(curIdx - 1 + ITEMS.length) % ITEMS.length], next = ITEMS[(curIdx + 1) % ITEMS.length];
+        html += '<div class="m-nav"><button type="button" data-nav="' + prev.n + '">← ' + esc(prev.name) + '</button>' +
+          '<button type="button" data-nav="' + next.n + '">' + esc(next.name) + " →</button></div>";
+        modalBody.innerHTML = html;
+        modalEl.classList.add("open");
+        modalEl.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        modalOpen = true;
+        vizRegister(modalBody);
+        bindCopy(modalBody);
+        document.querySelector(".modal .sheet").scrollTop = 0;
+        if (i.n === 6) wireSpeaker();
+      }
+      function wireSpeaker() {
+        var cv = modalBody.querySelector("canvas[data-vis]");
+        if (!cv || !cv._entry) return;
+        var st = cv._entry.state;
+        st.manual = { e: 0.85, o: 0.35, g: 0.18 };
+        if (REDUCED) vizDraw(cv._entry, 1.35, 0);
+        var status = document.getElementById("spkStatus");
+        function upd() {
+          document.getElementById("slEv").textContent = st.manual.e.toFixed(2);
+          document.getElementById("slOv").textContent = st.manual.o.toFixed(2);
+          document.getElementById("slGv").textContent = st.manual.g.toFixed(2);
+          status.innerHTML = st.manual.e < 0.05
+            ? "6 個零件已合體，拉高「展開」把它們分開"
+            : '<span class="ok">✓</span> 6 個零件已分離';
+          if (REDUCED) vizDraw(cv._entry, 1.35, 0);
+        }
+        document.getElementById("slE").addEventListener("input", function (e2) { st.manual.e = e2.target.value / 100; upd(); });
+        document.getElementById("slO").addEventListener("input", function (e2) { st.manual.o = e2.target.value / 100; upd(); });
+        document.getElementById("slG").addEventListener("input", function (e2) { st.manual.g = e2.target.value / 100; upd(); });
+      }
+      function closeModal() {
+        modalEl.classList.remove("open");
+        modalEl.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        modalOpen = false;
+      }
+      modalEl.addEventListener("click", function (e) {
+        if (e.target.hasAttribute("data-close") || e.target.closest("[data-close]")) { closeModal(); return; }
+        var nav = e.target.closest("[data-nav]");
+        if (nav) openModal(parseInt(nav.getAttribute("data-nav"), 10));
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modalOpen) { closeModal(); return; }
+        if (modalOpen) return;
+        var tag = (document.activeElement && document.activeElement.tagName) || "";
+        if (tag === "INPUT" || tag === "TEXTAREA") return;
+        if (e.key === "ArrowLeft") caroGo(-1);
+        if (e.key === "ArrowRight") caroGo(1);
+      });
+      document.addEventListener("click", function (e) {
+        var mb = e.target.closest("[data-modal]");
+        if (mb) { openModal(parseInt(mb.getAttribute("data-modal"), 10)); return; }
+        var cv = e.target.closest("canvas[data-vis]");
+        if (cv && !cv.closest(".modal")) {
+          var slide = cv.closest(".slide");
+          if (slide && slide.getAttribute("data-off") !== "0") return;
+          openModal(parseInt(cv.getAttribute("data-vis"), 10));
+        }
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        var cv = e.target.closest ? e.target.closest("canvas[data-vis]") : null;
+        if (cv && !cv.closest(".modal")) openModal(parseInt(cv.getAttribute("data-vis"), 10));
+      });
+
+      /* ================= grid + filters ================= */
+      var grid = document.getElementById("grid");
+      var empty = document.getElementById("empty");
+      var countEl = document.getElementById("count");
+      var filtersEl = document.getElementById("filters");
+      var qEl = document.getElementById("q");
+      var activeCat = "all";
+      var renderTimer = null;
+
+      function renderFilters() {
+        filtersEl.innerHTML = "";
+        CATS.forEach(function (c) {
+          var n = c.key === "all" ? ITEMS.length : ITEMS.filter(function (i) { return i.cat === c.key; }).length;
+          var b = document.createElement("button");
+          b.type = "button";
+          b.setAttribute("aria-pressed", activeCat === c.key ? "true" : "false");
+          b.innerHTML = esc(c.label) + '<span class="n">' + n + "</span>";
+          b.addEventListener("click", function () {
+            activeCat = c.key;
+            renderFilters();
+            render();
+          });
+          filtersEl.appendChild(b);
+        });
+      }
+      function matches(item, q) {
+        if (!q) return true;
+        var hay = (item.name + " " + item.desc + " " + item.path + " " + (item.path2 || "") + " " + item.cat + " " + item.catZh + " " + (item.cmd || "") + " " + item.tags.join(" ")).toLowerCase();
+        return q.toLowerCase().split(/\s+/).every(function (w) { return hay.indexOf(w) !== -1; });
+      }
+      function render() {
+        var q = qEl.value.trim();
+        var list = ITEMS.filter(function (i) {
+          return (activeCat === "all" || i.cat === activeCat) && matches(i, q);
+        });
+        countEl.textContent = list.length + " / " + ITEMS.length;
+        empty.classList.toggle("show", list.length === 0);
+        grid.innerHTML = list.map(function (i) {
+          return '<article class="card">' + cardInner(i, false) + "</article>";
+        }).join("");
+        vizRegister(grid);
+        bindCopy(grid);
+        buildCarousel(list);
+      }
+      qEl.addEventListener("input", function () {
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(render, 140);
+      });
+      var shuffleBtn = document.getElementById("shuffleBtn");
+      if (shuffleBtn) {
+        shuffleBtn.addEventListener("click", function () {
+          shuffleItems();
+          render();
+        });
+      }
+      shuffleItems();
+      renderFilters();
+      render();
+    </script>
+  </body>
+</html>
