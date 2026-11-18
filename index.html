@@ -1068,7 +1068,9 @@
       var vizList = [];
 
       function RR(g, x, y, w, h, r) {
-        r = Math.min(r, w / 2, h / 2);
+        if (w < 0) { x += w; w = -w; }
+        if (h < 0) { y += h; h = -h; }
+        r = Math.max(0, Math.min(r, w / 2, h / 2));
         g.beginPath();
         g.moveTo(x + r, y);
         g.arcTo(x + w, y, x + w, y + h, r);
@@ -1954,7 +1956,7 @@
           var rot = t * 0.9;
           g.strokeStyle = col; g.lineWidth = 4; g.lineCap = "round";
           for (var a = 0; a < 3; a++) {
-            g.beginPath(); g.arc(cx, cy, R - a * 9, rot + a * 2.1, rot + a * 2.1 + 1.7); g.stroke();
+            g.beginPath(); g.arc(cx, cy, Math.max(2, R - a * 9), rot + a * 2.1, rot + a * 2.1 + 1.7); g.stroke();
           }
           g.fillStyle = col; g.beginPath(); g.arc(cx, cy, 7, 0, 6.2832); g.fill();
           TXT(g, ".lottie", cx, h * 0.88, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.6)", "center");
@@ -2099,12 +2101,1548 @@
           g.fillStyle = "rgba(16,21,28,0.12)"; RR(g, bx + w * 0.06, by + bh - h * 0.13, bw - w * 0.12, 7, 3.5); g.fill();
           g.fillStyle = "#12957f"; RR(g, bx + w * 0.06, by + bh - h * 0.13, (bw - w * 0.12) * ph, 7, 3.5); g.fill();
           TXT(g, "mediabunny · zero deps", w * 0.07, h * 0.90, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 26 unslop: garish gradient blob crossed out, clean dark panel beside it */
+        26: function (g, w, h, t) {
+          g.fillStyle = "#14161a"; g.fillRect(0, 0, w, h);
+          TXT(g, "unslop", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.45)");
+          var grd = g.createLinearGradient(w * 0.06, h * 0.28, w * 0.42, h * 0.74);
+          grd.addColorStop(0, "#a855f7"); grd.addColorStop(1, "#3b82f6");
+          g.globalAlpha = 0.55 + 0.25 * Math.sin(t * 1.6);
+          g.fillStyle = grd; g.beginPath(); g.arc(w * 0.24, h * 0.52, Math.min(w, h) * 0.17, 0, 6.2832); g.fill();
+          g.globalAlpha = 1;
+          g.strokeStyle = "#e05252"; g.lineWidth = 3.5; g.lineCap = "round";
+          var r0 = Math.min(w, h) * 0.21;
+          g.beginPath();
+          g.moveTo(w * 0.24 - r0 * 0.7, h * 0.52 - r0 * 0.7); g.lineTo(w * 0.24 + r0 * 0.7, h * 0.52 + r0 * 0.7);
+          g.moveTo(w * 0.24 + r0 * 0.7, h * 0.52 - r0 * 0.7); g.lineTo(w * 0.24 - r0 * 0.7, h * 0.52 + r0 * 0.7);
+          g.stroke();
+          TXT(g, "漸層 · 發光 · emoji", w * 0.24, h * 0.88, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(224,82,82,0.85)", "center");
+          g.fillStyle = "#1e2229"; RR(g, w * 0.52, h * 0.20, w * 0.41, h * 0.62, 6); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.16)"; g.lineWidth = 1; RR(g, w * 0.52, h * 0.20, w * 0.41, h * 0.62, 6); g.stroke();
+          g.fillStyle = "rgba(255,255,255,0.88)"; RR(g, w * 0.58, h * 0.30, w * 0.20, 9, 4.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.35)"; RR(g, w * 0.58, h * 0.44, w * 0.29, 7, 3.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.22)"; RR(g, w * 0.58, h * 0.56, w * 0.24, 7, 3.5); g.fill();
+          g.fillStyle = "#8a93a3"; RR(g, w * 0.58, h * 0.68, w * 0.13, h * 0.09, 4); g.fill();
+        },
+        /* 27 Stageshow: product story frames into one realistic product shot */
+        27: function (g, w, h, t) {
+          g.fillStyle = "#f2f0eb"; g.fillRect(0, 0, w, h);
+          TXT(g, "stageshow · 先講故事", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          for (var f = 0; f < 3; f++) {
+            var fx = w * 0.07 + f * w * 0.20, fy = h * 0.24;
+            g.fillStyle = "#ffffff"; RR(g, fx, fy, w * 0.17, h * 0.30, 5); g.fill();
+            g.strokeStyle = "rgba(16,21,28,0.18)"; g.lineWidth = 1; RR(g, fx, fy, w * 0.17, h * 0.30, 5); g.stroke();
+            g.fillStyle = ["#c9d6e8", "#e8d9c9", "#cfe3d2"][f]; RR(g, fx + 6, fy + 6, w * 0.17 - 12, h * 0.16, 3); g.fill();
+            g.fillStyle = "rgba(16,21,28,0.30)"; RR(g, fx + 6, fy + h * 0.25, w * 0.17 - 20, 5, 2.5); g.fill();
+            TXT(g, String(f + 1), fx + w * 0.085, fy + h * 0.38, "700 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(16,21,28,0.4)", "center");
+          }
+          TXT(g, "→", w * 0.70, h * 0.39, "700 " + Math.max(14, w * 0.05) + "px sans-serif", "#b07908", "center");
+          var px = w * 0.76, py = h * 0.20, pw = w * 0.19, ph2 = h * 0.42;
+          g.fillStyle = "#10151c"; RR(g, px, py, pw, ph2, 7); g.fill();
+          g.fillStyle = "#274b73"; RR(g, px + 7, py + 7, pw - 14, ph2 * 0.52, 4); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.85)"; RR(g, px + 7, py + ph2 * 0.66, pw - 26, 6, 3); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.4)"; RR(g, px + 7, py + ph2 * 0.78, pw - 38, 6, 3); g.fill();
+          var shx = px + pw * ((t % 3.2) / 3.2);
+          var shg = g.createLinearGradient(shx - 14, 0, shx + 14, 0);
+          shg.addColorStop(0, "rgba(255,255,255,0)"); shg.addColorStop(0.5, "rgba(255,255,255,0.20)"); shg.addColorStop(1, "rgba(255,255,255,0)");
+          g.fillStyle = shg; g.fillRect(px, py, pw, ph2);
+          TXT(g, "像真的產品截圖", w * 0.5, h * 0.90, "500 " + Math.max(9, w * 0.034) + "px " + MONO, "rgba(16,21,28,0.5)", "center");
+        },
+        /* 28 ai-design-skills: landing page blocks assemble in order */
+        28: function (g, w, h, t) {
+          g.fillStyle = "#eef3ee"; g.fillRect(0, 0, w, h);
+          TXT(g, "ai-design-skills · 落地頁", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var bx = w * 0.16, bw = w * 0.68, ph = (t % 4.5) / 4.5;
+          g.fillStyle = "#ffffff"; RR(g, bx, h * 0.18, bw, h * 0.68, 8); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.15)"; g.lineWidth = 1; RR(g, bx, h * 0.18, bw, h * 0.68, 8); g.stroke();
+          var blocks = [
+            [0.06, 0.05, 0.88, 0.20, "#7ba05b"], [0.06, 0.31, 0.55, 0.10, "rgba(16,21,28,0.55)"],
+            [0.06, 0.46, 0.70, 0.07, "rgba(16,21,28,0.25)"], [0.06, 0.60, 0.26, 0.13, "#2f6f4f"],
+            [0.37, 0.60, 0.26, 0.13, "rgba(16,21,28,0.12)"], [0.68, 0.60, 0.26, 0.13, "rgba(16,21,28,0.12)"]
+          ];
+          blocks.forEach(function (b, i) {
+            var on = ph * 7 > i + 0.4, drop = on ? 0 : -h * 0.05 * (1 - Math.max(0, ph * 7 - i));
+            g.globalAlpha = on ? 1 : 0.25;
+            g.fillStyle = b[4]; RR(g, bx + bw * b[0], h * 0.18 + h * 0.68 * b[1] + drop, bw * b[2], h * 0.68 * b[3], 4); g.fill();
+          });
+          g.globalAlpha = 1;
+          var cxp = bx + bw * (0.2 + 0.6 * (0.5 + 0.5 * Math.sin(t * 0.9))), cyp = h * (0.35 + 0.3 * (0.5 + 0.5 * Math.cos(t * 0.7)));
+          g.fillStyle = "#10151c"; g.beginPath(); g.moveTo(cxp, cyp); g.lineTo(cxp + 11, cyp + 11); g.lineTo(cxp + 4.5, cyp + 11.5); g.lineTo(cxp + 7, cyp + 17); g.lineTo(cxp + 4.6, cyp + 18.4); g.lineTo(cxp + 2.2, cyp + 12.6); g.lineTo(cxp, cyp + 15.5); g.closePath(); g.fill();
+        },
+        /* 29 Hallmark: sloplint scan over checklist lines, photo thumbs aside */
+        29: function (g, w, h, t) {
+          g.fillStyle = "#f6f1e7"; g.fillRect(0, 0, w, h);
+          TXT(g, "hallmark · sloplint", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var scanY = h * (0.22 + 0.6 * ((t % 3.6) / 3.6));
+          for (var i = 0; i < 5; i++) {
+            var y = h * (0.26 + i * 0.115), done = scanY > y;
+            g.strokeStyle = done ? "#2f9e5f" : "rgba(16,21,28,0.3)"; g.lineWidth = 1.6;
+            RR(g, w * 0.07, y - 7, 14, 14, 3); g.stroke();
+            if (done) TXT(g, "✓", w * 0.07 + 7, y + 0.5, "700 11px sans-serif", "#2f9e5f", "center");
+            g.fillStyle = done ? "rgba(16,21,28,0.55)" : "rgba(16,21,28,0.28)";
+            RR(g, w * 0.14, y - 3.5, w * (0.34 - (i % 3) * 0.06), 7, 3.5); g.fill();
+          }
+          g.fillStyle = "rgba(176,121,8,0.16)"; g.fillRect(w * 0.05, scanY - 9, w * 0.52, 18);
+          g.strokeStyle = "#b07908"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(w * 0.05, scanY); g.lineTo(w * 0.57, scanY); g.stroke();
+          for (var p = 0; p < 4; p++) {
+            var px2 = w * (0.64 + (p % 2) * 0.16), py2 = h * (0.24 + Math.floor(p / 2) * 0.30);
+            g.fillStyle = "#ffffff"; RR(g, px2, py2, w * 0.14, h * 0.25, 4); g.fill();
+            g.fillStyle = ["#9db8d6", "#c8b28a", "#a8c3a2", "#d6a8a0"][p]; RR(g, px2 + 4, py2 + 4, w * 0.14 - 8, h * 0.15, 2); g.fill();
+            g.fillStyle = "rgba(16,21,28,0.3)"; RR(g, px2 + 4, py2 + h * 0.20, w * 0.14 - 16, 4, 2); g.fill();
+          }
+          TXT(g, "50 主題 · 755 張授權照片", w * 0.06, h * 0.93, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 30 ui-ux-pro-max: style tiles, palette swatches, font pairs database */
+        30: function (g, w, h, t) {
+          g.fillStyle = "#101623"; g.fillRect(0, 0, w, h);
+          TXT(g, "ui-ux-pro-max · 設計資料庫", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var cols = ["#e05252", "#ffb020", "#2f9e5f", "#1f6ae1", "#a855f7"];
+          cols.forEach(function (c, i) {
+            var lift = Math.abs(Math.sin(t * 2 + i * 0.7)) * 4;
+            g.fillStyle = c; RR(g, w * 0.07 + i * w * 0.115, h * 0.24 - lift, w * 0.095, h * 0.20, 5); g.fill();
+          });
+          TXT(g, "161 套配色", w * 0.66, h * 0.34, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(255,255,255,0.55)");
+          TXT(g, "Aa", w * 0.09, h * 0.60, "700 " + Math.max(20, w * 0.075) + "px Georgia, serif", "#ffffff");
+          TXT(g, "Aa", w * 0.24, h * 0.60, "400 " + Math.max(20, w * 0.075) + "px " + MONO, "#9fc2ff");
+          TXT(g, "57 組字體搭配", w * 0.40, h * 0.60, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(255,255,255,0.55)");
+          for (var s = 0; s < 6; s++) {
+            g.fillStyle = "rgba(255,255,255," + (0.10 + 0.08 * ((s + Math.floor(t * 2)) % 3)) + ")";
+            RR(g, w * 0.07 + s * w * 0.145, h * 0.76, w * 0.12, h * 0.13, 4); g.fill();
+          }
+          TXT(g, "67 風格 · 161 規則", w * 0.66, h * 0.825, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(255,255,255,0.55)");
+        },
+        /* 31 taste-skill: three 1-10 dials for layout, motion, density */
+        31: function (g, w, h, t) {
+          g.fillStyle = "#f4f1ea"; g.fillRect(0, 0, w, h);
+          TXT(g, "taste-skill · 品味三檔", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var rows = [["LAYOUT 布局", 0.62, "#b07908"], ["MOTION 動效", 0.38, "#1f6ae1"], ["DENSITY 密度", 0.78, "#2f9e5f"]];
+          rows.forEach(function (r, i) {
+            var y = h * (0.30 + i * 0.24), x0 = w * 0.30, x1 = w * 0.88;
+            TXT(g, r[0], w * 0.07, y, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "#10151c");
+            g.strokeStyle = "rgba(16,21,28,0.25)"; g.lineWidth = 2;
+            g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke();
+            for (var k = 0; k <= 10; k += 2) { var tx = x0 + (x1 - x0) * k / 10; g.beginPath(); g.moveTo(tx, y - 4); g.lineTo(tx, y + 4); g.stroke(); }
+            var pos = r[1] + 0.14 * Math.sin(t * 1.3 + i * 2.1);
+            g.fillStyle = r[2]; g.beginPath(); g.arc(x0 + (x1 - x0) * pos, y, 9, 0, 6.2832); g.fill();
+            g.fillStyle = "#ffffff"; g.beginPath(); g.arc(x0 + (x1 - x0) * pos, y, 3.5, 0, 6.2832); g.fill();
+            TXT(g, String(Math.round(pos * 10)), x1 + w * 0.055, y, "700 " + Math.max(12, w * 0.042) + "px " + MONO, r[2], "center");
+          });
+        },
+        /* 32 impeccable: magnifier hunts AI traces across UI lines */
+        32: function (g, w, h, t) {
+          g.fillStyle = "#0f1a16"; g.fillRect(0, 0, w, h);
+          TXT(g, "impeccable · AI 痕跡檢測", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          for (var i = 0; i < 4; i++) {
+            var y = h * (0.28 + i * 0.15);
+            g.fillStyle = "rgba(255,255,255,0.20)"; RR(g, w * 0.08, y - 4, w * (0.55 - (i % 2) * 0.14), 8, 4); g.fill();
+          }
+          var flags = [[0.30, 0.28], [0.52, 0.43], [0.22, 0.58], [0.60, 0.73]];
+          flags.forEach(function (fp, i) {
+            var on = (t * 0.7 + i * 0.22) % 1.6 < 1.1;
+            g.fillStyle = on ? "#ff5c5c" : "rgba(255,92,92,0.3)";
+            g.beginPath(); g.arc(w * fp[0], h * fp[1], on ? 5 : 3.5, 0, 6.2832); g.fill();
+          });
+          var mx = w * (0.35 + 0.28 * Math.sin(t * 0.8)), my = h * (0.5 + 0.24 * Math.cos(t * 1.1));
+          g.strokeStyle = "#7be3c3"; g.lineWidth = 3;
+          g.beginPath(); g.arc(mx, my, Math.min(w, h) * 0.14, 0, 6.2832); g.stroke();
+          g.lineCap = "round"; g.beginPath(); g.moveTo(mx + Math.min(w, h) * 0.10, my + Math.min(w, h) * 0.10); g.lineTo(mx + Math.min(w, h) * 0.20, my + Math.min(w, h) * 0.20); g.stroke();
+          TXT(g, "59 條規則 · 23+ 命令", w * 0.06, h * 0.93, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 33 frontend-ui-engineering: four component states done properly */
+        33: function (g, w, h, t) {
+          g.fillStyle = "#edf2f7"; g.fillRect(0, 0, w, h);
+          TXT(g, "frontend-ui-engineering · 狀態做完整", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var tiles = ["載入", "空白", "錯誤", "完成"];
+          for (var i = 0; i < 4; i++) {
+            var tx = w * 0.06 + i * w * 0.225, ty = h * 0.22, tw = w * 0.20, th = h * 0.42;
+            g.fillStyle = "#ffffff"; RR(g, tx, ty, tw, th, 7); g.fill();
+            g.strokeStyle = "rgba(16,21,28,0.14)"; g.lineWidth = 1; RR(g, tx, ty, tw, th, 7); g.stroke();
+            var cx = tx + tw / 2, cy = ty + th * 0.42;
+            if (i === 0) {
+              g.strokeStyle = "#1f6ae1"; g.lineWidth = 3; g.lineCap = "round";
+              g.beginPath(); g.arc(cx, cy, 11, t * 3.4, t * 3.4 + 4.2); g.stroke();
+            } else if (i === 1) {
+              g.strokeStyle = "rgba(16,21,28,0.35)"; g.lineWidth = 1.6; g.setLineDash([4, 4]);
+              RR(g, cx - 14, cy - 10, 28, 20, 4); g.stroke(); g.setLineDash([]);
+            } else if (i === 2) {
+              g.fillStyle = "#e05252"; g.beginPath(); g.moveTo(cx, cy - 12); g.lineTo(cx + 12, cy + 9); g.lineTo(cx - 12, cy + 9); g.closePath(); g.fill();
+              TXT(g, "!", cx, cy + 3, "700 12px sans-serif", "#ffffff", "center");
+            } else {
+              g.fillStyle = "#2f9e5f"; g.beginPath(); g.arc(cx, cy, 12, 0, 6.2832); g.fill();
+              TXT(g, "✓", cx, cy + 0.5, "700 12px sans-serif", "#ffffff", "center");
+            }
+            TXT(g, tiles[i], cx, ty + th * 0.80, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#3d4654", "center");
+          }
+          var toks = ["--ink", "--accent", "--space-4", "--radius"];
+          toks.forEach(function (tk, i) {
+            g.fillStyle = "#10151c"; RR(g, w * 0.06 + i * w * 0.225, h * 0.76, w * 0.20, h * 0.13, 999); g.fill();
+            TXT(g, tk, w * 0.06 + i * w * 0.225 + w * 0.10, h * 0.825, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "#ffffff", "center");
+          });
+          TXT(g, "WCAG 2.1 AA", w * 0.94, h * 0.10, "600 " + Math.max(10, w * 0.036) + "px " + MONO, "#1f6ae1", "right");
+        },
+        /* 34 emilkowalski/skills: easing curve with a 300ms duration gauge */
+        34: function (g, w, h, t) {
+          g.fillStyle = "#fdf6ec"; g.fillRect(0, 0, w, h);
+          TXT(g, "emilkowalski · 該不該加動畫", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var x0 = w * 0.10, y0 = h * 0.72, x1 = w * 0.58, y1 = h * 0.26;
+          g.strokeStyle = "rgba(16,21,28,0.2)"; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y0); g.moveTo(x0, y0); g.lineTo(x0, y1 - 8); g.stroke();
+          var u = (t % 2.8) / 2.8, ease = 1 - Math.pow(1 - u, 3);
+          g.strokeStyle = "#e07b24"; g.lineWidth = 3; g.lineCap = "round"; g.beginPath();
+          for (var i = 0; i <= 40; i++) {
+            var uu = (i / 40) * u, X = x0 + (x1 - x0) * uu, Y = y0 - (y0 - y1) * (1 - Math.pow(1 - uu, 3));
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.stroke();
+          g.fillStyle = "#e07b24"; g.beginPath(); g.arc(x0 + (x1 - x0) * u, y0 - (y0 - y1) * ease, 6, 0, 6.2832); g.fill();
+          var gx = w * 0.68, gw = w * 0.26;
+          TXT(g, "時長", gx, h * 0.30, "600 " + Math.max(10, w * 0.036) + "px " + MONO, "#10151c");
+          g.fillStyle = "rgba(16,21,28,0.12)"; RR(g, gx, h * 0.38, gw, 10, 5); g.fill();
+          g.fillStyle = "#2f9e5f"; RR(g, gx, h * 0.38, gw * (0.55 + 0.2 * Math.sin(t * 1.5)), 10, 5); g.fill();
+          g.strokeStyle = "#e05252"; g.lineWidth = 2; g.beginPath(); g.moveTo(gx + gw * 0.75, h * 0.35); g.lineTo(gx + gw * 0.75, h * 0.45); g.stroke();
+          TXT(g, "≤ 300ms", gx + gw * 0.75, h * 0.55, "700 " + Math.max(11, w * 0.04) + "px " + MONO, "#e05252", "center");
+          TXT(g, "目的？緩動？時長？", gx + gw / 2, h * 0.78, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.5)", "center");
+        },
+        /* 35 web-design-guidelines: review flags pinned to file lines */
+        35: function (g, w, h, t) {
+          g.fillStyle = "#f4f6f9"; g.fillRect(0, 0, w, h);
+          TXT(g, "web-design-guidelines · 逐條審查", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var bx = w * 0.08, bw = w * 0.84;
+          g.fillStyle = "#ffffff"; RR(g, bx, h * 0.18, bw, h * 0.66, 8); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.14)"; g.lineWidth = 1; RR(g, bx, h * 0.18, bw, h * 0.66, 8); g.stroke();
+          var flagged = { 1: true, 4: true };
+          for (var i = 0; i < 6; i++) {
+            var y = h * (0.28 + i * 0.095);
+            TXT(g, String(12 + i * 7), bx + w * 0.055, y, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.35)", "center");
+            if (flagged[i]) {
+              g.fillStyle = "rgba(255,176,32,0.25)"; RR(g, bx + w * 0.10, y - 8, bw * 0.62, 16, 4); g.fill();
+            }
+            g.fillStyle = "rgba(16,21,28," + (flagged[i] ? "0.6" : "0.3") + ")"; RR(g, bx + w * 0.11, y - 3.5, bw * (0.55 - (i % 3) * 0.1), 7, 3.5); g.fill();
+            if (flagged[i]) {
+              var bob = Math.sin(t * 3 + i) * 2;
+              g.fillStyle = "#e05252"; g.beginPath(); g.moveTo(bx + bw * 0.80, y - 8 + bob); g.lineTo(bx + bw * 0.87, y - 4 + bob); g.lineTo(bx + bw * 0.80, y + bob); g.closePath(); g.fill();
+              g.fillRect(bx + bw * 0.795, y - 8 + bob, 2.5, 13);
+            }
+          }
+          TXT(g, "Vercel《Web Interface Guidelines》", w * 0.06, h * 0.93, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 36 frontend-skill: full-bleed hero, one accent, no card grid */
+        36: function (g, w, h, t) {
+          g.fillStyle = "#10151c"; g.fillRect(0, 0, w, h);
+          var sweep = (t % 4) / 4;
+          g.fillStyle = "#ffb020"; g.fillRect(0, h * 0.78, w * sweep, 4);
+          TXT(g, "HERO", w * 0.07, h * 0.34, "800 " + Math.max(30, w * 0.13) + "px Archivo, sans-serif", "#ffffff");
+          TXT(g, "全幅 · 品牌優先 · 動效克制", w * 0.07, h * 0.55, "500 " + Math.max(11, w * 0.04) + "px sans-serif", "rgba(255,255,255,0.65)");
+          g.fillStyle = "#ffb020"; RR(g, w * 0.07, h * 0.63, w * 0.17, h * 0.10, 4); g.fill();
+          TXT(g, "開始", w * 0.07 + w * 0.085, h * 0.68, "700 " + Math.max(11, w * 0.038) + "px sans-serif", "#10151c", "center");
+          TXT(g, "OpenAI Codex 官方技能 · 最多兩種字體 · 一個強調色", w * 0.07, h * 0.92, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+          g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1.5; g.setLineDash([5, 5]);
+          RR(g, w * 0.68, h * 0.24, w * 0.24, h * 0.34, 6); g.stroke(); g.setLineDash([]);
+          TXT(g, "不用卡片", w * 0.80, h * 0.41, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "rgba(255,255,255,0.5)", "center");
+          g.strokeStyle = "#e05252"; g.lineWidth = 2.5; g.beginPath();
+          g.moveTo(w * 0.70, h * 0.27); g.lineTo(w * 0.90, h * 0.55); g.moveTo(w * 0.90, h * 0.27); g.lineTo(w * 0.70, h * 0.55); g.stroke();
+        },
+        /* 37 Liquid-Glass-Skill: glass toggle and segmented control refracting */
+        37: function (g, w, h, t) {
+          var bg = g.createLinearGradient(0, 0, w, h);
+          bg.addColorStop(0, "#7fb2e5"); bg.addColorStop(0.55, "#b48ce0"); bg.addColorStop(1, "#f2a65a");
+          g.fillStyle = bg; g.fillRect(0, 0, w, h);
+          TXT(g, "liquid glass", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.75)");
+          function glass(x, y, gw, gh, r) {
+            g.fillStyle = "rgba(255,255,255,0.22)"; RR(g, x, y, gw, gh, r); g.fill();
+            g.strokeStyle = "rgba(255,255,255,0.65)"; g.lineWidth = 1.2; RR(g, x, y, gw, gh, r); g.stroke();
+            g.fillStyle = "rgba(255,255,255,0.30)"; RR(g, x + 3, y + 3, gw - 6, gh * 0.38, r - 2); g.fill();
+          }
+          var on = (t % 3) < 1.5, slide = on ? 1 : 0;
+          if (!g._lg37) g._lg37 = 0;
+          g._lg37 += ((on ? 1 : 0) - g._lg37) * 0.12;
+          var kx = w * 0.14 + g._lg37 * w * 0.13;
+          glass(w * 0.10, h * 0.26, w * 0.30, h * 0.24, 999);
+          g.fillStyle = "#ffffff"; g.beginPath(); g.arc(kx + h * 0.085, h * 0.38, h * 0.085, 0, 6.2832); g.fill();
+          glass(w * 0.10, h * 0.60, w * 0.55, h * 0.20, 999);
+          var seg = Math.floor((t % 3.6) / 1.2);
+          g.fillStyle = "rgba(255,255,255,0.55)"; RR(g, w * 0.115 + seg * w * 0.175, h * 0.615, w * 0.16, h * 0.17, 999); g.fill();
+          ["日", "週", "月"].forEach(function (s, i) {
+            TXT(g, s, w * 0.115 + i * w * 0.175 + w * 0.08, h * 0.70, "600 " + Math.max(11, w * 0.038) + "px sans-serif", i === seg ? "#10151c" : "rgba(255,255,255,0.9)", "center");
+          });
+          var sx = w * (0.55 + 0.35 * ((t % 5) / 5));
+          var shine = g.createLinearGradient(sx - 20, 0, sx + 20, 0);
+          shine.addColorStop(0, "rgba(255,255,255,0)"); shine.addColorStop(0.5, "rgba(255,255,255,0.25)"); shine.addColorStop(1, "rgba(255,255,255,0)");
+          g.fillStyle = shine; g.fillRect(0, 0, w, h);
+        },
+        /* 38 premium-frontend-director: viewfinder framing the final shot */
+        38: function (g, w, h, t) {
+          g.fillStyle = "#17130e"; g.fillRect(0, 0, w, h);
+          TXT(g, "premium-frontend-director", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var fx = w * 0.30, fy = h * 0.22, fw = w * 0.62, fh = h * 0.56, L = Math.min(w, h) * 0.07;
+          g.strokeStyle = "#d8a94e"; g.lineWidth = 3; g.lineCap = "round";
+          [[fx, fy, 1, 1], [fx + fw, fy, -1, 1], [fx, fy + fh, 1, -1], [fx + fw, fy + fh, -1, -1]].forEach(function (c) {
+            g.beginPath(); g.moveTo(c[0] + L * c[2], c[1]); g.lineTo(c[0], c[1]); g.lineTo(c[0], c[1] + L * c[3]); g.stroke();
+          });
+          g.fillStyle = "#241d13"; RR(g, fx + 10, fy + 10, fw - 20, fh - 20, 4); g.fill();
+          g.fillStyle = "#d8a94e"; RR(g, fx + 22, fy + 24, fw * 0.42, 10, 5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.35)"; RR(g, fx + 22, fy + 46, fw * 0.6, 7, 3.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.2)"; RR(g, fx + 22, fy + 64, fw * 0.5, 7, 3.5); g.fill();
+          g.fillStyle = "#d8a94e"; g.beginPath(); g.arc(fx + fw - 30, fy + fh - 28, 9 + 2 * Math.sin(t * 2.4), 0, 6.2832); g.fill();
+          TXT(g, "簡報", w * 0.07, h * 0.30, "600 " + Math.max(11, w * 0.04) + "px sans-serif", "#ffffff");
+          TXT(g, "→ 方向", w * 0.07, h * 0.46, "600 " + Math.max(11, w * 0.04) + "px sans-serif", "rgba(255,255,255,0.65)");
+          TXT(g, "→ 實作", w * 0.07, h * 0.62, "600 " + Math.max(11, w * 0.04) + "px sans-serif", "rgba(255,255,255,0.65)");
+          TXT(g, "→ 實查交接", w * 0.07, h * 0.78, "600 " + Math.max(11, w * 0.04) + "px sans-serif", "rgba(255,255,255,0.65)");
+        },
+        /* 39 variant-design-skill: A B C directions with a rollback snapshot */
+        39: function (g, w, h, t) {
+          g.fillStyle = "#f2f4f0"; g.fillRect(0, 0, w, h);
+          TXT(g, "variant-design-skill · 三方向提案", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var acc = ["#1f6ae1", "#e07b24", "#2f9e5f"], cur = Math.floor((t % 4.5) / 1.5);
+          for (var i = 0; i < 3; i++) {
+            var px = w * 0.07 + i * w * 0.30, py = h * (i === cur ? 0.20 : 0.24), pw = w * 0.26, ph = h * 0.46;
+            g.fillStyle = "#ffffff"; RR(g, px, py, pw, ph, 7); g.fill();
+            g.strokeStyle = i === cur ? acc[i] : "rgba(16,21,28,0.15)"; g.lineWidth = i === cur ? 2.5 : 1; RR(g, px, py, pw, ph, 7); g.stroke();
+            g.fillStyle = acc[i]; RR(g, px + 8, py + 8, pw - 16, ph * 0.34, 4); g.fill();
+            g.fillStyle = "rgba(16,21,28,0.4)"; RR(g, px + 8, py + ph * 0.52, pw - 30, 6, 3); g.fill();
+            g.fillStyle = "rgba(16,21,28,0.25)"; RR(g, px + 8, py + ph * 0.66, pw - 44, 6, 3); g.fill();
+            TXT(g, "方向 " + "ABC"[i], px + pw / 2, py + ph * 0.88, "700 " + Math.max(11, w * 0.038) + "px sans-serif", acc[i], "center");
+          }
+          g.strokeStyle = "rgba(16,21,28,0.5)"; g.lineWidth = 2; g.lineCap = "round";
+          var ry = h * 0.84, sweep = 0.5 + 0.5 * Math.sin(t * 1.8);
+          g.beginPath(); g.arc(w * 0.5, ry, w * 0.16, 3.35, 3.35 + 1.9 * sweep); g.stroke();
+          var ax = w * 0.5 + Math.cos(3.35) * w * 0.16, ay = ry + Math.sin(3.35) * w * 0.16;
+          g.fillStyle = "rgba(16,21,28,0.6)"; g.beginPath(); g.moveTo(ax, ay); g.lineTo(ax + 11, ay + 2); g.lineTo(ax + 3, ay + 10); g.closePath(); g.fill();
+          TXT(g, "改動前先快照 · 可回滾", w * 0.5, h * 0.95, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.5)", "center");
+        },
+        /* 40 diagram-design: bars, pie and flowchart in one brand style */
+        40: function (g, w, h, t) {
+          g.fillStyle = "#eef4fb"; g.fillRect(0, 0, w, h);
+          TXT(g, "diagram-design · 45 種圖表", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var base = h * 0.72;
+          [0.35, 0.55, 0.42, 0.7].forEach(function (v, i) {
+            var bh = h * 0.42 * v * (0.85 + 0.15 * Math.sin(t * 1.6 + i));
+            g.fillStyle = ["#1f6ae1", "#5b9bf8", "#9fc2ff", "#274b73"][i];
+            RR(g, w * 0.08 + i * w * 0.075, base - bh, w * 0.055, bh, 3); g.fill();
+          });
+          g.strokeStyle = "rgba(16,21,28,0.3)"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(w * 0.06, base); g.lineTo(w * 0.42, base); g.stroke();
+          var pcx = w * 0.56, pcy = h * 0.48, pr = Math.min(w, h) * 0.17, rot = t * 0.5;
+          [["#1f6ae1", 2.4], ["#ffb020", 1.7], ["#2f9e5f", 2.18]].reduce(function (a, s) {
+            g.fillStyle = s[0]; g.beginPath(); g.moveTo(pcx, pcy); g.arc(pcx, pcy, pr, a + rot, a + rot + s[1]); g.closePath(); g.fill();
+            return a + s[1];
+          }, 0);
+          g.strokeStyle = "#1f6ae1"; g.lineWidth = 2;
+          var nx = w * 0.78;
+          RR(g, nx, h * 0.24, w * 0.15, h * 0.13, 6); g.stroke();
+          g.beginPath(); g.moveTo(nx + w * 0.075, h * 0.37); g.lineTo(nx + w * 0.075, h * 0.44); g.stroke();
+          g.beginPath(); g.moveTo(nx + w * 0.075, h * 0.56); g.lineTo(nx + w * 0.04, h * 0.50); g.lineTo(nx + w * 0.075, h * 0.44); g.lineTo(nx + w * 0.11, h * 0.50); g.closePath(); g.stroke();
+          g.beginPath(); g.moveTo(nx + w * 0.075, h * 0.56); g.lineTo(nx + w * 0.075, h * 0.62); g.stroke();
+          RR(g, nx, h * 0.62, w * 0.15, h * 0.13, 6); g.stroke();
+          TXT(g, "輸出 HTML + SVG 單一檔案", w * 0.06, h * 0.92, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 41 nordic-civic-design-skill: sharp corners, bold colour, big whitespace */
+        41: function (g, w, h, t) {
+          g.fillStyle = "#ffffff"; g.fillRect(0, 0, w, h);
+          TXT(g, "HDS · nordic civic", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          g.fillStyle = "#0000bf"; g.fillRect(w * 0.07, h * 0.22, w * 0.34, h * 0.30);
+          g.fillStyle = "#ffcf00"; g.fillRect(w * 0.45, h * 0.22, w * 0.13, h * 0.30);
+          g.fillStyle = "#000000"; g.fillRect(w * 0.07, h * 0.56, w * 0.51, 5);
+          TXT(g, "公共服務", w * 0.07, h * 0.70, "800 " + Math.max(17, w * 0.06) + "px sans-serif", "#10151c");
+          TXT(g, "直角 · 強色 · 大留白", w * 0.07, h * 0.85, "500 " + Math.max(10, w * 0.036) + "px sans-serif", "rgba(16,21,28,0.55)");
+          var fx = w * 0.68, fy = h * 0.24 + Math.sin(t * 1.7) * 3;
+          g.strokeStyle = "#0000bf"; g.lineWidth = 4; g.strokeRect(fx, fy, w * 0.24, h * 0.20);
+          g.fillStyle = "#0000bf"; TXT(g, "A", fx + w * 0.12, fy + h * 0.10, "800 " + Math.max(16, w * 0.055) + "px sans-serif", "#0000bf", "center");
+          g.fillStyle = "#ffcf00"; g.fillRect(w * 0.68, h * 0.62, w * 0.24, h * 0.14);
+          TXT(g, "Helsinki", w * 0.80, h * 0.69, "700 " + Math.max(11, w * 0.036) + "px sans-serif", "#10151c", "center");
+        },
+        /* 42 neopop-design-skill: hard-shadow 3D plunk button pressing */
+        42: function (g, w, h, t) {
+          g.fillStyle = "#0a0a0a"; g.fillRect(0, 0, w, h);
+          TXT(g, "neopop · CRED", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var press = Math.max(0, Math.sin(t * 2.2)) > 0.86 ? 6 : 0;
+          var bx = w * 0.16, by = h * 0.30, bw = w * 0.42, bh = h * 0.30;
+          g.fillStyle = "#3ee08a"; g.fillRect(bx + 10, by + 12, bw, bh);
+          g.fillStyle = "#ffd02e"; g.fillRect(bx + press, by + press, bw, bh);
+          g.strokeStyle = "#ffffff"; g.lineWidth = 2; g.strokeRect(bx + press, by + press, bw, bh);
+          TXT(g, "PLUNK!", bx + bw / 2 + press, by + bh / 2 + press, "800 " + Math.max(16, w * 0.055) + "px Archivo, sans-serif", "#0a0a0a", "center");
+          TXT(g, "硬邊 3D 按鈕", w * 0.70, h * 0.38, "700 " + Math.max(13, w * 0.045) + "px sans-serif", "#ffffff", "center");
+          TXT(g, "黑底 · 大膽字體", w * 0.70, h * 0.54, "500 " + Math.max(10, w * 0.036) + "px sans-serif", "rgba(255,255,255,0.6)", "center");
+          for (var s = 0; s < 3; s++) {
+            g.fillStyle = ["#3ee08a", "#ffd02e", "#ff5c8a"][s];
+            g.fillRect(w * 0.60 + s * w * 0.11, h * 0.68, w * 0.08, h * 0.14);
+          }
+        },
+        /* 43 cloudmamba-design-skill: a mamba curve winding past brand tokens */
+        43: function (g, w, h, t) {
+          g.fillStyle = "#0d1f16"; g.fillRect(0, 0, w, h);
+          TXT(g, "cloudmamba · 雲曼巴品牌語言", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          g.strokeStyle = "#39d98a"; g.lineWidth = 7; g.lineCap = "round"; g.beginPath();
+          for (var i = 0; i <= 60; i++) {
+            var u = i / 60, X = w * (0.07 + 0.6 * u), Y = h * 0.48 + Math.sin(u * 9 + t * 2) * h * 0.13 * (1 - u * 0.3);
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.stroke();
+          var hx = w * 0.70, hy = h * 0.48 + Math.sin(9 + t * 2) * h * 0.09;
+          g.fillStyle = "#39d98a"; g.beginPath(); g.arc(hx, hy, 10, 0, 6.2832); g.fill();
+          g.fillStyle = "#0d1f16"; g.beginPath(); g.arc(hx + 4, hy - 3, 2.2, 0, 6.2832); g.fill();
+          TXT(g, "9 logo · 6 角色", w * 0.76, h * 0.30, "600 " + Math.max(10, w * 0.036) + "px " + MONO, "#ffffff", "center");
+          ["#39d98a", "#ffd02e", "#ffffff", "#1f6ae1"].forEach(function (c, i) {
+            g.fillStyle = c; g.beginPath(); g.arc(w * (0.70 + i * 0.075), h * 0.68, 9, 0, 6.2832); g.fill();
+          });
+          TXT(g, "配色 / 字體 token · 毛邊對照規範", w * 0.06, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 44 digital-go-design-skill: yellow-black focus ring walks the form */
+        44: function (g, w, h, t) {
+          g.fillStyle = "#ffffff"; g.fillRect(0, 0, w, h);
+          TXT(g, "DADS · 日本數位廳設計系統", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.5)");
+          var fields = [0.24, 0.44, 0.64], cur = Math.floor((t % 3.6) / 1.2);
+          fields.forEach(function (fy, i) {
+            var y = h * fy;
+            TXT(g, ["氏名", "住所", "電話"][i], w * 0.08, y + h * 0.055, "700 " + Math.max(11, w * 0.038) + "px sans-serif", "#10151c");
+            g.fillStyle = "#f4f6f9"; RR(g, w * 0.24, y, w * 0.52, h * 0.11, 3); g.fill();
+            g.strokeStyle = "rgba(16,21,28,0.4)"; g.lineWidth = 1.2; RR(g, w * 0.24, y, w * 0.52, h * 0.11, 3); g.stroke();
+            g.fillStyle = "rgba(16,21,28,0.55)"; RR(g, w * 0.27, y + h * 0.032, w * (0.3 - i * 0.06), h * 0.045, 2); g.fill();
+            if (i === cur) {
+              g.strokeStyle = "#ffd400"; g.lineWidth = 5; RR(g, w * 0.235, y - 4, w * 0.53, h * 0.11 + 8, 5); g.stroke();
+              g.strokeStyle = "#10151c"; g.lineWidth = 2; RR(g, w * 0.235, y - 4, w * 0.53, h * 0.11 + 8, 5); g.stroke();
+            }
+          });
+          g.fillStyle = "#0017c1"; RR(g, w * 0.24, h * 0.84, w * 0.24, h * 0.10, 3); g.fill();
+          TXT(g, "申請する", w * 0.36, h * 0.89, "700 " + Math.max(11, w * 0.036) + "px sans-serif", "#ffffff", "center");
+          TXT(g, "高對比 · 易讀", w * 0.80, h * 0.89, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#10151c", "center");
+        },
+        /* 45 finesse: app polish, direction flips between LTR and RTL */
+        45: function (g, w, h, t) {
+          g.fillStyle = "#eef0f6"; g.fillRect(0, 0, w, h);
+          TXT(g, "finesse · 狀態優先打磨", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var rtl = (t % 4) >= 2;
+          var bx = w * 0.14, bw = w * 0.72;
+          g.fillStyle = "#ffffff"; RR(g, bx, h * 0.20, bw, h * 0.52, 10); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.12)"; g.lineWidth = 1; RR(g, bx, h * 0.20, bw, h * 0.52, 10); g.stroke();
+          var ax = rtl ? bx + bw - w * 0.10 : bx + w * 0.05;
+          g.fillStyle = "#5a54c9"; g.beginPath(); g.arc(rtl ? bx + bw - w * 0.065 : bx + w * 0.065, h * 0.33, 13, 0, 6.2832); g.fill();
+          g.fillStyle = "rgba(16,21,28,0.6)"; RR(g, ax + (rtl ? -w * 0.30 : w * 0.06), h * 0.285, w * 0.30, 8, 4); g.fill();
+          g.fillStyle = "rgba(16,21,28,0.28)"; RR(g, ax + (rtl ? -w * 0.22 : w * 0.06), h * 0.375, w * 0.22, 7, 3.5); g.fill();
+          ["default", "hover", "active"].forEach(function (s, i) {
+            var on = Math.floor((t % 3) / 1) === i;
+            g.fillStyle = on ? "#5a54c9" : "rgba(16,21,28,0.08)";
+            var cxp = rtl ? bx + bw - w * 0.10 - i * w * 0.20 : bx + w * 0.05 + i * w * 0.20;
+            RR(g, cxp, h * 0.52, w * 0.17, h * 0.11, 999); g.fill();
+            TXT(g, s, cxp + w * 0.085, h * 0.575, "600 " + Math.max(9, w * 0.03) + "px " + MONO, on ? "#ffffff" : "rgba(16,21,28,0.55)", "center");
+          });
+          TXT(g, rtl ? "RTL ← 原生支援" : "LTR → 原生支援", w * 0.5, h * 0.88, "600 " + Math.max(11, w * 0.038) + "px " + MONO, "#5a54c9", "center");
+        },
+        /* 46 mochen-website-design: paper grid, charcoal type, a trotting dog */
+        46: function (g, w, h, t) {
+          g.fillStyle = "#fbfaf6"; g.fillRect(0, 0, w, h);
+          g.strokeStyle = "rgba(16,21,28,0.07)"; g.lineWidth = 1;
+          for (var gx = 0; gx < w; gx += 18) { g.beginPath(); g.moveTo(gx, 0); g.lineTo(gx, h); g.stroke(); }
+          for (var gy = 0; gy < h; gy += 18) { g.beginPath(); g.moveTo(0, gy); g.lineTo(w, gy); g.stroke(); }
+          TXT(g, "MOCHEN", w * 0.07, h * 0.36, "800 " + Math.max(26, w * 0.105) + "px Archivo, sans-serif", "#232323");
+          g.fillStyle = "rgba(250,224,120,0.75)"; g.fillRect(w * 0.065, h * 0.47, w * 0.34, h * 0.075);
+          TXT(g, "個人網站 · 紙白網格", w * 0.07, h * 0.51, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "#232323");
+          var dx = w * (0.55 + 0.3 * ((t % 4.4) / 4.4)), dy = h * 0.78, bob = Math.abs(Math.sin(t * 7)) * 3;
+          g.fillStyle = "#232323";
+          g.beginPath(); g.ellipse(dx, dy - bob, 17, 10, 0, 0, 6.2832); g.fill();
+          g.beginPath(); g.arc(dx + 19, dy - 8 - bob, 8, 0, 6.2832); g.fill();
+          g.fillRect(dx - 13, dy + 6 - bob, 4, 9); g.fillRect(dx + 9, dy + 6 - bob, 4, 9);
+          g.strokeStyle = "#232323"; g.lineWidth = 3; g.lineCap = "round";
+          g.beginPath(); g.moveTo(dx - 17, dy - 4 - bob); g.lineTo(dx - 24, dy - 12 - bob + Math.sin(t * 9) * 3); g.stroke();
+          g.fillStyle = "#232323"; g.beginPath(); g.arc(dx + 21.5, dy - 9.5 - bob, 1.6, 0, 6.2832); g.fill();
+          TXT(g, "拖著玩的小狗", w * 0.07, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 47 mobile-app-designer: two phones and a 137-point checklist */
+        47: function (g, w, h, t) {
+          g.fillStyle = "#101820"; g.fillRect(0, 0, w, h);
+          TXT(g, "mobile-app-designer", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          for (var p = 0; p < 2; p++) {
+            var px = w * (0.09 + p * 0.24), py = h * 0.20, pw = w * 0.19, ph = h * 0.60;
+            g.fillStyle = "#1b2634"; RR(g, px, py, pw, ph, 12); g.fill();
+            g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1.2; RR(g, px, py, pw, ph, 12); g.stroke();
+            g.fillStyle = ["#1f6ae1", "#3ddc84"][p]; RR(g, px + 8, py + 14, pw - 16, ph * 0.26, 5); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.35)"; RR(g, px + 8, py + ph * 0.46, pw - 24, 6, 3); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.2)"; RR(g, px + 8, py + ph * 0.58, pw - 32, 6, 3); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.5)"; RR(g, px + 8, py + ph * 0.78, pw - 16, ph * 0.12, 5); g.fill();
+            TXT(g, p ? "Android" : "iOS", px + pw / 2, py + ph + h * 0.055, "600 " + Math.max(10, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.6)", "center");
+          }
+          var cnt = Math.floor(137 * ((t % 5) / 5));
+          TXT(g, String(cnt), w * 0.72, h * 0.42, "800 " + Math.max(30, w * 0.11) + "px Archivo, sans-serif", "#ffffff", "center");
+          TXT(g, "/ 137 項檢查", w * 0.72, h * 0.58, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "rgba(255,255,255,0.6)", "center");
+          TXT(g, "簡報 → 系統 → 原型 → 交接", w * 0.72, h * 0.74, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)", "center");
+        },
+        /* 48 ui-designer: drag blocks on a canvas, AI prompt bar below */
+        48: function (g, w, h, t) {
+          g.fillStyle = "#f5f2fb"; g.fillRect(0, 0, w, h);
+          TXT(g, "ui-designer · 拖曳排版", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var bx = w * 0.08, by = h * 0.18, bw = w * 0.84, bh = h * 0.52;
+          g.fillStyle = "#ffffff"; RR(g, bx, by, bw, bh, 8); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.14)"; g.lineWidth = 1; RR(g, bx, by, bw, bh, 8); g.stroke();
+          g.fillStyle = "#d9cdf2"; RR(g, bx + 10, by + 10, bw * 0.3, bh * 0.4, 4); g.fill();
+          g.fillStyle = "rgba(16,21,28,0.25)"; RR(g, bx + 10, by + bh * 0.62, bw * 0.45, 7, 3.5); g.fill();
+          var dx = bx + bw * (0.52 + 0.18 * Math.sin(t * 1.2)), dy = by + bh * (0.30 + 0.16 * Math.cos(t * 0.9));
+          g.fillStyle = "#7a5fd0"; RR(g, dx, dy, bw * 0.24, bh * 0.34, 4); g.fill();
+          g.strokeStyle = "#7a5fd0"; g.lineWidth = 1.6; RR(g, dx - 5, dy - 5, bw * 0.24 + 10, bh * 0.34 + 10, 5); g.stroke();
+          [[dx - 5, dy - 5], [dx + bw * 0.24 + 5, dy - 5], [dx - 5, dy + bh * 0.34 + 5], [dx + bw * 0.24 + 5, dy + bh * 0.34 + 5]].forEach(function (hd) {
+            g.fillStyle = "#ffffff"; g.fillRect(hd[0] - 3.5, hd[1] - 3.5, 7, 7);
+            g.strokeStyle = "#7a5fd0"; g.lineWidth = 1.2; g.strokeRect(hd[0] - 3.5, hd[1] - 3.5, 7, 7);
+          });
+          g.fillStyle = "#10151c"; RR(g, bx, h * 0.78, bw, h * 0.13, 999); g.fill();
+          TXT(g, "> 把標題放大一點", bx + 18, h * 0.845, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "#cdbcf5");
+          TXT(g, "AI 改稿", bx + bw - 16, h * 0.845, "600 " + Math.max(10, w * 0.032) + "px " + MONO, "#ffffff", "right");
+        },
+        /* 49 anti-slop-ui: four product-first steps up a staircase */
+        49: function (g, w, h, t) {
+          g.fillStyle = "#f7f4ee"; g.fillRect(0, 0, w, h);
+          TXT(g, "anti-slop-ui · 產品導向", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var steps = ["理解任務", "定方向", "修層級做流程", "驗證成果"];
+          steps.forEach(function (s, i) {
+            var sx = w * (0.08 + i * 0.225), sy = h * (0.70 - i * 0.13), on = (t % 4.8) > i * 1.1;
+            g.fillStyle = on ? "#10151c" : "rgba(16,21,28,0.15)";
+            RR(g, sx, sy, w * 0.20, h * 0.115, 5); g.fill();
+            TXT(g, String(i + 1), sx + 13, sy + h * 0.058, "800 " + Math.max(12, w * 0.04) + "px sans-serif", on ? "#ffb020" : "rgba(16,21,28,0.4)", "center");
+            TXT(g, s, sx + w * 0.115, sy + h * 0.058, "600 " + Math.max(9, w * 0.03) + "px sans-serif", on ? "#ffffff" : "rgba(16,21,28,0.45)", "center");
+          });
+          var topOn = (t % 4.8) > 4.2;
+          g.fillStyle = topOn ? "#2f9e5f" : "rgba(47,158,95,0.3)";
+          g.beginPath(); g.arc(w * 0.90, h * 0.16, 13, 0, 6.2832); g.fill();
+          TXT(g, "✓", w * 0.90, h * 0.165, "700 13px sans-serif", "#ffffff", "center");
+        },
+        /* 50 frontend-ux-motion-skills: logo marquee scrolls, a card hovers up */
+        50: function (g, w, h, t) {
+          g.fillStyle = "#0e1522"; g.fillRect(0, 0, w, h);
+          TXT(g, "frontend-ux-motion · 28 個技能", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var off = (t * w * 0.09) % (w * 0.16);
+          for (var i = -1; i < 7; i++) {
+            var cx = i * w * 0.16 - off + w * 0.08;
+            g.fillStyle = "rgba(255,255,255,0.10)"; g.beginPath(); g.arc(cx, h * 0.30, Math.min(w, h) * 0.055, 0, 6.2832); g.fill();
+            TXT(g, "✦", cx, h * 0.305, "400 " + Math.max(11, w * 0.04) + "px sans-serif", "rgba(255,255,255,0.65)", "center");
+          }
+          TXT(g, "logo 跑馬燈", w * 0.06, h * 0.44, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.4)");
+          var lift = Math.max(0, Math.sin(t * 1.8)) * -8;
+          g.fillStyle = "rgba(31,106,225,0.25)"; RR(g, w * 0.30, h * 0.56 + lift + 8, w * 0.40, h * 0.26, 9); g.fill();
+          g.fillStyle = "#1b2634"; RR(g, w * 0.30, h * 0.54 + lift, w * 0.40, h * 0.26, 9); g.fill();
+          g.strokeStyle = "#6ea8ff"; g.lineWidth = 1.5; RR(g, w * 0.30, h * 0.54 + lift, w * 0.40, h * 0.26, 9); g.stroke();
+          g.fillStyle = "rgba(255,255,255,0.8)"; RR(g, w * 0.35, h * 0.60 + lift, w * 0.22, 7, 3.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.35)"; RR(g, w * 0.35, h * 0.68 + lift, w * 0.28, 6, 3); g.fill();
+          TXT(g, "卡片懸停", w * 0.5, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)", "center");
+        },
+        /* 51 mermaid-design: pastel flowchart with export chips */
+        51: function (g, w, h, t) {
+          g.fillStyle = "#f3f7f5"; g.fillRect(0, 0, w, h);
+          TXT(g, "mermaid-design · 流程圖美化", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var cy = h * 0.42, flow = (t % 3) / 3;
+          function node(x, kind, col, label) {
+            g.fillStyle = col;
+            if (kind === 0) { g.beginPath(); g.ellipse(x, cy, w * 0.055, h * 0.085, 0, 0, 6.2832); g.fill(); }
+            else if (kind === 1) { RR(g, x - w * 0.065, cy - h * 0.085, w * 0.13, h * 0.17, 9); g.fill(); }
+            else { g.beginPath(); g.moveTo(x, cy - h * 0.10); g.lineTo(x + w * 0.06, cy); g.lineTo(x, cy + h * 0.10); g.lineTo(x - w * 0.06, cy); g.closePath(); g.fill(); }
+            TXT(g, label, x, cy, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "#17352b", "center");
+          }
+          g.strokeStyle = "rgba(16,21,28,0.35)"; g.lineWidth = 2;
+          [[0.20, 0.36], [0.475, 0.635], [0.75, 0.885]].forEach(function (sg) {
+            g.beginPath(); g.moveTo(w * sg[0], cy); g.lineTo(w * sg[1], cy); g.stroke();
+            g.fillStyle = "rgba(16,21,28,0.5)"; g.beginPath();
+            g.moveTo(w * sg[1], cy); g.lineTo(w * sg[1] - 8, cy - 4); g.lineTo(w * sg[1] - 8, cy + 4); g.closePath(); g.fill();
+          });
+          node(w * 0.135, 0, "#bfe3d0", "開始");
+          node(w * 0.415, 1, "#cfe0f5", "處理");
+          node(w * 0.70, 2, "#f7dfae", "判斷?");
+          node(w * 0.925, 0, "#f3c6c6", "結束");
+          var dotx = w * (0.10 + 0.85 * flow);
+          g.fillStyle = "#12957f"; g.beginPath(); g.arc(dotx, cy, 4.5, 0, 6.2832); g.fill();
+          ["PNG", "SVG", "PPT", "設計"].forEach(function (s, i) {
+            g.fillStyle = "#17352b"; RR(g, w * 0.10 + i * w * 0.20, h * 0.72, w * 0.16, h * 0.13, 999); g.fill();
+            TXT(g, s, w * 0.18 + i * w * 0.20, h * 0.785, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "#ffffff", "center");
+          });
+        },
+        /* 52 design-taste-skills: eleven skill cards fan out */
+        52: function (g, w, h, t) {
+          g.fillStyle = "#191410"; g.fillRect(0, 0, w, h);
+          TXT(g, "design-taste-skills · 11 個技能", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var px = w * 0.5, py = h * 0.94, spread = 0.75 + 0.25 * Math.sin(t * 1.1);
+          var cols = ["#e8b04b", "#d97b4f", "#b85c48", "#8a6fb8", "#5b84b8", "#4f9e7b"];
+          for (var i = 10; i >= 0; i--) {
+            var a = -0.9 + (i / 10) * 1.8 * spread;
+            g.save(); g.translate(px, py); g.rotate(a);
+            g.fillStyle = cols[i % cols.length]; RR(g, -w * 0.085, -h * 0.52, w * 0.17, h * 0.46, 6); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.35)"; RR(g, -w * 0.06, -h * 0.47, w * 0.12, 6, 3); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.2)"; RR(g, -w * 0.06, -h * 0.40, w * 0.09, 5, 2.5); g.fill();
+            g.restore();
+          }
+          g.fillStyle = "#191410"; g.beginPath(); g.arc(px, py, 12, 0, 6.2832); g.fill();
+          g.strokeStyle = "#e8b04b"; g.lineWidth = 2; g.beginPath(); g.arc(px, py, 12, 0, 6.2832); g.stroke();
+          TXT(g, "先定觀點 · 再排層級留白", w * 0.07, h * 0.93, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 53 anti-ai-slop: a shield turning slop icons away */
+        53: function (g, w, h, t) {
+          g.fillStyle = "#12181f"; g.fillRect(0, 0, w, h);
+          TXT(g, "anti-ai-slop · 7 個技能攔俗套", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var sx = w * 0.56, sy = h * 0.52, ss = Math.min(w, h) * 0.30;
+          g.fillStyle = "#1f6ae1";
+          g.beginPath();
+          g.moveTo(sx, sy - ss);
+          g.lineTo(sx + ss * 0.85, sy - ss * 0.62);
+          g.lineTo(sx + ss * 0.85, sy + ss * 0.1);
+          g.quadraticCurveTo(sx + ss * 0.85, sy + ss * 0.75, sx, sy + ss);
+          g.quadraticCurveTo(sx - ss * 0.85, sy + ss * 0.75, sx - ss * 0.85, sy + ss * 0.1);
+          g.lineTo(sx - ss * 0.85, sy - ss * 0.62);
+          g.closePath(); g.fill();
+          TXT(g, "✓", sx, sy + ss * 0.05, "800 " + Math.max(20, w * 0.07) + "px sans-serif", "#ffffff", "center");
+          var bounce = Math.abs(Math.sin(t * 2.6)) * 6;
+          var grd = g.createLinearGradient(w * 0.06, h * 0.2, w * 0.3, h * 0.5);
+          grd.addColorStop(0, "#a855f7"); grd.addColorStop(1, "#3b82f6");
+          g.fillStyle = grd; g.beginPath(); g.arc(w * 0.17, h * 0.34 - bounce * 0.4, Math.min(w, h) * 0.085, 0, 6.2832); g.fill();
+          g.strokeStyle = "#e05252"; g.lineWidth = 3; g.beginPath();
+          g.moveTo(w * 0.17 - 12, h * 0.34 + 12 - bounce * 0.4); g.lineTo(w * 0.17 + 12, h * 0.34 - 12 - bounce * 0.4); g.stroke();
+          TXT(g, "🙂", w * 0.17, h * 0.56 - bounce * 0.3, "400 " + Math.max(16, w * 0.055) + "px sans-serif", "#ffffff", "center");
+          g.strokeStyle = "#e05252"; g.beginPath(); g.moveTo(w * 0.17 - 12, h * 0.56 + 12 - bounce * 0.3); g.lineTo(w * 0.17 + 12, h * 0.56 - 12 - bounce * 0.3); g.stroke();
+          for (var c = 0; c < 3; c++) {
+            g.strokeStyle = "rgba(255,255,255,0.55)"; g.lineWidth = 2;
+            g.beginPath(); g.arc(w * (0.10 + c * 0.075), h * 0.76 - bounce * 0.25, 9, 0, 6.2832); g.stroke();
+          }
+          g.strokeStyle = "#e05252"; g.beginPath(); g.moveTo(w * 0.085, h * 0.76 + 11 - bounce * 0.25); g.lineTo(w * 0.26, h * 0.76 - 11 - bounce * 0.25); g.stroke();
+          TXT(g, "介面 · 程式碼 · 文案", w * 0.80, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)", "center");
+        },
+        /* 54 antheo-design/skills: 21 skills as a precise dot grid plus scales */
+        54: function (g, w, h, t) {
+          g.fillStyle = "#f4f4f2"; g.fillRect(0, 0, w, h);
+          TXT(g, "antheo-design · 21 個設計技能", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var lit = Math.floor((t % 4.2) / 4.2 * 21);
+          for (var i = 0; i < 21; i++) {
+            var cx = w * 0.09 + (i % 7) * w * 0.065, cy = h * (0.26 + Math.floor(i / 7) * 0.16);
+            g.fillStyle = i < lit ? "#10151c" : "rgba(16,21,28,0.18)";
+            g.beginPath(); g.arc(cx, cy, 6, 0, 6.2832); g.fill();
+          }
+          TXT(g, String(lit) + " / 21", w * 0.09, h * 0.82, "700 " + Math.max(13, w * 0.045) + "px " + MONO, "#10151c");
+          var wheel = ["#e05252", "#ffb020", "#2f9e5f", "#1f6ae1", "#a855f7", "#e07b24"];
+          wheel.forEach(function (c, i) {
+            g.fillStyle = c; g.beginPath();
+            g.moveTo(w * 0.70, h * 0.42);
+            g.arc(w * 0.70, h * 0.42, Math.min(w, h) * 0.15, i * 1.047 + t * 0.4, (i + 1) * 1.047 + t * 0.4);
+            g.closePath(); g.fill();
+          });
+          g.fillStyle = "#f4f4f2"; g.beginPath(); g.arc(w * 0.70, h * 0.42, Math.min(w, h) * 0.06, 0, 6.2832); g.fill();
+          [0.9, 0.65, 0.45, 0.3].forEach(function (v, i) {
+            g.fillStyle = "rgba(16,21,28,0.5)"; g.fillRect(w * 0.60, h * (0.66 + i * 0.075), w * 0.22 * v, 4);
+          });
+          TXT(g, "配色 · 排版 · 布局 · 評審", w * 0.60, h * 0.93, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 55 classic-aero-ui: glossy Aero window, sheen sweeping the titlebar */
+        55: function (g, w, h, t) {
+          g.fillStyle = "#20303f"; g.fillRect(0, 0, w, h);
+          TXT(g, "classic aero · WPF 企業介面", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var bx = w * 0.09, by = h * 0.18, bw = w * 0.82, bh = h * 0.64;
+          var tg = g.createLinearGradient(0, by, 0, by + h * 0.13);
+          tg.addColorStop(0, "#9fc6e8"); tg.addColorStop(0.5, "#5b8cc0"); tg.addColorStop(1, "#3d6a9c");
+          g.fillStyle = "#e9eef3"; RR(g, bx, by, bw, bh, 9); g.fill();
+          g.fillStyle = tg; RR(g, bx, by, bw, h * 0.13, 9); g.fill(); g.fillRect(bx, by + h * 0.065, bw, h * 0.065);
+          var shx = bx + bw * ((t % 3.8) / 3.8);
+          var shg = g.createLinearGradient(shx - 26, 0, shx + 26, 0);
+          shg.addColorStop(0, "rgba(255,255,255,0)"); shg.addColorStop(0.5, "rgba(255,255,255,0.45)"); shg.addColorStop(1, "rgba(255,255,255,0)");
+          g.fillStyle = shg; g.fillRect(bx, by, bw, h * 0.13);
+          TXT(g, "Classic Aero", bx + 12, by + h * 0.065, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#ffffff");
+          ["─", "▢", "✕"].forEach(function (s, i) {
+            g.fillStyle = i === 2 ? "#c75050" : "rgba(255,255,255,0.35)";
+            RR(g, bx + bw - 30 - (2 - i) * 26, by + 5, 22, 15, 3); g.fill();
+            TXT(g, s, bx + bw - 19 - (2 - i) * 26, by + h * 0.065, "600 9px sans-serif", "#ffffff", "center");
+          });
+          for (var r = 0; r < 3; r++) for (var c2 = 0; c2 < 6; c2++) {
+            g.fillStyle = "rgba(61,106,156," + (0.25 + 0.2 * ((r + c2) % 3) / 2) + ")";
+            RR(g, bx + 12 + c2 * (bw - 24) / 6, by + h * 0.19 + r * h * 0.13, (bw - 24) / 6 - 8, h * 0.09, 3); g.fill();
+          }
+          TXT(g, "雙主題 · 高密度 · 零 NuGet 依賴", w * 0.06, h * 0.93, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 56 craft: brief first, states listed, self-check ticks at the end */
+        56: function (g, w, h, t) {
+          g.fillStyle = "#f6f3ec"; g.fillRect(0, 0, w, h);
+          TXT(g, "craft · 像設計師一樣做介面", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var bx = w * 0.08, bw = w * 0.52;
+          g.fillStyle = "#ffffff"; RR(g, bx, h * 0.18, bw, h * 0.64, 7); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.14)"; g.lineWidth = 1; RR(g, bx, h * 0.18, bw, h * 0.64, 7); g.stroke();
+          TXT(g, "設計簡報", bx + 12, h * 0.26, "700 " + Math.max(11, w * 0.038) + "px sans-serif", "#10151c");
+          var write = (t % 4.6) / 4.6;
+          for (var i = 0; i < 4; i++) {
+            var y = h * (0.37 + i * 0.10), full = bw * (0.38 - (i % 2) * 0.08);
+            g.fillStyle = "rgba(16,21,28,0.14)"; RR(g, bx + 12, y - 4, full, 8, 4); g.fill();
+            g.fillStyle = "#10151c"; RR(g, bx + 12, y - 4, full * Math.max(0, Math.min(1, write * 5 - i)), 8, 4); g.fill();
+          }
+          var states = ["預設", "載入", "空白", "錯誤", "完成"];
+          states.forEach(function (s, i) {
+            var y = h * (0.24 + i * 0.115), done = write * 6 > i + 1.2;
+            g.strokeStyle = done ? "#2f9e5f" : "rgba(16,21,28,0.3)"; g.lineWidth = 1.6;
+            RR(g, w * 0.68, y - 7, 14, 14, 3); g.stroke();
+            if (done) TXT(g, "✓", w * 0.68 + 7, y + 0.5, "700 11px sans-serif", "#2f9e5f", "center");
+            TXT(g, s, w * 0.75, y, "600 " + Math.max(10, w * 0.034) + "px sans-serif", done ? "#10151c" : "rgba(16,21,28,0.45)");
+          });
+          TXT(g, "完工自查", w * 0.68, h * 0.90, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "#2f9e5f");
+        },
+        /* 57 baoyu-design: five output kinds, highlight touring the tiles */
+        57: function (g, w, h, t) {
+          g.fillStyle = "#101418"; g.fillRect(0, 0, w, h);
+          TXT(g, "baoyu-design · 本地 Design Artifact", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var kinds = ["UI mockup", "原型", "簡報", "設計系統", "儀表板", "motion film"];
+          var cur = Math.floor((t % 6) / 1);
+          for (var i = 0; i < 6; i++) {
+            var tx = w * 0.06 + (i % 3) * w * 0.30, ty = h * (0.20 + Math.floor(i / 3) * 0.30), on = i === cur % 6;
+            g.fillStyle = on ? "#f0b429" : "rgba(255,255,255,0.08)"; RR(g, tx, ty, w * 0.27, h * 0.24, 8); g.fill();
+            if (i === 0) { g.fillStyle = on ? "#10151c" : "#9fc2ff"; RR(g, tx + 10, ty + 10, w * 0.27 - 20, h * 0.10, 3); g.fill(); }
+            else if (i === 2) { g.fillStyle = on ? "#10151c" : "#e8b04b"; RR(g, tx + 10, ty + 10, w * 0.10, h * 0.10, 2); g.fill(); }
+            else if (i === 4) { [0.4, 0.7, 0.55].forEach(function (v, b) { g.fillStyle = on ? "#10151c" : "#7be3c3"; RR(g, tx + 10 + b * 13, ty + h * 0.16 - h * 0.09 * v, 8, h * 0.09 * v, 2); g.fill(); }); }
+            else if (i === 5) { g.fillStyle = on ? "#10151c" : "#ff8fa8"; g.beginPath(); g.moveTo(tx + 14, ty + 9); g.lineTo(tx + 14, ty + h * 0.11); g.lineTo(tx + 26, ty + h * 0.065); g.closePath(); g.fill(); }
+            else { g.strokeStyle = on ? "#10151c" : "rgba(255,255,255,0.6)"; g.lineWidth = 2; g.beginPath(); g.arc(tx + 16, ty + h * 0.075, 6, 0, 6.2832); g.stroke(); }
+            TXT(g, kinds[i], tx + w * 0.135, ty + h * 0.185, "600 " + Math.max(9, w * 0.03) + "px sans-serif", on ? "#10151c" : "rgba(255,255,255,0.75)", "center");
+          }
+          TXT(g, "五種可編輯產出", w * 0.06, h * 0.93, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 58 codex-ui-design: image mockup first, spec lines build after */
+        58: function (g, w, h, t) {
+          g.fillStyle = "#eef1f6"; g.fillRect(0, 0, w, h);
+          TXT(g, "codex-ui-design · 圖先行", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var ix = w * 0.08, iy = h * 0.20, iw = w * 0.40, ih = h * 0.46;
+          g.fillStyle = "#ffffff"; RR(g, ix, iy, iw, ih, 7); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.15)"; g.lineWidth = 1; RR(g, ix, iy, iw, ih, 7); g.stroke();
+          g.fillStyle = "#bcd3f2"; RR(g, ix + 7, iy + 7, iw - 14, ih * 0.55, 4); g.fill();
+          g.fillStyle = "#ffb020"; g.beginPath(); g.arc(ix + iw * 0.76, iy + ih * 0.2, 8, 0, 6.2832); g.fill();
+          g.fillStyle = "#7ba05b"; g.beginPath(); g.moveTo(ix + 7, iy + ih * 0.62); g.lineTo(ix + iw * 0.4, iy + ih * 0.3); g.lineTo(ix + iw * 0.62, iy + ih * 0.5); g.lineTo(ix + iw - 7, iy + ih * 0.62); g.closePath(); g.fill();
+          g.fillStyle = "rgba(16,21,28,0.4)"; RR(g, ix + 7, iy + ih * 0.74, iw - 30, 6, 3); g.fill();
+          g.fillStyle = "rgba(16,21,28,0.25)"; RR(g, ix + 7, iy + ih * 0.86, iw - 46, 6, 3); g.fill();
+          TXT(g, "gpt-image-2", ix + iw / 2, iy + ih + h * 0.07, "600 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)", "center");
+          TXT(g, "→", w * 0.53, h * 0.43, "700 " + Math.max(14, w * 0.05) + "px sans-serif", "#1f6ae1", "center");
+          var build = (t % 4.4) / 4.4;
+          for (var i = 0; i < 5; i++) {
+            var y = h * (0.24 + i * 0.105), on = build * 6 > i;
+            g.fillStyle = on ? "#10151c" : "rgba(16,21,28,0.10)";
+            RR(g, w * 0.60, y - 4.5, w * (0.30 - (i % 3) * 0.05) * (on ? 1 : 0.6), 9, 4.5); g.fill();
+            if (on) TXT(g, "✓", w * 0.945, y, "700 11px sans-serif", "#2f9e5f", "center");
+          }
+          TXT(g, "mockup → build spec", w * 0.60, h * 0.86, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 59 logo-design-skill: from brief to a drawn mark and guidelines */
+        59: function (g, w, h, t) {
+          g.fillStyle = "#faf8f3"; g.fillRect(0, 0, w, h);
+          TXT(g, "logo-design-skill · brief 到成品", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var cx = w * 0.28, cy = h * 0.48, R = Math.min(w, h) * 0.20;
+          g.strokeStyle = "rgba(16,21,28,0.15)"; g.lineWidth = 1;
+          g.beginPath(); g.moveTo(cx - R - 14, cy); g.lineTo(cx + R + 14, cy); g.moveTo(cx, cy - R - 14); g.lineTo(cx, cy + R + 14); g.stroke();
+          var ph = (t % 3.6) / 3.6;
+          g.strokeStyle = "#10151c"; g.lineWidth = 4; g.lineCap = "round";
+          g.beginPath(); g.arc(cx, cy, R, -1.57, -1.57 + 6.2832 * Math.min(1, ph * 1.4)); g.stroke();
+          g.beginPath(); g.moveTo(cx - R * 0.45, cy + R * 0.4); g.lineTo(cx, cy - R * 0.45); g.lineTo(cx + R * 0.45, cy + R * 0.4); g.stroke();
+          [[cx - R, cy], [cx + R, cy], [cx, cy - R], [cx, cy + R]].forEach(function (pt) {
+            g.fillStyle = "#e05252"; g.fillRect(pt[0] - 3, pt[1] - 3, 6, 6);
+          });
+          for (var v = 0; v < 4; v++) {
+            var vx = w * (0.56 + (v % 2) * 0.20), vy = h * (0.24 + Math.floor(v / 2) * 0.30);
+            g.fillStyle = ["#10151c", "#1f6ae1", "#e07b24", "#2f9e5f"][v]; RR(g, vx, vy, w * 0.16, h * 0.24, 5); g.fill();
+            TXT(g, "A", vx + w * 0.08, vy + h * 0.12, "800 " + Math.max(14, w * 0.045) + "px Archivo, sans-serif", "#ffffff", "center");
+          }
+          TXT(g, "1,400+ 參考庫 · 品牌規範", w * 0.56, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 60 ComfyUI: node graph wired up, render queue filling */
+        60: function (g, w, h, t) {
+          g.fillStyle = "#17181c"; g.fillRect(0, 0, w, h);
+          TXT(g, "comfyui · 節點式生圖", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var nodes = [
+            [0.08, 0.30, "#3a6ea8", "文字編碼"], [0.08, 0.58, "#8a5fb0", "採樣器"],
+            [0.42, 0.44, "#b07908", "模型"], [0.74, 0.44, "#2f9e5f", "解碼輸出"]
+          ];
+          g.strokeStyle = "rgba(255,255,255,0.35)"; g.lineWidth = 2;
+          function wire(x1, y1, x2, y2) {
+            g.beginPath(); g.moveTo(x1, y1); g.bezierCurveTo(x1 + w * 0.08, y1, x2 - w * 0.08, y2, x2, y2); g.stroke();
+          }
+          wire(w * 0.30, h * 0.37, w * 0.42, h * 0.48);
+          wire(w * 0.30, h * 0.65, w * 0.42, h * 0.55);
+          wire(w * 0.64, h * 0.51, w * 0.74, h * 0.51);
+          nodes.forEach(function (nd, i) {
+            var nx = w * nd[0], ny = h * nd[1], nw = w * 0.22, nh = h * 0.15;
+            g.fillStyle = "#22242a"; RR(g, nx, ny, nw, nh, 6); g.fill();
+            g.fillStyle = nd[2]; RR(g, nx, ny, nw, h * 0.045, 6); g.fill(); g.fillRect(nx, ny + h * 0.03, nw, h * 0.02);
+            TXT(g, nd[3], nx + 8, ny + h * 0.10, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(255,255,255,0.8)");
+            g.fillStyle = "#ffd02e"; g.beginPath(); g.arc(nx + nw, ny + nh / 2, 3.5, 0, 6.2832); g.fill();
+            g.beginPath(); g.arc(nx, ny + nh / 2, 3.5, 0, 6.2832); g.fill();
+          });
+          var flow = (t % 2.6) / 2.6;
+          g.fillStyle = "#ffd02e"; g.beginPath(); g.arc(w * (0.30 + 0.12 * flow), h * (0.37 + 0.11 * flow), 3.5, 0, 6.2832); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.12)"; RR(g, w * 0.08, h * 0.84, w * 0.84, 8, 4); g.fill();
+          g.fillStyle = "#2f9e5f"; RR(g, w * 0.08, h * 0.84, w * 0.84 * ((t % 3.4) / 3.4), 8, 4); g.fill();
+          TXT(g, "本地 GPU · 零單張成本", w * 0.94, h * 0.10, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)", "right");
+        },
+        /* 61 danlogo-swisstech: a letterform built on a Swiss grid */
+        61: function (g, w, h, t) {
+          g.fillStyle = "#f2f0eb"; g.fillRect(0, 0, w, h);
+          g.strokeStyle = "rgba(16,21,28,0.10)"; g.lineWidth = 1;
+          for (var i = 0; i <= 8; i++) { g.beginPath(); g.moveTo(w * 0.08 + i * w * 0.07, h * 0.16); g.lineTo(w * 0.08 + i * w * 0.07, h * 0.80); g.stroke(); }
+          for (var j = 0; j <= 4; j++) { g.beginPath(); g.moveTo(w * 0.08, h * 0.16 + j * h * 0.16); g.lineTo(w * 0.64, h * 0.16 + j * h * 0.16); g.stroke(); }
+          var draw = (t % 3.8) / 3.8;
+          g.fillStyle = "#10151c";
+          var cells = [[1, 0], [2, 0], [3, 0], [1, 1], [1, 2], [2, 2], [3, 2], [3, 3], [1, 4], [2, 4], [3, 4]];
+          cells.forEach(function (c, i) {
+            if (draw * cells.length < i) return;
+            g.fillRect(w * 0.08 + c[0] * w * 0.07 + 1.5, h * 0.16 + c[1] * h * 0.16 + 1.5, w * 0.07 - 3, h * 0.16 - 3);
+          });
+          g.fillStyle = "#e2001a"; g.fillRect(w * 0.08 + 5 * w * 0.07, h * 0.16, w * 0.07, h * 0.16);
+          TXT(g, "字成一體", w * 0.74, h * 0.34, "800 " + Math.max(15, w * 0.05) + "px sans-serif", "#10151c");
+          TXT(g, "再取字成符", w * 0.74, h * 0.48, "800 " + Math.max(15, w * 0.05) + "px sans-serif", "#10151c");
+          TXT(g, "瑞士風字標 · 九個階段", w * 0.74, h * 0.64, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)");
+          g.fillStyle = "#e2001a"; g.fillRect(w * 0.74, h * 0.72, w * 0.18, 4);
+        },
+        /* 62 chanmeng-logo-as-code: hand scribble settles into a smooth bezier */
+        62: function (g, w, h, t) {
+          g.fillStyle = "#fdfcf8"; g.fillRect(0, 0, w, h);
+          TXT(g, "logo-as-code · 手繪轉 SVG", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var cx = w * 0.26, cy = h * 0.50, R = Math.min(w, h) * 0.21;
+          var settle = 0.5 + 0.5 * Math.sin(t * 0.9);
+          g.strokeStyle = "#10151c"; g.lineWidth = 3; g.lineCap = "round"; g.beginPath();
+          for (var i = 0; i <= 48; i++) {
+            var a = (i / 48) * 6.2832;
+            var jit = (1 - settle) * 5 * Math.sin(a * 7 + 1.3);
+            var X = cx + Math.cos(a) * (R + jit), Y = cy + Math.sin(a) * (R * 0.82 + jit);
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.closePath(); g.stroke();
+          if (settle > 0.55) {
+            [[cx - R, cy], [cx + R, cy], [cx, cy - R * 0.82], [cx, cy + R * 0.82]].forEach(function (pt) {
+              g.fillStyle = "#1f6ae1"; g.fillRect(pt[0] - 3.5, pt[1] - 3.5, 7, 7);
+            });
+            TXT(g, "三次貝茲擬合", cx, h * 0.88, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "#1f6ae1", "center");
+          } else {
+            TXT(g, "手繪原稿", cx, h * 0.88, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(16,21,28,0.5)", "center");
+          }
+          for (var v = 0; v < 4; v++) {
+            var vx = w * (0.56 + (v % 2) * 0.19), vy = h * (0.24 + Math.floor(v / 2) * 0.28);
+            g.strokeStyle = ["#10151c", "#e05252", "#1f6ae1", "#2f9e5f"][v]; g.lineWidth = 2.5;
+            g.beginPath(); g.ellipse(vx + w * 0.07, vy + h * 0.10, w * 0.045, h * 0.065, 0, 0, 6.2832); g.stroke();
+          }
+          TXT(g, "變體矩陣", w * 0.655, h * 0.90, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.45)", "center");
+        },
+        /* 63 gif-factory: title letters cycle typefaces inside film frames */
+        63: function (g, w, h, t) {
+          g.fillStyle = "#131313"; g.fillRect(0, 0, w, h);
+          TXT(g, "gif-factory · GIF 工廠", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var fonts = ["800 %fpx Archivo, sans-serif", "700 %fpx Georgia, serif", "500 %fpx " + MONO, "900 %fpx sans-serif"];
+          var word = "GIF!";
+          for (var f = 0; f < 4; f++) {
+            var fx = w * 0.06 + f * w * 0.225, fy = h * 0.24, fw = w * 0.20, fh = h * 0.40;
+            g.fillStyle = "#1e1e1e"; RR(g, fx, fy, fw, fh, 4); g.fill();
+            g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1; RR(g, fx, fy, fw, fh, 4); g.stroke();
+            g.fillStyle = "rgba(255,255,255,0.7)";
+            g.fillRect(fx + 5, fy + 4, 5, 5); g.fillRect(fx + fw - 10, fy + 4, 5, 5);
+            g.fillRect(fx + 5, fy + fh - 9, 5, 5); g.fillRect(fx + fw - 10, fy + fh - 9, 5, 5);
+            var fi = (Math.floor(t * 2.2) + f) % 4;
+            var fs = Math.max(15, w * 0.052);
+            TXT(g, word[f], fx + fw / 2, fy + fh / 2, fonts[fi].replace("%f", fs), ["#ffd02e", "#ff5c8a", "#7be3c3", "#9fc2ff"][f], "center");
+          }
+          TXT(g, "40 種字形 · 動態海報 · 表情包 · 光柵變畫卡", w * 0.5, h * 0.82, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(255,255,255,0.55)", "center");
+          g.strokeStyle = "#ffd02e"; g.lineWidth = 2; g.lineCap = "round";
+          var la = t * 1.5;
+          g.beginPath(); g.arc(w * 0.5, h * 0.93, 7, la, la + 4.6); g.stroke();
+          g.beginPath(); g.moveTo(w * 0.5 + Math.cos(la) * 7, h * 0.93 + Math.sin(la) * 7); g.lineTo(w * 0.5 + Math.cos(la) * 13, h * 0.93 + Math.sin(la) * 7 - 2); g.stroke();
+        },
+        /* 64 cartoon-jake-skill: round flat cartoon face, thick outline, blinking */
+        64: function (g, w, h, t) {
+          g.fillStyle = "#fdf3d8"; g.fillRect(0, 0, w, h);
+          TXT(g, "cartoon-jake · 2D 卡通", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var cx = w * 0.34, cy = h * 0.52, R = Math.min(w, h) * 0.26;
+          g.fillStyle = "#f7b731";
+          g.beginPath(); g.ellipse(cx, cy, R * 1.12, R * 0.94, 0, 0, 6.2832); g.fill();
+          g.strokeStyle = "#10151c"; g.lineWidth = 4.5; g.stroke();
+          g.beginPath(); g.ellipse(cx + R * 0.42, cy + R * 0.28, R * 0.34, R * 0.24, 0, 0, 6.2832); g.fillStyle = "#ffe9b0"; g.fill(); g.stroke();
+          var blink = (t % 3.4) > 3.22;
+          [-0.36, 0.30].forEach(function (o) {
+            if (blink) {
+              g.strokeStyle = "#10151c"; g.lineWidth = 3; g.beginPath();
+              g.moveTo(cx + R * o - 7, cy - R * 0.18); g.lineTo(cx + R * o + 7, cy - R * 0.18); g.stroke();
+            } else {
+              g.fillStyle = "#10151c"; g.beginPath(); g.arc(cx + R * o, cy - R * 0.18, 4.5, 0, 6.2832); g.fill();
+              g.fillStyle = "#ffffff"; g.beginPath(); g.arc(cx + R * o + 1.5, cy - R * 0.22, 1.6, 0, 6.2832); g.fill();
+            }
+          });
+          g.strokeStyle = "#10151c"; g.lineWidth = 3; g.lineCap = "round";
+          g.beginPath(); g.arc(cx + R * 0.05, cy + R * 0.30, R * 0.30, 0.35, 2.5); g.stroke();
+          g.fillStyle = "#ff8fa8"; g.beginPath(); g.ellipse(cx - R * 0.72, cy + R * 0.18, 7, 4.5, 0, 0, 6.2832); g.fill();
+          g.beginPath(); g.ellipse(cx + R * 0.78, cy + R * 0.05, 7, 4.5, 0, 0, 6.2832); g.fill();
+          for (var r = 0; r < 3; r++) {
+            var rx = w * 0.62 + r * w * 0.115, ry = h * 0.26;
+            g.fillStyle = "#ffffff"; RR(g, rx, ry, w * 0.10, h * 0.42, 4); g.fill();
+            g.strokeStyle = "rgba(16,21,28,0.25)"; g.lineWidth = 1; RR(g, rx, ry, w * 0.10, h * 0.42, 4); g.stroke();
+            g.fillStyle = ["#f7b731", "#7be3c3", "#ff8fa8"][r]; g.beginPath(); g.arc(rx + w * 0.05, ry + h * 0.20, Math.min(w, h) * 0.045, 0, 6.2832); g.fill();
+            g.strokeStyle = "#10151c"; g.lineWidth = 2; g.stroke();
+          }
+          TXT(g, "三張參考圖定風格 · 粗黑描邊 · 鮮豔平塗", w * 0.62, h * 0.86, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 65 HyperFrames: HTML scene code renders into frame-exact film */
+        65: function (g, w, h, t) {
+          g.fillStyle = "#0d1117"; g.fillRect(0, 0, w, h);
+          TXT(g, "hyperframes · HTML → MP4", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var code = [["<scene>", "#ff8fa8"], ["  <h1>", "#9fc2ff"], ["  animate()", "#7be3c3"], ["</scene>", "#ff8fa8"]];
+          code.forEach(function (ln, i) {
+            TXT(g, ln[0], w * 0.07, h * (0.26 + i * 0.115), "500 " + Math.max(10, w * 0.034) + "px " + MONO, ln[1]);
+          });
+          TXT(g, "→", w * 0.40, h * 0.44, "700 " + Math.max(15, w * 0.05) + "px sans-serif", "#ffffff", "center");
+          var fx = w * 0.50, fy = h * 0.20, fw = w * 0.44, fh = h * 0.42;
+          g.fillStyle = "#161c26"; RR(g, fx, fy, fw, fh, 6); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.3)"; g.lineWidth = 1.2; RR(g, fx, fy, fw, fh, 6); g.stroke();
+          var fr = Math.floor((t % 2.4) / 0.3);
+          g.fillStyle = "#ffb020"; RR(g, fx + 12, fy + 12, fw * 0.5, 9, 4.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.4)"; RR(g, fx + 12, fy + 30, fw * 0.68, 7, 3.5); g.fill();
+          g.fillStyle = "#1f6ae1"; g.beginPath(); g.arc(fx + fw * (0.2 + 0.6 * ((fr % 8) / 7)), fy + fh * 0.72, 8, 0, 6.2832); g.fill();
+          TXT(g, "frame " + (fr * 4) + " / 96", fx + fw / 2, fy + fh + h * 0.075, "600 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.55)", "center");
+          for (var b = 0; b < 24; b++) {
+            var bx = w * 0.50 + (b % 12) * w * 0.0375, by = h * (0.76 + Math.floor(b / 12) * 0.09);
+            g.fillStyle = "hsla(" + (210 + b * 6) + ",70%,60%," + (0.25 + 0.5 * Math.abs(Math.sin(t * 2 + b))) + ")";
+            RR(g, bx, by, w * 0.03, h * 0.06, 2); g.fill();
+          }
+          TXT(g, "450 blocks", w * 0.06, h * 0.80, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.55)");
+        },
+        /* 66 video-shotcraft: recipe cards fan over a beat timeline */
+        66: function (g, w, h, t) {
+          g.fillStyle = "#16130f"; g.fillRect(0, 0, w, h);
+          TXT(g, "video-shotcraft · 鏡頭配方", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var cur = Math.floor((t % 4) / 1);
+          for (var i = 3; i >= 0; i--) {
+            var off = (i - cur + 4) % 4;
+            var cx = w * (0.16 + off * 0.055), cy = h * (0.20 + off * 0.03), cw = w * 0.34, ch = h * 0.42;
+            g.fillStyle = off === 0 ? "#f5efe2" : "#2a251c"; RR(g, cx, cy, cw, ch, 7); g.fill();
+            if (off === 0) {
+              g.fillStyle = "#274b73"; RR(g, cx + 9, cy + 9, cw - 18, ch * 0.5, 4); g.fill();
+              g.fillStyle = "#ffffff"; g.beginPath(); g.moveTo(cx + cw / 2 - 6, cy + ch * 0.16); g.lineTo(cx + cw / 2 - 6, cy + ch * 0.36); g.lineTo(cx + cw / 2 + 8, cy + ch * 0.26); g.closePath(); g.fill();
+              TXT(g, "配方 #" + (37 + cur * 7), cx + 12, cy + ch * 0.68, "700 " + Math.max(11, w * 0.036) + "px " + MONO, "#10151c");
+              TXT(g, "推鏡 · 環繞 · 特寫", cx + 12, cy + ch * 0.84, "500 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(16,21,28,0.55)");
+            }
+          }
+          TXT(g, "124 張配方卡", w * 0.62, h * 0.30, "700 " + Math.max(13, w * 0.042) + "px sans-serif", "#f5efe2");
+          TXT(g, "150 個動態預覽", w * 0.62, h * 0.42, "500 " + Math.max(10, w * 0.034) + "px sans-serif", "rgba(255,255,255,0.6)");
+          var by = h * 0.80;
+          g.strokeStyle = "rgba(255,255,255,0.3)"; g.lineWidth = 2; g.beginPath(); g.moveTo(w * 0.08, by); g.lineTo(w * 0.92, by); g.stroke();
+          for (var b = 0; b < 8; b++) {
+            var bx = w * (0.10 + b * 0.105), strong = b % 2 === 0;
+            g.fillStyle = strong ? "#ffb020" : "rgba(255,255,255,0.4)";
+            g.fillRect(bx, by - (strong ? 12 : 7), 3, strong ? 24 : 14);
+          }
+          var play = w * (0.08 + 0.84 * ((t % 4) / 4));
+          g.fillStyle = "#e05252"; g.beginPath(); g.arc(play, by, 5.5, 0, 6.2832); g.fill();
+        },
+        /* 67 brag: a project box launches as a rocket with notes */
+        67: function (g, w, h, t) {
+          g.fillStyle = "#0f1420"; g.fillRect(0, 0, w, h);
+          TXT(g, "brag · 一句話變 launch 影片", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var ph = (t % 3.6) / 3.6, ry = h * 0.72 - ph * h * 0.38, rx = w * 0.34 + Math.sin(ph * 9) * 3;
+          g.fillStyle = "#1b2634"; RR(g, w * 0.10, h * 0.66, w * 0.48, h * 0.20, 7); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.2)"; g.lineWidth = 1; RR(g, w * 0.10, h * 0.66, w * 0.48, h * 0.20, 7); g.stroke();
+          g.fillStyle = "rgba(255,255,255,0.5)"; RR(g, w * 0.15, h * 0.72, w * 0.30, 7, 3.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.25)"; RR(g, w * 0.15, h * 0.79, w * 0.22, 6, 3); g.fill();
+          g.save(); g.translate(rx, ry); g.rotate(-0.5);
+          g.fillStyle = "#f5efe2"; g.beginPath(); g.moveTo(0, -20); g.quadraticCurveTo(11, -4, 9, 12); g.lineTo(-9, 12); g.quadraticCurveTo(-11, -4, 0, -20); g.fill();
+          g.fillStyle = "#e05252"; g.beginPath(); g.arc(0, -4, 5, 0, 6.2832); g.fill();
+          g.fillStyle = "#ffb020"; g.beginPath(); g.moveTo(-6, 13); g.lineTo(0, 24 + 5 * Math.sin(t * 22)); g.lineTo(6, 13); g.closePath(); g.fill();
+          g.restore();
+          ["♪", "♫", "♪"].forEach(function (n, i) {
+            var nx = w * (0.62 + i * 0.11), ny = h * (0.62 - 0.28 * ((t * 0.5 + i * 0.3) % 1));
+            g.globalAlpha = 1 - ((t * 0.5 + i * 0.3) % 1);
+            TXT(g, n, nx, ny, "400 " + Math.max(14, w * 0.05) + "px sans-serif", "#7be3c3", "center");
+          });
+          g.globalAlpha = 1;
+          TXT(g, "分享文案 ↗", w * 0.70, h * 0.82, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "#ffb020", "center");
+          TXT(g, "HyperFrames 渲染", w * 0.70, h * 0.92, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)", "center");
+        },
+        /* 68 pixelfx: a burst of pure-code pixels */
+        68: function (g, w, h, t) {
+          g.fillStyle = "#0a0a12"; g.fillRect(0, 0, w, h);
+          TXT(g, "pixelfx · 232 個像素特效", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var cx = w * 0.38, cy = h * 0.52, cell = Math.max(6, w * 0.02), ph = (t % 2.2) / 2.2;
+          var cols = ["#ffd02e", "#ff5c8a", "#7be3c3", "#9fc2ff"];
+          for (var i = 0; i < 42; i++) {
+            var a = i * 2.39996, d = (0.25 + (i % 7) / 7) * Math.min(w, h) * 0.42 * ph;
+            var X = cx + Math.cos(a) * d, Y = cy + Math.sin(a) * d * 0.8;
+            g.globalAlpha = Math.max(0, 1 - ph * 1.15);
+            g.fillStyle = cols[i % 4];
+            g.fillRect(Math.round(X / cell) * cell, Math.round(Y / cell) * cell, cell - 1.5, cell - 1.5);
+          }
+          g.globalAlpha = 1;
+          g.fillStyle = "#ffffff"; g.fillRect(cx - cell / 2, cy - cell / 2, cell, cell);
+          var gx = w * 0.68;
+          for (var r = 0; r < 6; r++) for (var c = 0; c < 5; c++) {
+            var on = ((r * 5 + c + Math.floor(t * 3)) % 7) < 3;
+            g.fillStyle = on ? cols[(r + c) % 4] : "rgba(255,255,255,0.10)";
+            g.fillRect(gx + c * (cell + 3), h * 0.30 + r * (cell + 3), cell, cell);
+          }
+          TXT(g, "全部程式碼產生", gx + cell * 2.5, h * 0.72, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#ffffff", "center");
+          TXT(g, "零圖片素材", gx + cell * 2.5, h * 0.82, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.5)", "center");
+        },
+        /* 69 anidoodle: a wobbly hand-drawn house, redrawn every frame */
+        69: function (g, w, h, t) {
+          g.fillStyle = "#fbf7ec"; g.fillRect(0, 0, w, h);
+          TXT(g, "anidoodle · 逐幀手繪", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var seed = Math.floor(t * 9);
+          function jit(v, k) { return Math.sin(seed * 12.9898 + k * 78.233) * v; }
+          g.strokeStyle = "#274b73"; g.lineWidth = 3; g.lineCap = "round"; g.lineJoin = "round";
+          var hx = w * 0.16, hy = h * 0.42, hw = w * 0.30, hh = h * 0.32;
+          g.beginPath();
+          g.moveTo(hx + jit(2, 1), hy + hh);
+          g.lineTo(hx + jit(2, 2), hy + jit(2, 3));
+          g.lineTo(hx + hw / 2 + jit(2, 4), hy - h * 0.16 + jit(2, 5));
+          g.lineTo(hx + hw + jit(2, 6), hy + jit(2, 7));
+          g.lineTo(hx + hw + jit(2, 8), hy + hh);
+          g.closePath(); g.stroke();
+          g.strokeStyle = "#e07b24";
+          g.beginPath(); g.moveTo(hx + hw * 0.38, hy + hh); g.lineTo(hx + hw * 0.38, hy + hh * 0.45); g.lineTo(hx + hw * 0.62, hy + hh * 0.45); g.lineTo(hx + hw * 0.62, hy + hh); g.stroke();
+          g.strokeStyle = "#e05252"; g.beginPath(); g.arc(hx + hw * 0.78, hy + hh * 0.28, 7, 0, 6.2832); g.stroke();
+          var sx = w * 0.66, sy = h * 0.34, sr = Math.min(w, h) * 0.13;
+          g.strokeStyle = "#b07908"; g.beginPath();
+          for (var i = 0; i <= 5; i++) {
+            var a = -1.57 + i * (6.2832 / 5) + 0.31, a2 = -1.57 + (i + 2) * (6.2832 / 5) + 0.31;
+            g.moveTo(sx + Math.cos(a) * sr + jit(2, 20 + i), sy + Math.sin(a) * sr + jit(2, 30 + i));
+            g.lineTo(sx + Math.cos(a2) * sr + jit(2, 40 + i), sy + Math.sin(a2) * sr + jit(2, 50 + i));
+          }
+          g.stroke();
+          TXT(g, "♪", w * (0.62 + 0.05 * Math.sin(t * 2)), h * (0.66 + 0.03 * Math.cos(t * 2.6)), "400 " + Math.max(15, w * 0.05) + "px sans-serif", "#12957f", "center");
+          TXT(g, "全片以程式碼手繪 · 配樂", w * 0.06, h * 0.92, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 70 idea-to-motion: a bulb becomes a finished narrated film */
+        70: function (g, w, h, t) {
+          g.fillStyle = "#101623"; g.fillRect(0, 0, w, h);
+          TXT(g, "idea-to-motion · 一句話生成", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var glow = 0.7 + 0.3 * Math.sin(t * 3);
+          g.fillStyle = "rgba(255,208,46," + 0.18 * glow + ")"; g.beginPath(); g.arc(w * 0.17, h * 0.44, Math.min(w, h) * 0.17, 0, 6.2832); g.fill();
+          g.fillStyle = "#ffd02e"; g.beginPath(); g.arc(w * 0.17, h * 0.44, Math.min(w, h) * 0.085, 0, 6.2832); g.fill();
+          g.fillStyle = "#8a93a3"; RR(g, w * 0.17 - 8, h * 0.545, 16, 10, 3); g.fill();
+          g.strokeStyle = "rgba(255,208,46,0.8)"; g.lineWidth = 2; g.lineCap = "round";
+          for (var r = 0; r < 6; r++) {
+            var a = r * 1.047 + 0.5;
+            g.beginPath();
+            g.moveTo(w * 0.17 + Math.cos(a) * Math.min(w, h) * 0.115, h * 0.44 + Math.sin(a) * Math.min(w, h) * 0.115);
+            g.lineTo(w * 0.17 + Math.cos(a) * Math.min(w, h) * 0.145, h * 0.44 + Math.sin(a) * Math.min(w, h) * 0.145);
+            g.stroke();
+          }
+          TXT(g, "→", w * 0.335, h * 0.44, "700 " + Math.max(15, w * 0.05) + "px sans-serif", "#ffffff", "center");
+          var fx = w * 0.44, fy = h * 0.22, fw = w * 0.50, fh = h * 0.44;
+          g.fillStyle = "#1b2634"; RR(g, fx, fy, fw, fh, 7); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1; RR(g, fx, fy, fw, fh, 7); g.stroke();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.moveTo(w * 0.655, fy + fh * 0.32); g.lineTo(w * 0.655, fy + fh * 0.68); g.lineTo(w * 0.715, fy + fh * 0.5); g.closePath(); g.fill();
+          for (var b = 0; b < 16; b++) {
+            var bh = h * (0.03 + 0.09 * Math.abs(Math.sin(t * 2.6 + b * 0.8)));
+            g.fillStyle = "#7be3c3"; RR(g, fx + 10 + b * (fw - 20) / 16, fy + fh * 0.86 - bh / 2, (fw - 20) / 16 - 3, bh, 2); g.fill();
+          }
+          TXT(g, "14 種風格 · 16 種體裁 · 本地渲染免 API key", w * 0.06, h * 0.88, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 71 one-prompt-video: one line in, video.json, a finished short out */
+        71: function (g, w, h, t) {
+          g.fillStyle = "#f2f5f9"; g.fillRect(0, 0, w, h);
+          TXT(g, "one-prompt-video", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          g.fillStyle = "#10151c"; RR(g, w * 0.07, h * 0.20, w * 0.52, h * 0.15, 999); g.fill();
+          TXT(g, "> 做一支 30 秒產品短片", w * 0.10, h * 0.275, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "#ffffff");
+          if ((t % 1.2) < 0.6) TXT(g, "▌", w * 0.545, h * 0.275, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "#7be3c3");
+          TXT(g, "{ video.json }", w * 0.07, h * 0.47, "600 " + Math.max(11, w * 0.038) + "px " + MONO, "#1f6ae1");
+          for (var i = 0; i < 3; i++) {
+            g.fillStyle = "rgba(31,106,225,0.25)"; RR(g, w * 0.07, h * (0.55 + i * 0.09) - 4, w * (0.34 - i * 0.06), 8, 4); g.fill();
+          }
+          TXT(g, "→", w * 0.53, h * 0.47, "700 " + Math.max(15, w * 0.05) + "px sans-serif", "#10151c", "center");
+          var fx = w * 0.63, fy = h * 0.20, fw = w * 0.31, fh = h * 0.50;
+          g.fillStyle = "#10151c"; RR(g, fx, fy, fw, fh, 8); g.fill();
+          g.fillStyle = "#ffb020"; g.beginPath(); g.moveTo(fx + fw * 0.40, fy + fh * 0.32); g.lineTo(fx + fw * 0.40, fy + fh * 0.56); g.lineTo(fx + fw * 0.64, fy + fh * 0.44); g.closePath(); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.75)"; RR(g, fx + 10, fy + fh * 0.70, fw - 20, 6, 3); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.4)"; RR(g, fx + 10, fy + fh * 0.82, fw - 34, 6, 3); g.fill();
+          for (var s = 0; s < 9; s++) {
+            var on = Math.floor((t % 2.7) / 0.3) === s;
+            g.fillStyle = on ? "#1f6ae1" : "rgba(16,21,28,0.15)";
+            RR(g, w * 0.07 + s * w * 0.045, h * 0.86, w * 0.036, h * 0.07, 2); g.fill();
+          }
+          TXT(g, "9 種版式 · 18 套主題", w * 0.52, h * 0.895, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 72 four-style-motion-video: four picture logics in four quadrants */
+        72: function (g, w, h, t) {
+          g.fillStyle = "#14161c"; g.fillRect(0, 0, w, h);
+          TXT(g, "four-style-motion · 四種畫面邏輯", w * 0.06, h * 0.09, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var qw = w * 0.42, qh = h * 0.34, quads = [[0.06, 0.17], [0.52, 0.17], [0.06, 0.56], [0.52, 0.56]];
+          quads.forEach(function (q, i) {
+            g.fillStyle = "rgba(255,255,255,0.06)"; RR(g, w * q[0], h * q[1], qw, qh, 6); g.fill();
+          });
+          var tilt = Math.sin(t * 1.6) * 0.16, bx = w * 0.27, by = h * 0.24;
+          g.strokeStyle = "#ffb020"; g.lineWidth = 2.5; g.lineCap = "round";
+          g.beginPath(); g.moveTo(bx, by); g.lineTo(bx, by + qh * 0.5); g.stroke();
+          g.save(); g.translate(bx, by); g.rotate(tilt);
+          g.beginPath(); g.moveTo(-qw * 0.32, 0); g.lineTo(qw * 0.32, 0); g.stroke();
+          [-0.32, 0.32].forEach(function (o) {
+            g.beginPath(); g.moveTo(qw * o, 0); g.lineTo(qw * o - 8, qh * 0.22); g.lineTo(qw * o + 8, qh * 0.22); g.closePath(); g.stroke();
+          });
+          g.restore();
+          TXT(g, "視覺隱喻", bx, h * 0.475, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(255,255,255,0.65)", "center");
+          var on = (t % 2) < 1;
+          g.fillStyle = on ? "#2f9e5f" : "rgba(255,255,255,0.15)"; RR(g, w * 0.66, h * 0.235, w * 0.14, h * 0.115, 999); g.fill();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.arc(w * (on ? 0.755 : 0.685), h * 0.2925, h * 0.042, 0, 6.2832); g.fill();
+          TXT(g, "物體狀態", w * 0.73, h * 0.475, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(255,255,255,0.65)", "center");
+          g.strokeStyle = "#7be3c3"; g.lineWidth = 2.5; g.beginPath();
+          for (var i = 0; i <= 20; i++) {
+            var X = w * 0.10 + i * (w * 0.34 / 20), Y = h * 0.83 - (0.5 + 0.5 * Math.sin(i * 0.55 + t * 2)) * h * 0.16;
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.stroke();
+          TXT(g, "變量圖解", w * 0.27, h * 0.865 + h * 0.10 - h * 0.10, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(255,255,255,0.65)", "center");
+          var cell = Math.max(5, w * 0.016), hop = Math.abs(Math.sin(t * 3.2)) * cell * 1.4;
+          g.fillStyle = "#ff5c8a";
+          g.fillRect(w * 0.70, h * 0.78 - hop, cell * 2, cell * 2);
+          g.fillRect(w * 0.70 - cell * 0.0, h * 0.78 - hop - cell, cell * 2, cell);
+          g.fillStyle = "#9fc2ff"; g.fillRect(w * 0.60, h * 0.845, w * 0.28, cell * 0.8);
+          TXT(g, "像素劇情", w * 0.73, h * 0.865 + h * 0.10 - h * 0.10, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(255,255,255,0.65)", "center");
+        },
+        /* 73 viva-video: documents become a release film, palette from OKLCH */
+        73: function (g, w, h, t) {
+          g.fillStyle = "#f4f1ea"; g.fillRect(0, 0, w, h);
+          TXT(g, "viva-video · 文件變發布片", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          for (var p = 2; p >= 0; p--) {
+            g.fillStyle = "#ffffff"; RR(g, w * 0.08 + p * 7, h * 0.22 + p * 5, w * 0.24, h * 0.42, 4); g.fill();
+            g.strokeStyle = "rgba(16,21,28,0.18)"; g.lineWidth = 1; RR(g, w * 0.08 + p * 7, h * 0.22 + p * 5, w * 0.24, h * 0.42, 4); g.stroke();
+          }
+          for (var i = 0; i < 4; i++) {
+            g.fillStyle = "rgba(16,21,28,0.35)"; RR(g, w * 0.105, h * (0.30 + i * 0.085), w * (0.17 - (i % 2) * 0.04), 6, 3); g.fill();
+          }
+          TXT(g, "→", w * 0.42, h * 0.43, "700 " + Math.max(15, w * 0.05) + "px sans-serif", "#10151c", "center");
+          var fx = w * 0.52, fy = h * 0.20, fw = w * 0.42, fh = h * 0.46;
+          g.fillStyle = "#10151c"; RR(g, fx, fy, fw, fh, 7); g.fill();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.moveTo(fx + fw * 0.42, fy + fh * 0.3); g.lineTo(fx + fw * 0.42, fy + fh * 0.62); g.lineTo(fx + fw * 0.62, fy + fh * 0.46); g.closePath(); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.4)"; RR(g, fx + 12, fy + fh * 0.76, fw - 24, 6, 3); g.fill();
+          var wx = w * 0.20, wy = h * 0.82, wr = Math.min(w, h) * 0.085;
+          for (var s = 0; s < 12; s++) {
+            g.fillStyle = "hsl(" + (s * 30 + t * 24) + ",75%,55%)";
+            g.beginPath(); g.moveTo(wx, wy); g.arc(wx, wy, wr, s * 0.5236, (s + 1) * 0.5236); g.closePath(); g.fill();
+          }
+          g.fillStyle = "#f4f1ea"; g.beginPath(); g.arc(wx, wy, wr * 0.45, 0, 6.2832); g.fill();
+          TXT(g, "OKLCH 從品牌色推導配色 · 4 套主題包", w * 0.36, h * 0.82, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 74 course-to-feishu-video: outline, feishu doc, SRT, ten-minute batches */
+        74: function (g, w, h, t) {
+          g.fillStyle = "#eef4ff"; g.fillRect(0, 0, w, h);
+          TXT(g, "course-to-feishu · 教學分批交付", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var steps = ["課程大綱", "飛書課件", "授課稿", "SRT 字幕"];
+          steps.forEach(function (s, i) {
+            var y = h * (0.24 + i * 0.135), on = (t % 4.8) > i * 1.1;
+            g.fillStyle = on ? "#1f6ae1" : "rgba(16,21,28,0.15)";
+            g.beginPath(); g.arc(w * 0.10, y, 9, 0, 6.2832); g.fill();
+            TXT(g, String(i + 1), w * 0.10, y + 0.5, "700 10px sans-serif", "#ffffff", "center");
+            TXT(g, s, w * 0.155, y, "600 " + Math.max(11, w * 0.038) + "px sans-serif", on ? "#10151c" : "rgba(16,21,28,0.45)");
+            if (i < 3) { g.strokeStyle = "rgba(16,21,28,0.2)"; g.lineWidth = 2; g.beginPath(); g.moveTo(w * 0.10, y + 10); g.lineTo(w * 0.10, y + h * 0.135 - 10); g.stroke(); }
+          });
+          TXT(g, "00:01:12,400 --> 00:01:15,080", w * 0.44, h * 0.30, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.55)");
+          TXT(g, "這一節我們來看…", w * 0.44, h * 0.40, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "#10151c");
+          for (var b = 0; b < 3; b++) {
+            var bx = w * 0.44 + b * w * 0.175, by = h * 0.56, filled = (t % 4.8) > 3.4 + b * 0.4;
+            g.fillStyle = filled ? "#10151c" : "rgba(16,21,28,0.10)"; RR(g, bx, by, w * 0.155, h * 0.20, 6); g.fill();
+            TXT(g, "▶", bx + w * 0.0775, by + h * 0.075, "400 " + Math.max(12, w * 0.04) + "px sans-serif", filled ? "#ffffff" : "rgba(16,21,28,0.35)", "center");
+            TXT(g, "約 10 分鐘", bx + w * 0.0775, by + h * 0.155, "500 " + Math.max(8, w * 0.026) + "px " + MONO, filled ? "rgba(255,255,255,0.7)" : "rgba(16,21,28,0.4)", "center");
+            TXT(g, "第 " + (b + 1) + " 批", bx + w * 0.0775, by + h * 0.26, "600 " + Math.max(9, w * 0.03) + "px sans-serif", "rgba(16,21,28,0.55)", "center");
+          }
+        },
+        /* 75 clip-builder: headless browser paints frames, FFmpeg encodes */
+        75: function (g, w, h, t) {
+          g.fillStyle = "#12181f"; g.fillRect(0, 0, w, h);
+          TXT(g, "clip-builder · 逐幀繪圖", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var bx = w * 0.08, by = h * 0.18, bw = w * 0.56, bh = h * 0.50;
+          g.fillStyle = "#1b2634"; RR(g, bx, by, bw, bh, 8); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.2)"; g.lineWidth = 1; RR(g, bx, by, bw, bh, 8); g.stroke();
+          ["#e05252", "#ffb020", "#2f9e5f"].forEach(function (c, i) {
+            g.fillStyle = c; g.beginPath(); g.arc(bx + 13 + i * 14, by + 11, 4, 0, 6.2832); g.fill();
+          });
+          var fr = Math.floor((t % 3) / 0.25);
+          var hue = (fr * 47) % 360;
+          g.fillStyle = "hsl(" + hue + ",65%,55%)"; g.beginPath(); g.arc(bx + bw * (0.25 + 0.5 * Math.abs(Math.sin(fr * 0.9))), by + bh * 0.55, 13, 0, 6.2832); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.75)"; RR(g, bx + 12, by + bh * 0.78, bw * 0.55, 6, 3); g.fill();
+          TXT(g, "frame " + (100 + fr * 13), bx + bw - 10, by + 13, "600 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.6)", "right");
+          TXT(g, "headless Chromium", bx, by + bh + h * 0.08, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)");
+          var ex = w * 0.72;
+          TXT(g, "FFmpeg", ex, h * 0.30, "700 " + Math.max(13, w * 0.042) + "px " + MONO, "#7be3c3", "center");
+          TXT(g, "編碼 MP4", ex, h * 0.40, "500 " + Math.max(10, w * 0.034) + "px sans-serif", "rgba(255,255,255,0.6)", "center");
+          g.fillStyle = "rgba(255,255,255,0.12)"; RR(g, ex - w * 0.11, h * 0.50, w * 0.22, 9, 4.5); g.fill();
+          g.fillStyle = "#7be3c3"; RR(g, ex - w * 0.11, h * 0.50, w * 0.22 * ((t % 3) / 3), 9, 4.5); g.fill();
+          TXT(g, Math.floor(((t % 3) / 3) * 100) + "%", ex, h * 0.62, "700 " + Math.max(12, w * 0.04) + "px " + MONO, "#ffffff", "center");
+          TXT(g, "字幕 · 旁白", ex, h * 0.76, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)", "center");
+        },
+        /* 76 gpt-hand-drawing-skill: watercolour wash under an ink line */
+        76: function (g, w, h, t) {
+          g.fillStyle = "#fbf6ee"; g.fillRect(0, 0, w, h);
+          TXT(g, "gpt-hand-drawing · 水彩墨線", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var blobs = [[0.30, 0.45, "#a8c8e8"], [0.55, 0.55, "#f2c4ce"], [0.72, 0.40, "#bfe0c0"], [0.45, 0.66, "#f7dfae"]];
+          blobs.forEach(function (b, i) {
+            var grow = Math.max(0.25, Math.min(1, (t % 5) * 0.5 - i * 0.3));
+            g.fillStyle = b[2]; g.globalAlpha = 0.5;
+            g.beginPath(); g.ellipse(w * b[0], h * b[1], Math.min(w, h) * 0.16 * grow, Math.min(w, h) * 0.11 * grow, i * 0.7, 0, 6.2832); g.fill();
+          });
+          g.globalAlpha = 1;
+          var ph = (t % 5) / 5;
+          g.strokeStyle = "#2b2b2b"; g.lineWidth = 2.6; g.lineCap = "round"; g.beginPath();
+          var pts = [];
+          for (var i = 0; i <= 40; i++) {
+            var u = i / 40, X = w * (0.10 + 0.78 * u), Y = h * 0.68 - Math.sin(u * 3.6) * h * 0.17 - u * h * 0.06;
+            pts.push([X, Y]);
+          }
+          var upto = Math.floor(40 * Math.min(1, ph * 1.25));
+          pts.slice(0, upto + 1).forEach(function (p, i) { i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); });
+          g.stroke();
+          g.fillStyle = "#e8a33d"; g.beginPath(); g.arc(w * 0.82, h * 0.28, Math.min(w, h) * 0.055, 0, 6.2832); g.fill();
+          g.strokeStyle = "#2b2b2b"; g.lineWidth = 2; g.stroke();
+          TXT(g, "p5.js + p5.brush · 本地 Chrome + FFmpeg", w * 0.06, h * 0.92, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 77 video-3d-explicativo: low-poly town inside a vertical frame */
+        77: function (g, w, h, t) {
+          g.fillStyle = "#101820"; g.fillRect(0, 0, w, h);
+          TXT(g, "video-3d-explicativo", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var fx = w * 0.36, fy = h * 0.14, fw = w * 0.28, fh = h * 0.72;
+          g.fillStyle = "#87b5d9"; RR(g, fx, fy, fw, fh, 8); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.4)"; g.lineWidth = 1.2; RR(g, fx, fy, fw, fh, 8); g.stroke();
+          function house(bx, by, s, c1, c2) {
+            g.fillStyle = c1; g.fillRect(bx, by, s, s * 0.9);
+            g.fillStyle = c2; g.beginPath(); g.moveTo(bx - 2, by); g.lineTo(bx + s / 2, by - s * 0.42); g.lineTo(bx + s + 2, by); g.closePath(); g.fill();
+            g.fillStyle = "rgba(255,240,180,0.95)"; g.fillRect(bx + s * 0.32, by + s * 0.3, s * 0.3, s * 0.3);
+          }
+          var bob = Math.sin(t * 1.8) * 2;
+          house(fx + fw * 0.10, fy + fh * 0.52 + bob, fw * 0.30, "#e8e2d4", "#c75050");
+          house(fx + fw * 0.52, fy + fh * 0.44 - bob, fw * 0.34, "#d8e4ee", "#3d6a9c");
+          house(fx + fw * 0.28, fy + fh * 0.66, fw * 0.26, "#f0e6c8", "#7ba05b");
+          g.fillStyle = "rgba(16,21,28,0.75)"; RR(g, fx + 8, fy + fh * 0.84, fw - 16, h * 0.075, 4); g.fill();
+          var words = ["把", "講稿", "變成", "小城"];
+          TXT(g, words[Math.floor((t % 2.4) / 0.6)], fx + fw / 2, fy + fh * 0.878, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#ffffff", "center");
+          TXT(g, "9:16 直式", w * 0.14, h * 0.34, "700 " + Math.max(13, w * 0.042) + "px " + MONO, "#ffffff");
+          TXT(g, "30–60 秒", w * 0.14, h * 0.46, "500 " + Math.max(11, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.65)");
+          TXT(g, "AI 旁白 · 逐詞字幕", w * 0.14, h * 0.58, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)");
+          TXT(g, "低多邊形 3D 講解", w * 0.72, h * 0.34, "700 " + Math.max(12, w * 0.04) + "px sans-serif", "#ffffff");
+          TXT(g, "小城場景", w * 0.72, h * 0.46, "500 " + Math.max(11, w * 0.038) + "px sans-serif", "rgba(255,255,255,0.65)");
+        },
+        /* 78 hyperframes-video-polish: alignment guides and export checks */
+        78: function (g, w, h, t) {
+          g.fillStyle = "#f2f5f9"; g.fillRect(0, 0, w, h);
+          TXT(g, "hyperframes-video-polish · 成片校驗", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var fx = w * 0.07, fy = h * 0.20, fw = w * 0.52, fh = h * 0.52;
+          g.fillStyle = "#10151c"; RR(g, fx, fy, fw, fh, 6); g.fill();
+          g.strokeStyle = "rgba(123,227,195,0.5)"; g.lineWidth = 1; g.setLineDash([5, 5]);
+          g.beginPath(); g.moveTo(fx + fw / 2, fy + 6); g.lineTo(fx + fw / 2, fy + fh - 6); g.moveTo(fx + 6, fy + fh / 2); g.lineTo(fx + fw - 6, fy + fh / 2); g.stroke();
+          g.setLineDash([]);
+          var off = Math.sin(t * 1.4) * fw * 0.05 * Math.max(0, 1 - (t % 4) / 4);
+          g.fillStyle = "#ffb020"; RR(g, fx + fw * 0.30 + off, fy + fh * 0.30, fw * 0.4, 9, 4.5); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.5)"; RR(g, fx + fw * 0.34 + off, fy + fh * 0.52, fw * 0.32, 7, 3.5); g.fill();
+          TXT(g, Math.abs(off) < 2 ? "置中 ✓" : "置中偏移 " + Math.round(off) + "px", fx + fw / 2, fy + fh * 0.82, "600 " + Math.max(9, w * 0.03) + "px " + MONO, Math.abs(off) < 2 ? "#7be3c3" : "#ffb020", "center");
+          var checks = [["編碼 H.264", true], ["幀率 30fps", true], ["時長 00:42", true], ["音訊漂移 0ms", (t % 4) > 2.6]];
+          checks.forEach(function (c, i) {
+            var y = h * (0.26 + i * 0.115);
+            g.fillStyle = c[1] ? "#2f9e5f" : "#e07b24"; g.beginPath(); g.arc(w * 0.665, y, 8, 0, 6.2832); g.fill();
+            TXT(g, c[1] ? "✓" : "…", w * 0.665, y + 0.5, "700 10px sans-serif", "#ffffff", "center");
+            TXT(g, c[0], w * 0.70, y, "600 " + Math.max(10, w * 0.033) + "px " + MONO, "#10151c");
+          });
+          TXT(g, "逐幀診斷 · 校驗真實 MP4", w * 0.07, h * 0.88, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 79 Beatreel: one script, vertical and horizontal, word-synced subs */
+        79: function (g, w, h, t) {
+          g.fillStyle = "#171310"; g.fillRect(0, 0, w, h);
+          TXT(g, "beatreel · 口播解說產生器", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var vx = w * 0.10, vy = h * 0.20, vw = w * 0.17, vh = h * 0.56;
+          g.fillStyle = "#241d16"; RR(g, vx, vy, vw, vh, 8); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1; RR(g, vx, vy, vw, vh, 8); g.stroke();
+          var hx = w * 0.36, hy = h * 0.26, hw = w * 0.34, hh = h * 0.34;
+          g.fillStyle = "#241d16"; RR(g, hx, hy, hw, hh, 8); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.25)"; RR(g, hx, hy, hw, hh, 8); g.stroke();
+          [vx + vw / 2, hx + hw / 2].forEach(function (cx, i) {
+            var cyy = i === 0 ? vy + vh * 0.30 : hy + hh * 0.36;
+            g.fillStyle = "#e8b04b"; g.beginPath(); g.arc(cx, cyy, 10, 0, 6.2832); g.fill();
+            g.fillRect(cx - 2, cyy, 4, 14);
+            g.strokeStyle = "#e8b04b"; g.lineWidth = 2; g.beginPath(); g.arc(cx, cyy + 16, 8, 0.4, 2.74); g.stroke();
+          });
+          var words = ["寫", "一段", "JSON", "就好"];
+          var cur = Math.floor((t % 2.4) / 0.6);
+          words.forEach(function (wd, i) {
+            TXT(g, wd, w * (0.76 + (i % 2) * 0.10), h * (0.30 + Math.floor(i / 2) * 0.13), "700 " + Math.max(12, w * 0.04) + "px sans-serif", i === cur ? "#ffb020" : "rgba(255,255,255,0.55)", "center");
+          });
+          TXT(g, "Kokoro 離線配音", w * 0.10, h * 0.88, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+          TXT(g, "字幕逐詞同步", w * 0.44, h * 0.88, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+          TXT(g, "直式 + 橫式", w * 0.78, h * 0.88, "600 " + Math.max(9, w * 0.032) + "px " + MONO, "#e8b04b", "center");
+        },
+        /* 80 shortform-kinetic-typography: words land big, small, in reading order */
+        80: function (g, w, h, t) {
+          g.fillStyle = "#0c0c0e"; g.fillRect(0, 0, w, h);
+          var seq = [
+            ["一句口播", 0.075, 0.30, 0.085, "#ffffff"], ["變成", 0.075, 0.47, 0.05, "rgba(255,255,255,0.6)"],
+            ["視覺構圖", 0.075, 0.66, 0.105, "#ffd02e"], ["有順序", 0.55, 0.83, 0.045, "rgba(255,255,255,0.75)"]
+          ];
+          var ph = (t % 4) / 4;
+          seq.forEach(function (s, i) {
+            var on = ph * 5 > i + 0.3;
+            var pop = on ? Math.min(1, (ph * 5 - i - 0.3) * 2.4) : 0;
+            var sc = 0.6 + 0.4 * (1 - Math.pow(1 - pop, 3));
+            g.globalAlpha = on ? 1 : 0.12;
+            TXT(g, s[0], w * s[1], h * s[2], "800 " + Math.max(12, w * s[3] * sc) + "px Archivo, sans-serif", s[4]);
+          });
+          g.globalAlpha = 1;
+          TXT(g, "kinetic typography", w * 0.94, h * 0.09, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.4)", "right");
+          TXT(g, "強詞層級 · 混合字號 · 克制強調", w * 0.075, h * 0.94, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 81 codex-motions-movie: coloured stick folk under a spooky moon */
+        81: function (g, w, h, t) {
+          g.fillStyle = "#0d0f1a"; g.fillRect(0, 0, w, h);
+          TXT(g, "codex-motions-movie", w * 0.06, h * 0.09, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var fx = w * 0.38, fy = h * 0.14, fw = w * 0.24, fh = h * 0.74;
+          g.fillStyle = "#141a2e"; RR(g, fx, fy, fw, fh, 9); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1; RR(g, fx, fy, fw, fh, 9); g.stroke();
+          g.fillStyle = "#e8e4c8"; g.beginPath(); g.arc(fx + fw * 0.76, fy + fh * 0.14, 10, 0, 6.2832); g.fill();
+          g.fillStyle = "#141a2e"; g.beginPath(); g.arc(fx + fw * 0.76 + 5, fy + fh * 0.12, 8.5, 0, 6.2832); g.fill();
+          g.fillStyle = "#0a0d18"; g.fillRect(fx, fy + fh * 0.78, fw, fh * 0.22);
+          function stick(cx, base, col, ph2) {
+            var hip = base - 16, head = hip - 13, step = Math.sin(ph2) * 6;
+            g.strokeStyle = col; g.lineWidth = 3; g.lineCap = "round";
+            g.beginPath(); g.arc(cx, head - 5, 5.5, 0, 6.2832); g.stroke();
+            g.beginPath(); g.moveTo(cx, head + 1); g.lineTo(cx, hip); g.stroke();
+            g.beginPath(); g.moveTo(cx, hip); g.lineTo(cx - 6 + step, base); g.moveTo(cx, hip); g.lineTo(cx + 6 - step, base); g.stroke();
+            g.beginPath(); g.moveTo(cx, head + 5); g.lineTo(cx - 7, hip - 3 + step * 0.5); g.moveTo(cx, head + 5); g.lineTo(cx + 7, hip - 3 - step * 0.5); g.stroke();
+          }
+          stick(fx + fw * 0.32, fy + fh * 0.80, "#ff5c8a", t * 6);
+          stick(fx + fw * 0.62, fy + fh * 0.80, "#7be3c3", t * 6 + 3.1);
+          g.fillStyle = "rgba(255,176,32,0.9)"; g.beginPath(); g.arc(fx + fw * 0.80, fy + fh * 0.62 + Math.sin(t * 2) * 2, 4, 0, 6.2832); g.fill();
+          TXT(g, "民俗與恐怖", w * 0.10, h * 0.36, "700 " + Math.max(13, w * 0.045) + "px sans-serif", "#ffffff");
+          TXT(g, "直式短片", w * 0.10, h * 0.50, "500 " + Math.max(11, w * 0.038) + "px sans-serif", "rgba(255,255,255,0.6)");
+          TXT(g, "Gemini TTS 旁白", w * 0.70, h * 0.36, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.6)");
+          TXT(g, "Remotion 本地動畫", w * 0.70, h * 0.50, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.6)");
+          TXT(g, "關鍵鏡頭 Veo 3.1 Lite", w * 0.70, h * 0.64, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.6)");
+        },
+        /* 82 muri-skills: three skill books, the video one opens into a film */
+        82: function (g, w, h, t) {
+          g.fillStyle = "#f3efe7"; g.fillRect(0, 0, w, h);
+          TXT(g, "muri-skills · 敘事技能包", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var books = [["品牌", "#b85c48"], ["設計", "#5b84b8"], ["muri-video", "#274b73"]];
+          books.forEach(function (b, i) {
+            var bx = w * (0.07 + i * 0.13), by = h * 0.24, bw = w * 0.105, bh = h * 0.44;
+            g.fillStyle = b[1]; RR(g, bx, by, bw, bh, 3); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.85)"; g.fillRect(bx + 5, by, 3, bh);
+            TXT(g, b[0], bx + bw / 2 + 3, by + bh * 0.3, "700 " + Math.max(9, w * 0.028) + "px sans-serif", "#ffffff", "center");
+          });
+          TXT(g, "→", w * 0.52, h * 0.46, "700 " + Math.max(15, w * 0.05) + "px sans-serif", "#10151c", "center");
+          var fx = w * 0.60, fy = h * 0.20, fw = w * 0.34, fh = h * 0.42;
+          g.fillStyle = "#10151c"; RR(g, fx, fy, fw, fh, 7); g.fill();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.moveTo(fx + fw * 0.44, fy + fh * 0.32); g.lineTo(fx + fw * 0.44, fy + fh * 0.60); g.lineTo(fx + fw * 0.62, fy + fh * 0.46); g.closePath(); g.fill();
+          for (var i = 0; i < 14; i++) {
+            var bh = h * (0.02 + 0.07 * Math.abs(Math.sin(t * 3 + i * 0.9)));
+            g.fillStyle = "#e8b04b"; RR(g, fx + 9 + i * (fw - 18) / 14, fy + fh * 0.85 - bh / 2, (fw - 18) / 14 - 3, bh, 2); g.fill();
+          }
+          TXT(g, "帶旁白的產品敘事片 · 最高 4K", w * 0.60, h * 0.74, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#10151c");
+          TXT(g, "Remotion / HyperFrames 渲染", w * 0.60, h * 0.84, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 83 guiji-marble-video: a marble rolls the rail and rings the keys */
+        83: function (g, w, h, t) {
+          g.fillStyle = "#131720"; g.fillRect(0, 0, w, h);
+          TXT(g, "guiji-marble · 彈珠卡點", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var x0 = w * 0.07, x1 = w * 0.93, y0 = h * 0.26, y1 = h * 0.60;
+          g.strokeStyle = "#8a93a3"; g.lineWidth = 3.5; g.lineCap = "round";
+          g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+          g.strokeStyle = "rgba(138,147,163,0.4)"; g.lineWidth = 2;
+          g.beginPath(); g.moveTo(x0, y0 + 9); g.lineTo(x1, y1 + 9); g.stroke();
+          var ph = (t % 3.2) / 3.2, mx = x0 + (x1 - x0) * ph, my = y0 + (y1 - y0) * ph - 11;
+          for (var k = 0; k < 5; k++) {
+            var kx = x0 + (x1 - x0) * (0.18 + k * 0.17), ky = y0 + (y1 - y0) * (0.18 + k * 0.17);
+            var hit = Math.abs(ph - (0.18 + k * 0.17)) < 0.045;
+            g.fillStyle = hit ? "#ffd02e" : "#2a3140"; RR(g, kx - 13, ky + 8, 26, h * 0.15, 3); g.fill();
+            g.strokeStyle = "rgba(255,255,255,0.3)"; g.lineWidth = 1; RR(g, kx - 13, ky + 8, 26, h * 0.15, 3); g.stroke();
+            if (hit) TXT(g, "♪", kx, ky - h * 0.10, "400 " + Math.max(13, w * 0.045) + "px sans-serif", "#ffd02e", "center");
+          }
+          var mg = g.createRadialGradient(mx - 3, my - 3, 1, mx, my, 11);
+          mg.addColorStop(0, "#ffffff"); mg.addColorStop(0.4, "#9fc2ff"); mg.addColorStop(1, "#1f6ae1");
+          g.fillStyle = mg; g.beginPath(); g.arc(mx, my, 10, 0, 6.2832); g.fill();
+          TXT(g, "琴鍵 · 銅鈴 · 木音條 · 鼓面", w * 0.07, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+          TXT(g, "Blender 720×1280 · 24fps", w * 0.94, h * 0.10, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)", "right");
+        },
+        /* 84 motion2code: film frames dissolve back into SVG and GSAP code */
+        84: function (g, w, h, t) {
+          g.fillStyle = "#0e1512"; g.fillRect(0, 0, w, h);
+          TXT(g, "motion2code · 影片轉程式碼", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var fx = w * 0.07, fy = h * 0.22, fw = w * 0.30, fh = h * 0.44;
+          g.fillStyle = "#1b2620"; RR(g, fx, fy, fw, fh, 6); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 1; RR(g, fx, fy, fw, fh, 6); g.stroke();
+          g.fillStyle = "#88ce02"; g.beginPath(); g.arc(fx + fw * (0.3 + 0.4 * (0.5 + 0.5 * Math.sin(t * 2))), fy + fh * 0.45, 10, 0, 6.2832); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.4)"; RR(g, fx + 9, fy + fh * 0.72, fw - 18, 6, 3); g.fill();
+          for (var p = 0; p < 10; p++) {
+            var pp = ((t * 0.35 + p * 0.1) % 1);
+            var X = fx + fw + pp * w * 0.16, Y = fy + fh * 0.44 + Math.sin(pp * 9 + p) * 9;
+            g.globalAlpha = 1 - pp;
+            g.fillStyle = "#88ce02"; g.fillRect(X, Y, 4, 4);
+          }
+          g.globalAlpha = 1;
+          var cx = w * 0.56;
+          g.strokeStyle = "#88ce02"; g.lineWidth = 2.5; g.lineCap = "round"; g.beginPath();
+          for (var i = 0; i <= 30; i++) {
+            var u = i / 30, X = cx + u * w * 0.16, Y = fy + fh * 0.44 + Math.sin(u * 6.28 + t * 2) * fh * 0.16;
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.stroke();
+          TXT(g, "<path d=\"…\"/>", cx, fy + 8, "600 " + Math.max(10, w * 0.033) + "px " + MONO, "#7be3c3");
+          var lines = ["gsap.to(\"#dot\", {", "  x: 240, ease:", "  \"power3.out\" })"];
+          lines.forEach(function (ln, i) {
+            TXT(g, ln, cx, fy + fh * 0.72 + i * h * 0.085, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.65)");
+          });
+          TXT(g, "逐幀拆解 · 無縫循環", w * 0.07, h * 0.90, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 85 motion-skill: canvas stage, web audio wave, MP4 out */
+        85: function (g, w, h, t) {
+          g.fillStyle = "#f0f4ee"; g.fillRect(0, 0, w, h);
+          TXT(g, "motion-skill · Canvas + Web Audio", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var sx = w * 0.07, sy = h * 0.18, sw = w * 0.60, sh = h * 0.52;
+          g.fillStyle = "#10151c"; RR(g, sx, sy, sw, sh, 7); g.fill();
+          var bx = sx + sw * (0.2 + 0.55 * Math.abs(Math.sin(t * 1.3))), by = sy + sh * (0.3 + 0.4 * Math.abs(Math.cos(t * 1.7)));
+          g.fillStyle = "#ffb020"; g.beginPath(); g.arc(bx, by, 11, 0, 6.2832); g.fill();
+          g.fillStyle = "#1f6ae1"; RR(g, sx + sw * 0.12, sy + sh * 0.6, sw * 0.3 * (0.6 + 0.4 * Math.sin(t * 2.2)), sh * 0.16, 4); g.fill();
+          TXT(g, "動態文字", sx + sw * 0.66, sy + sh * 0.30, "800 " + Math.max(13, w * 0.042) + "px sans-serif", "#ffffff", "center");
+          for (var i = 0; i < 18; i++) {
+            var bh = h * (0.02 + 0.08 * Math.abs(Math.sin(t * 3 + i * 0.75)));
+            g.fillStyle = "#12957f"; RR(g, sx + 8 + i * (sw - 16) / 18, sy + sh * 0.90 - bh / 2, (sw - 16) / 18 - 3, bh, 2); g.fill();
+          }
+          TXT(g, "→", w * 0.715, h * 0.44, "700 " + Math.max(15, w * 0.05) + "px sans-serif", "#10151c", "center");
+          g.fillStyle = "#e05252"; RR(g, w * 0.78, h * 0.30, w * 0.16, h * 0.28, 8); g.fill();
+          TXT(g, "MP4", w * 0.86, h * 0.44, "800 " + Math.max(14, w * 0.045) + "px " + MONO, "#ffffff", "center");
+          TXT(g, "片頭 · 解說 · 動態文字", w * 0.07, h * 0.88, "500 " + Math.max(9, w * 0.032) + "px " + MONO, "rgba(16,21,28,0.45)");
+        },
+        /* 86 huashu-art-motion: the frame keeps changing art style */
+        86: function (g, w, h, t) {
+          var styles = [
+            ["#f7e8c9", "#c75050", "水墨"], ["#101623", "#7be3c3", "霓虹"], ["#fdf6ec", "#274b73", "木刻"],
+            ["#1d1030", "#ff8fa8", "蒸汽波"], ["#eef3ee", "#2f9e5f", "扁平"], ["#f2f0eb", "#10151c", "包浩斯"]
+          ];
+          var cur = Math.floor((t % 12) / 2), st = styles[cur];
+          g.fillStyle = st[0]; g.fillRect(0, 0, w, h);
+          TXT(g, "huashu-art-motion · 36 種藝術風格", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, cur === 1 || cur === 3 ? "rgba(255,255,255,0.55)" : "rgba(16,21,28,0.45)");
+          var cx = w * 0.5, cy = h * 0.52, R = Math.min(w, h) * 0.20;
+          g.fillStyle = st[1];
+          if (cur % 3 === 0) {
+            g.beginPath();
+            for (var i = 0; i <= 40; i++) {
+              var u = i / 40, a = u * 6.2832, rr = R * (0.75 + 0.25 * Math.sin(a * 5 + t * 1.5));
+              var X = cx + Math.cos(a) * rr, Y = cy + Math.sin(a) * rr;
+              i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+            }
+            g.closePath(); g.fill();
+          } else if (cur % 3 === 1) {
+            g.save(); g.translate(cx, cy); g.rotate(t * 0.7);
+            g.fillRect(-R * 0.8, -R * 0.8, R * 1.6, R * 1.6);
+            g.fillStyle = st[0]; g.beginPath(); g.arc(0, 0, R * 0.42, 0, 6.2832); g.fill();
+            g.restore();
+          } else {
+            g.beginPath(); g.moveTo(cx, cy - R); g.lineTo(cx + R * 0.9, cy + R * 0.7); g.lineTo(cx - R * 0.9, cy + R * 0.7); g.closePath(); g.fill();
+            g.beginPath(); g.arc(cx, cy + R * 0.15, R * 0.34, 0, 6.2832); g.fillStyle = st[0]; g.fill();
+          }
+          TXT(g, "目前風格：" + st[2], cx, h * 0.86, "700 " + Math.max(12, w * 0.042) + "px sans-serif", st[1], "center");
+          TXT(g, "9 種解說語法 · 8 種參數化片段", cx, h * 0.94, "500 " + Math.max(9, w * 0.03) + "px " + MONO, cur === 1 || cur === 3 ? "rgba(255,255,255,0.5)" : "rgba(16,21,28,0.45)", "center");
+        },
+        /* 87 design-style: a calendar of daily style films */
+        87: function (g, w, h, t) {
+          g.fillStyle = "#f6f2ea"; g.fillRect(0, 0, w, h);
+          TXT(g, "design-style · 每天認識一個風格", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(16,21,28,0.45)");
+          var cx = w * 0.24, cy = h * 0.24, cw = w * 0.30, ch = h * 0.46;
+          g.fillStyle = "#ffffff"; RR(g, cx, cy, cw, ch, 7); g.fill();
+          g.strokeStyle = "rgba(16,21,28,0.16)"; g.lineWidth = 1; RR(g, cx, cy, cw, ch, 7); g.stroke();
+          g.fillStyle = "#e05252"; RR(g, cx, cy, cw, h * 0.09, 7); g.fill(); g.fillRect(cx, cy + h * 0.05, cw, h * 0.045);
+          [-0.3, 0, 0.3].forEach(function (o) {
+            g.fillStyle = "#8a93a3"; g.beginPath(); g.arc(cx + cw * (0.5 + o), cy - 3, 4, 0, 6.2832); g.fill();
+          });
+          var day = 12 + Math.floor((t % 4) / 0.8);
+          TXT(g, String(day), cx + cw / 2, cy + h * 0.30, "800 " + Math.max(28, w * 0.095) + "px Archivo, sans-serif", "#10151c", "center");
+          TXT(g, "今日風格", cx + cw / 2, cy + h * 0.40, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "rgba(16,21,28,0.55)", "center");
+          var fx = w * 0.62, fy = h * 0.20, fw = w * 0.32, fh = h * 0.40;
+          var pals = [["#c75050", "#f7e8c9"], ["#274b73", "#bcd3f2"], ["#2f9e5f", "#d8ecd8"], ["#10151c", "#ffd02e"], ["#b85c48", "#f3e0d8"]];
+          var pal = pals[Math.floor((t % 5) / 1) % 5];
+          g.fillStyle = pal[1]; RR(g, fx, fy, fw, fh, 7); g.fill();
+          g.fillStyle = pal[0]; g.beginPath(); g.arc(fx + fw * 0.32, fy + fh * 0.42, Math.min(w, h) * 0.075, 0, 6.2832); g.fill();
+          g.fillStyle = pal[0]; RR(g, fx + fw * 0.52, fy + fh * 0.22, fw * 0.36, fh * 0.4, 3); g.fill();
+          g.fillStyle = "#10151c"; g.beginPath(); g.arc(fx + fw - 20, fy + fh - 18, 13, 0, 6.2832); g.fill();
+          g.fillStyle = "#ffffff"; g.beginPath(); g.moveTo(fx + fw - 23.5, fy + fh - 23); g.lineTo(fx + fw - 23.5, fy + fh - 13); g.lineTo(fx + fw - 15.5, fy + fh - 18); g.closePath(); g.fill();
+          TXT(g, "15–20 秒動效短片", w * 0.62, h * 0.74, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "#10151c");
+          TXT(g, "+ 風格圖 + 製作指南（原始碼開放）", w * 0.62, h * 0.85, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)");
+        },
+        /* 88 viral-hook-reels: hook curve spikes inside a vertical reel */
+        88: function (g, w, h, t) {
+          g.fillStyle = "#120d0d"; g.fillRect(0, 0, w, h);
+          TXT(g, "viral-hook-reels · 爆款拆解", w * 0.06, h * 0.09, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var fx = w * 0.40, fy = h * 0.13, fw = w * 0.20, fh = h * 0.74;
+          g.fillStyle = "#1e1512"; RR(g, fx, fy, fw, fh, 10); g.fill();
+          g.strokeStyle = "rgba(255,255,255,0.3)"; g.lineWidth = 1.2; RR(g, fx, fy, fw, fh, 10); g.stroke();
+          TXT(g, "🔥", fx + fw / 2, fy + fh * 0.13, "400 " + Math.max(15, w * 0.05) + "px sans-serif", "#ffffff", "center");
+          g.strokeStyle = "#ff5c39"; g.lineWidth = 2.5; g.lineCap = "round"; g.beginPath();
+          for (var i = 0; i <= 24; i++) {
+            var u = i / 24, X = fx + 8 + u * (fw - 16), Y = fy + fh * 0.52 - Math.pow(u, 2.6) * fh * 0.26 - Math.sin(u * 7 + t * 3) * 2;
+            i ? g.lineTo(X, Y) : g.moveTo(X, Y);
+          }
+          g.stroke();
+          var words = ["為什麼", "它會火"];
+          var cur = Math.floor((t % 1.6) / 0.8);
+          words.forEach(function (wd, i) {
+            g.fillStyle = i === cur ? "#ffd02e" : "rgba(255,255,255,0.75)";
+            RR(g, fx + 8 + i * fw * 0.06, fy + fh * (0.62 + i * 0.11), fw * (0.52 + i * 0.1), fh * 0.085, 3); g.fill();
+            TXT(g, wd, fx + fw / 2, fy + fh * (0.662 + i * 0.11), "700 " + Math.max(9, w * 0.028) + "px sans-serif", "#10151c", "center");
+          });
+          TXT(g, "1080×1920", fx + fw / 2, fy + fh * 0.93, "500 " + Math.max(8, w * 0.026) + "px " + MONO, "rgba(255,255,255,0.45)", "center");
+          TXT(g, "貼上爆款連結", w * 0.09, h * 0.34, "700 " + Math.max(12, w * 0.04) + "px sans-serif", "#ffffff");
+          TXT(g, "🔗", w * 0.09, h * 0.47, "400 " + Math.max(14, w * 0.045) + "px sans-serif", "#ffffff");
+          TXT(g, "逐詞字幕", w * 0.68, h * 0.34, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "#ffffff");
+          TXT(g, "ElevenLabs 配音", w * 0.68, h * 0.47, "500 " + Math.max(10, w * 0.034) + "px sans-serif", "rgba(255,255,255,0.6)");
+          TXT(g, "Remotion 渲染", w * 0.68, h * 0.60, "500 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.6)");
+        },
+        /* 89 motion-director: clapper, B-roll strip and overlay graphics */
+        89: function (g, w, h, t) {
+          g.fillStyle = "#141210"; g.fillRect(0, 0, w, h);
+          TXT(g, "motion-director · 品牌動效導演", w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, "rgba(255,255,255,0.5)");
+          var cx = w * 0.09, cy = h * 0.22, cw = w * 0.30, ch = h * 0.30;
+          var snap = (t % 2.8) < 0.18 ? 0.5 : 0.06;
+          g.save(); g.translate(cx, cy); g.rotate(-snap);
+          g.fillStyle = "#f5efe2"; g.fillRect(0, -9, cw, 9);
+          for (var s = 0; s < 5; s++) { g.fillStyle = "#10151c"; g.beginPath(); g.moveTo(s * cw / 5, -9); g.lineTo(s * cw / 5 + cw / 10, -9); g.lineTo(s * cw / 5 + cw / 10 - 5, 0); g.lineTo(s * cw / 5 - 5, 0); g.closePath(); g.fill(); }
+          g.restore();
+          g.fillStyle = "#f5efe2"; RR(g, cx, cy, cw, ch, 4); g.fill();
+          TXT(g, "SCENE 01", cx + 10, cy + ch * 0.32, "700 " + Math.max(10, w * 0.034) + "px " + MONO, "#10151c");
+          TXT(g, "品牌啟動片", cx + 10, cy + ch * 0.58, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "rgba(16,21,28,0.6)");
+          TXT(g, "10–30 秒", cx + 10, cy + ch * 0.80, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(16,21,28,0.5)");
+          TXT(g, "B-roll", w * 0.48, h * 0.26, "600 " + Math.max(10, w * 0.034) + "px " + MONO, "rgba(255,255,255,0.6)");
+          for (var b = 0; b < 4; b++) {
+            var bx = w * (0.48 + b * 0.125), by = h * 0.32;
+            g.fillStyle = ["#3d6a9c", "#7ba05b", "#b85c48", "#5b84b8"][b]; RR(g, bx, by, w * 0.11, h * 0.17, 4); g.fill();
+            g.fillStyle = "rgba(255,255,255,0.85)"; g.beginPath(); g.moveTo(bx + w * 0.045, by + h * 0.055); g.lineTo(bx + w * 0.045, by + h * 0.115); g.lineTo(bx + w * 0.075, by + h * 0.085); g.closePath(); g.fill();
+          }
+          TXT(g, "266 個 B-roll", w * 0.48, h * 0.58, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)");
+          var oy = h * 0.72 + Math.sin(t * 1.6) * 2;
+          g.fillStyle = "rgba(31,106,225,0.85)"; RR(g, w * 0.09, oy, w * 0.44, h * 0.13, 4); g.fill();
+          TXT(g, "透明疊加圖形 · 頻道片頭", w * 0.115, oy + h * 0.065, "600 " + Math.max(10, w * 0.034) + "px sans-serif", "#ffffff");
+          TXT(g, "一句話或一條連結即可開工", w * 0.60, h * 0.785, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)");
+        },
+        /* 90 cinematic-skill: letterboxed pan across one designed world */
+        90: function (g, w, h, t) {
+          g.fillStyle = "#000000"; g.fillRect(0, 0, w, h);
+          var fy = h * 0.16, fh = h * 0.62;
+          var sky = g.createLinearGradient(0, fy, 0, fy + fh);
+          sky.addColorStop(0, "#2b3a55"); sky.addColorStop(0.6, "#b07908"); sky.addColorStop(1, "#e8a33d");
+          g.fillStyle = sky; g.fillRect(0, fy, w, fh);
+          var pan = ((t % 14) / 14) * w * 0.24;
+          g.fillStyle = "#f7dfae"; g.beginPath(); g.arc(w * 0.72 - pan * 0.4, fy + fh * 0.30, Math.min(w, h) * 0.075, 0, 6.2832); g.fill();
+          g.fillStyle = "#4a3520";
+          g.beginPath();
+          g.moveTo(-pan, fy + fh);
+          g.lineTo(w * 0.25 - pan, fy + fh * 0.45);
+          g.lineTo(w * 0.48 - pan, fy + fh * 0.72);
+          g.lineTo(w * 0.75 - pan, fy + fh * 0.38);
+          g.lineTo(w * 1.05 - pan, fy + fh * 0.68);
+          g.lineTo(w * 1.3 - pan, fy + fh * 0.5);
+          g.lineTo(w * 1.3 - pan, fy + fh);
+          g.closePath(); g.fill();
+          g.fillStyle = "#2b2015";
+          g.beginPath();
+          g.moveTo(-pan * 1.4, fy + fh);
+          g.lineTo(w * 0.4 - pan * 1.4, fy + fh * 0.7);
+          g.lineTo(w * 0.9 - pan * 1.4, fy + fh * 0.82);
+          g.lineTo(w * 1.4 - pan * 1.4, fy + fh * 0.66);
+          g.lineTo(w * 1.4 - pan * 1.4, fy + fh);
+          g.closePath(); g.fill();
+          var sub = ["九十秒，一個世界。", "鏡頭不切，緩緩橫移。", "旁白與音效，卡在幀上。"][Math.floor((t % 9) / 3)];
+          TXT(g, sub, w * 0.5, fy + fh * 0.88, "600 " + Math.max(11, w * 0.038) + "px sans-serif", "#ffffff", "center");
+          TXT(g, "cinematic-skill · 純程式碼紀錄片", w * 0.06, h * 0.075, "500 " + Math.max(10, w * 0.036) + "px " + MONO, "rgba(255,255,255,0.55)");
+          for (var i = 0; i < 22; i++) {
+            var bh = h * (0.012 + 0.035 * Math.abs(Math.sin(t * 2.4 + i * 0.8)));
+            g.fillStyle = "rgba(255,255,255,0.5)"; RR(g, w * 0.30 + i * w * 0.018, h * 0.915 - bh / 2, w * 0.011, bh, 2); g.fill();
+          }
+          TXT(g, "Skia 連續運鏡", w * 0.94, h * 0.075, "500 " + Math.max(9, w * 0.03) + "px " + MONO, "rgba(255,255,255,0.45)", "right");
         }
-
       };
 
       var vizIO = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { if (en.target._entry) en.target._entry.vis = en.isIntersecting; });
+        entries.forEach(function (en) {
+          var e = en.target._entry; if (!e) return;
+          e.vis = en.isIntersecting;
+          if (en.isIntersecting && !e.w) { vizSize(e); vizDraw(e, 1.35, 0); }
+        });
       }, { threshold: 0.04 }) : null;
 
       function vizSize(e) {
@@ -2216,12 +3754,14 @@
         TXT(g, (cat ? cat.toLowerCase() : "skill") + " " + pad(n), w * 0.06, h * 0.10, "500 " + Math.max(10, w * 0.038) + "px " + MONO, dark ? "rgba(255,255,255,0.5)" : "rgba(16,21,28,0.45)");
       }
       function vizDraw(e, t, dt) {
-        var fn = VIZ[e.n];
         if (!e.w) return;
-        if (!fn) { var gg = e.el.getContext("2d"); gg.setTransform(e.dpr, 0, 0, e.dpr, 0, 0); var it = byN(e.n); vizGeneric(gg, e.w, e.h, t + e.n * 0.83, e.n, it ? it.cat : null); return; }
-        var g = e.el.getContext("2d");
-        g.setTransform(e.dpr, 0, 0, e.dpr, 0, 0);
-        fn(g, e.w, e.h, t + e.n * 0.83, dt, e.state);
+        try {
+          var fn = VIZ[e.n];
+          var g = e.el.getContext("2d");
+          g.setTransform(e.dpr, 0, 0, e.dpr, 0, 0);
+          if (!fn) { var it = byN(e.n); vizGeneric(g, e.w, e.h, t + e.n * 0.83, e.n, it ? it.cat : null); return; }
+          fn(g, e.w, e.h, t + e.n * 0.83, dt, e.state);
+        } catch (err) { /* one bad drawing must not blank the rest */ }
       }
       function vizRegister(scope) {
         scope.querySelectorAll("canvas[data-vis]").forEach(function (el) {
@@ -2232,6 +3772,15 @@
           vizSize(e);
           if (vizIO) vizIO.observe(el); else e.vis = true;
           vizDraw(e, 1.35, 0);
+          if (!e.w) {
+            var tries = 0;
+            var iv = setInterval(function () {
+              tries++;
+              if (!document.contains(el) || tries > 16) { clearInterval(iv); return; }
+              vizSize(e);
+              if (e.w) { vizDraw(e, 1.35, 0); clearInterval(iv); }
+            }, 120);
+          }
         });
       }
       var lastTs = 0;
